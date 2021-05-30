@@ -1,0 +1,52 @@
+.header-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hc {
+  composes: header-flex;
+  min-width: 995px;
+  max-width: 1082px;
+  margin: 0 auto;
+}
+
+.header {
+  box-sizing: border-box;
+  width: 100%;
+  height: 88px; /* потом убрать и задавать высоту хедера за счёт содержимого */
+  padding: 16px 0px;
+  background-color: #1c1c21;
+}
+
+.userPanel {
+  min-width: 316px; /* Важно! Влияет на центровку логотипа в шапке */
+}
+
+.ul {
+  composes: header-flex;
+  list-style-type: none;
+  cursor: pointer;
+}
+
+.ul:last-of-type {
+  justify-content: flex-end;
+}
+
+li {
+  /*
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  */
+}
+
+li:last-of-type {
+  margin-left: 49px;
+}
+
+span.icon {
+  margin-left: 9px;
+  font-family: "Jet Brains Mono"; /* В пакете от практикума в этом правиле опечатка, так что нужно переназначить */
+}

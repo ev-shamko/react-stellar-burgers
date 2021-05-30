@@ -1,25 +1,14 @@
 import React from 'react';
 import logo from '../../images/logo.svg';
 import styles from './App.module.css';
+import AppHeader from '../app-header/app-header';
 
 function App() {
   return (
-    <div className={styles.app}>
-      <header className={styles.header}>
-        <img src={logo} className={styles.logo} alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload. Hello World!
-        </p>
-        <a
-          className={styles.link}
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <AppHeader />
+      <p className='text_type_main-medium'>Параграф вне хедера</p>
+    </>
   );
 }
 
