@@ -7,26 +7,23 @@ import {
     ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-
-//console.log(styles);
-
 class AppHeader extends React.Component {
     render() {
         return (
             <header className={headerStyles.header}>
-                <div className={headerStyles.hc}>
-                    <nav className={headerStyles.nav}>
-                        <ul className={headerStyles.ul}>
-                            <li className='text text_type_main-default'>
-                                <div className={headerStyles.ul}>
+                <div className={headerStyles.headerContainer}>
+                    <nav className='text text_type_main-default'>
+                        <ul className={headerStyles.navBurgerBuilder}>
+                            <li>
+                                <div className={headerStyles.navButton}>
                                     <BurgerIcon type="primary" />
-                                    <span className={headerStyles.icon + ' ' + 'text text_type_main-small'}>Конструктор</span>
+                                    <span className={headerStyles.buttonCaption}>Конструктор</span>
                                 </div>
                             </li>
-                            <li className='text text_type_main-default'>
-                                <div className={headerStyles.ul}>
+                            <li>
+                                <div className={headerStyles.authButton + '  text_color_inactive'}>{/* вот здесь через state будем менять цвет текста */}
                                     <ListIcon type="secondary" />
-                                    <span className={headerStyles.icon + ' ' + 'text text_type_main-small  text_color_inactive'}>Лента заказов</span>
+                                    <span className={headerStyles.buttonCaption}>Лента заказов</span>
                                 </div>
                             </li>
                         </ul>
@@ -36,16 +33,12 @@ class AppHeader extends React.Component {
                     </a>
 
                     {/* На будущее:
-Логотип в шапке центруктся через space-between, поэтому левая и правая <nav> должны быть одинаковой ширины.
-Можно кнопке личного кабинета (которая справа от логотипа) через js задать min-width,
-равный ширине меню (которое слева от логотипа). Мало ли что там в мобильной версии потом будет/
-Предварительно: для захардкоденной ширины лучше сделать @media и уменьшать при уменьшении ширины экрана, а то шапка резинится не очень
-Прямо сейчас ширина кнопки авторизации захардкодена */}
-
-                    <nav className={headerStyles.userPanel}>
-                        <div className={headerStyles.ul}>
+Логотип в шапке центруктся через space-between, поэтому левая и правая <nav> должны быть примерно одинаковой ширины, но кнопка авторизации чуть уже.
+Можно высчитывать ширину кнопки авторизации через js, но пока захардкодено в css. */}
+                    <nav className={headerStyles.userPanel + ' ' + 'text text_type_main-default'}>
+                        <div className={headerStyles.authButton + '  text_color_inactive'}> 
                             <ProfileIcon type="secondary" />
-                            <span className={headerStyles.icon + ' ' + 'text text_type_main-small  text_color_inactive'}>Личный кабинет</span>
+                            <span className={headerStyles.buttonCaption}>Личный кабинет</span>
                         </div>
                     </nav>
                 </div>
