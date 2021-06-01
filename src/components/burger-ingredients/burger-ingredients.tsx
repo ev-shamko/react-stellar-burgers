@@ -1,6 +1,7 @@
 import React from "react";
 import ingrStyles from "./burger-ingredients.module.css";
-import IngridientCard from "../ingridient-card/ingrdient-card"
+import IngridientCard from "../ingridient-card/ingrdient-card";
+import CardList from "../ingridients-cardlist/ingridients-cardlist";
 import ingridientsList from "../../utils/data";
 import {
     Tab,
@@ -16,6 +17,15 @@ import {
 const testFunc = () => {
     console.log('clicked');
 }
+
+const keyword = "bun";
+
+// @ts-ignore
+const arrOfIngridients = ingridientsList.filter(function (obj) {
+    return obj.type === keyword;
+})
+
+console.log(arrOfIngridients);
 
 /*
 const obj = {
@@ -34,6 +44,7 @@ const obj = {
 };
 */
 
+// @ts-ignore
 class BurgerIngredients extends React.Component {
     render() {
         return (
@@ -48,28 +59,21 @@ class BurgerIngredients extends React.Component {
                     <div className={ingrStyles.ingrShowcase}>
                         <h3 className="text text_type_main-medium">Булки</h3>
                         <div className={ingrStyles.ingrList}>
-                            <IngridientCard image={ingridientsList[0].image} price={ingridientsList[0].price} name={ingridientsList[0].name}  />
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
+                            <CardList type={"bun"} />
                         </div>
                     </div>
 
                     <div className={ingrStyles.ingrShowcase}>
                         <h3 className="text text_type_main-medium">Соусы</h3>
                         <div className={ingrStyles.ingrList}>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
+                            <CardList type={"sauce"} />
                         </div>
                     </div>
 
                     <div className={ingrStyles.ingrShowcase}>
                         <h3 className="text text_type_main-medium">Начинки</h3>
                         <div className={ingrStyles.ingrList}>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
+                        <CardList type={"main"} />
                         </div>
                     </div>
 
