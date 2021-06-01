@@ -1,6 +1,7 @@
 import React from "react";
 import ingrStyles from "./burger-ingredients.module.css";
 import IngridientCard from "../ingridient-card/ingrdient-card"
+import ingridientsList from "../../utils/data";
 import {
     Tab,
 
@@ -16,6 +17,23 @@ const testFunc = () => {
     console.log('clicked');
 }
 
+/*
+const obj = {
+    "_id": "60666c42cc7b410027a1a9b1",
+    "name": "Краторная булка N-200i",
+    "type": "bun",
+    "proteins": 80,
+    "fat": 24,
+    "carbohydrates": 53,
+    "calories": 420,
+    "price": 1255,
+    "image": "https://code.s3.yandex.net/react/code/bun-02.png",
+    "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+    "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
+    "__v": 0
+};
+*/
+
 class BurgerIngredients extends React.Component {
     render() {
         return (
@@ -30,7 +48,7 @@ class BurgerIngredients extends React.Component {
                     <div className={ingrStyles.ingrShowcase}>
                         <h3 className="text text_type_main-medium">Булки</h3>
                         <div className={ingrStyles.ingrList}>
-                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
+                            <IngridientCard image={ingridientsList[0].image} price={ingridientsList[0].price} name={ingridientsList[0].name}  />
                             <div className={ingrStyles.zaglushka + ' mb-8'}></div>
                         </div>
                     </div>
@@ -51,7 +69,7 @@ class BurgerIngredients extends React.Component {
                             <div className={ingrStyles.zaglushka + ' mb-8'}></div>
                             <div className={ingrStyles.zaglushka + ' mb-8'}></div>
                             <div className={ingrStyles.zaglushka + ' mb-8'}></div>
-                            <IngridientCard />
+                            <div className={ingrStyles.zaglushka + ' mb-8'}></div>
                         </div>
                     </div>
 
