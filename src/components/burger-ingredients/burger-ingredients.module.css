@@ -1,0 +1,31 @@
+.ingridiensContainer {
+  max-width: 600px; /* Иначе расхреначит флекс-контейнеры с карточками ингридиентов */
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  max-height: 56px;
+}
+
+.ingrDisplay {
+  display: block;
+}
+
+.ingrShowcase {
+  display: block;
+}
+
+.ingrList {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 24px 16px 8px;
+}
+
+.zaglushka {
+  width: 272px;
+  height: 200px;
+  border: 1px solid mediumslateblue;
+}

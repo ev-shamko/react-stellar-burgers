@@ -1,3 +1,23 @@
-.app {
-  text-align: center;
+.main {
+  margin: 0 auto;
+  max-width: 1240px;
+  min-width: 1240px;
+}
+
+.headerSection {
+  padding-top: 40px;
+  padding-bottom: 20px;
+}
+
+.constructorContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.zaglushka {
+  width: 832px;
+  height: 612px;
+  border: 1px solid grey;
+  box-sizing: border-box;
 }
