@@ -7,29 +7,6 @@ import {
 
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-
-/*
-
-1. Получаем ключевое слово, по которому фильтруем массив (this.props.type)
-1. Или лучше получить массив
-
-2. Отфильтровали массив с ингридиентами нужного типа
-
-3. На основании массива черех map получили разметку и вернули ее
-
-
-
-
-const keyword = "bun";
-
-
-// @ts-ignore
-const arrOfIngridients = ingridientsList.filter(function (obj) {
-    return obj.type === keyword;
-})
-
-*/
-
 // @ts-ignore
 class CardList extends React.Component {
     render() {

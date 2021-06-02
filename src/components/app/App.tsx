@@ -3,6 +3,7 @@ import logo from '../../images/logo.svg';
 import indexStyles from './App.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
+import BurgerConstructor from '../burger-constructor/burger-constructor'
 
 function App() {
   return (
@@ -10,13 +11,12 @@ function App() {
       <AppHeader />
       <main className={indexStyles.main}>
         <section className={indexStyles.headerSection}>
-          <h1 className="text text_type_main-large">Собери бургер</h1>
+          <h1 className="text text_type_main-large">Соберите бургер</h1>
         </section>
         <section className={indexStyles.constructorContainer}>
           <BurgerIngredients />
-          {/* <BurgerConstructor /> */}
+          <BurgerConstructor />
           {/*<div className={indexStyles.zaglushka}></div>*/}
-          <div className={indexStyles.zaglushka}></div>
         </section>
 
       </main>

@@ -1,0 +1,14 @@
+.container {
+    max-width: 600px;
+    min-width: 600px;
+
+    box-sizing: border-box; 
+    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.container > div {
+    margin: 8px 0;
+}
