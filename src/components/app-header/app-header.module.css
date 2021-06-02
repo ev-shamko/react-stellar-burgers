@@ -45,11 +45,11 @@
 }
 
 
-li {
+.headerButton {
   margin-left: 49px;
 }
 
-li:first-child {
+.headerButton:first-child {
   margin-left: 0px;
 }
 

@@ -14,13 +14,13 @@ class AppHeader extends React.Component {
                 <div className={headerStyles.headerContainer}>
                     <nav className='text text_type_main-default'>
                         <ul className={headerStyles.navBurgerBuilder}>
-                            <li>
+                            <li className={headerStyles.headerButton}>
                                 <div className={headerStyles.navButton}>
                                     <BurgerIcon type="primary" />
                                     <span className={headerStyles.buttonCaption}>Конструктор</span>
                                 </div>
                             </li>
-                            <li>
+                            <li className={headerStyles.headerButton}>
                                 <div className={headerStyles.authButton + '  text_color_inactive'}>{/* вот здесь через state будем менять цвет текста */}
                                     <ListIcon type="secondary" />
                                     <span className={headerStyles.buttonCaption}>Лента заказов</span>
