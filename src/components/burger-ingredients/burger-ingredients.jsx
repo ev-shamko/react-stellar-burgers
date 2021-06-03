@@ -5,7 +5,6 @@ import CardList from "../ingridients-cardlist/ingridients-cardlist";
 import ingridientsList from "../../utils/data";
 import {
     Tab,
-
     /*
 счётчики,
 иконки,

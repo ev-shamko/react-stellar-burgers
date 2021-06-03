@@ -7,10 +7,13 @@ import {
 
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-// @ts-ignore
+// <CardList type="bun" />
+
 class CardList extends React.Component {
     render() {
         const {type} = this.props; // нельзя просто использовать this.props.type
+
+        // создаём новый массив из ингридиентов определённого типа
         const arrSomeIngridients = ingridientsList.filter(function (obj) {
             return obj.type === type;
         });
@@ -20,7 +23,7 @@ class CardList extends React.Component {
                 {
                     arrSomeIngridients.map((obj, index) => {
                         console.log(arrSomeIngridients);
-                        return <IngridientCard image={obj.image} price={obj.price} name={obj.name} />
+                        return <IngridientCard key={obj._id} image={obj.image} price={obj.price} name={obj.name} />
                     })
                 }
             </>
@@ -28,6 +31,22 @@ class CardList extends React.Component {
     }
 }
 
-// <CardList type="bun" />
+/*  Пример объекта, содержащегося в массиве с ингридиентами:
+{
+    "_id": "60666c42cc7b410027a1a9b1",
+    "name": "Краторная булка N-200i",
+    "type": "bun",
+    "proteins": 80,
+    "fat": 24,
+    "carbohydrates": 53,
+    "calories": 420,
+    "price": 1255,
+    "image": "https://code.s3.yandex.net/react/code/bun-02.png",
+    "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+    "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
+    "__v": 0
+}*/
+
+
 
 export default CardList;

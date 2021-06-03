@@ -1,56 +1,65 @@
 import React from "react";
 import crStyles from "./burger-constructor.module.css";
-import IngridientCard from "../ingridient-card/ingrdient-card";
-import CardList from "../ingridients-cardlist/ingridients-cardlist";
 import ingridientsList from "../../utils/data";
+import DraggableItems from "../draggable-items/draggable-items";
 import {
     ConstructorElement,
     Button,
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+// пока что захардодено
+// создаём массив с ингридиентами, которые будут находиться между верхней и нижней булкой. Из этого массива нагененрируем ингридиенты для конструктора
+const arrSomeIngridients = ingridientsList.filter((obj) => {
+    return obj.type === "main";
+})
 
 // @ts-ignore
 class BurgerConstructor extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            //пока что захардкодено
+            bunIngridient: ingridientsList[0],
+            draggableIngridients: arrSomeIngridients,
+        }
+    }
+
+    getTotalPrice() {
+        let totalPrice = this.state.bunIngridient.price * 2; // цена верхней и нижней булки
+        let summOfDraggableIngr = 0;
+
+        // если есть ингридиенты между булками, то считаем их стоимость
+        if (this.state.draggableIngridients.length > 0) {
+            summOfDraggableIngr = this.state.draggableIngridients.reduce(function (accumulator, currentValue) {
+                console.log(accumulator);
+                return accumulator + Number(currentValue.price);
+            }, 0);
+        }
+
+        return totalPrice + summOfDraggableIngr;
+    }
+
     render() {
         return (
             <section className={crStyles.container}>
                 <ul className={crStyles.chosenIngridients + ' mt-6 mb-6'}>
 
                     <li className={crStyles.topIngridinet}>
-                        <ConstructorElement type="top" isLocked="true" text="Краторная булка N-200i (верх)" thumbnail="https://code.s3.yandex.net/react/code/bun-02.png" price="200" />
+                        <ConstructorElement type="top" isLocked="true" text={this.state.bunIngridient.name + " (верх)"} thumbnail={this.state.bunIngridient.image} price={this.state.bunIngridient.price} />
                     </li>
 
                     <li className={crStyles.draggableIngridinetContainer}>
-
-                        <div className={crStyles.draggableItime}>
-                            <button className={crStyles.draggableButton}></button>
-                            <ConstructorElement text="Соус традиционный галактический" thumbnail="https://code.s3.yandex.net/react/code/sauce-03.png" price="200" />
-                        </div>
-                        <div className={crStyles.draggableItime}>
-                            <button className={crStyles.draggableButton}></button>
-                            <ConstructorElement text="Биокотлета из марсианской Магнолии" thumbnail="https://code.s3.yandex.net/react/code/meat-01.png" price="200" />
-                        </div>
-                        <div className={crStyles.draggableItime}>
-                            <button className={crStyles.draggableButton}></button>
-                            <ConstructorElement text="Хрустящие минеральные кольца" thumbnail="https://code.s3.yandex.net/react/code/mineral_rings.png" price="200" />
-                        </div>
-                        <div className={crStyles.draggableItime}>
-                            <button className={crStyles.draggableButton}></button>
-                            <ConstructorElement text="Хрустящие минеральные кольца" thumbnail="https://code.s3.yandex.net/react/code/mineral_rings.png" price="200" />
-                        </div>
-                        <div className={crStyles.draggableItime}>
-                            <button className={crStyles.draggableButton}></button>
-                            <ConstructorElement text="Хрустящие минеральные кольца" thumbnail="https://code.s3.yandex.net/react/code/mineral_rings.png" price="200" />
-                        </div>
+                        <DraggableItems arrSomeIngridients={this.state.draggableIngridients} />
                     </li>
 
                     <li className={crStyles.bottomIngridinet}>
-                        <ConstructorElement type="bottom" isLocked="true" text="Краторная булка N-200i (низ)" thumbnail="https://code.s3.yandex.net/react/code/bun-02.png" price="200" />
+                        <ConstructorElement type="bottom" isLocked="true" text={this.state.bunIngridient.name + " (низ)"} thumbnail={this.state.bunIngridient.image} price={this.state.bunIngridient.price} />
                     </li>
                 </ul>
                 <div className={crStyles.totalBar}>
-                    <span className={'text text_type_digits-medium mr-10'}>610 <CurrencyIcon type={'primary'} /></span>
+                    <span className={'text text_type_digits-medium mr-10'}>{this.getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
                     <Button type="primary" size="large">Оформить заказ</Button>
                 </div>
             </section>
