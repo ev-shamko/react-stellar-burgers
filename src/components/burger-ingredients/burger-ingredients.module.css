@@ -10,6 +10,21 @@
 
 .ingrDisplay {
   display: block;
+
+  min-height: 600px;
+  max-height: 68vh;
+  overflow-y: scroll;
+}
+
+.ingrDisplay::-webkit-scrollbar {
+  width: 8px;
+  left: -30px;
+}
+.ingrDisplay::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+.ingrDisplay::-webkit-scrollbar-thumb {
+  background: #8585ad;
 }
 
 .ingrShowcase {
@@ -21,7 +36,7 @@
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding: 24px 16px 8px;
+  padding: 24px 7px 8px 16px;
 }
 
 .zaglushka {

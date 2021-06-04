@@ -31,10 +31,30 @@
 }
 
 .draggableIngridinetContainer {
+
+  /* Для вынесения кастомного скролла правее списка ингридиентов */
+  position: relative;
+  left: 16px;
+
   list-style-type: none;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  margin-bottom: 16px;
+  min-height: 400px;
+  max-height: 48vh;
+  overflow-y: scroll;
+}
+
+.draggableIngridinetContainer::-webkit-scrollbar {
+  width: 8px;
+  left: -30px;
+}
+.draggableIngridinetContainer::-webkit-scrollbar-track {
+  background: #2F2F37;
+}
+.draggableIngridinetContainer::-webkit-scrollbar-thumb {
+  background: #8585AD;
 }
 
 .draggableIngridinetContainer > div {
