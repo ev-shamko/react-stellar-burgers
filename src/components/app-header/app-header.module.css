@@ -1,8 +1,8 @@
 .header {
   box-sizing: border-box;
   width: 100%;
-  height: 88px; /* потом убрать и задавать высоту хедера за счёт содержимого */
-  padding: 16px 0px;
+  
+
   background-color: #1c1c21;
 }
 
@@ -20,17 +20,21 @@
 
   min-width: 1080px;
   max-width: 1296px;
+  height: 88px; /* потом убрать и задавать высоту хедера за счёт содержимого */
+  padding: 16px 0px;
+
   margin: 0 auto;
-  padding: 0 8px;
+  /*padding: 0 8px;*/
 }
 
 .userPanel {
-  min-width: 340px; /* Важно! Влияет на центровку логотипа в шапке */
+  min-width: 346px; /* Важно! Влияет на центровку логотипа в шапке */
 }
 
 .navBurgerBuilder {
   composes: header-flex;
   list-style-type: none;
+  padding-left: 50px;
 }
 
 .navButton {
@@ -42,11 +46,12 @@
   composes: header-flex;
   composes: navButton; /* хы-хы, работает :) */
   justify-content: flex-end;
+  padding-right: 6px;
 }
 
 
 .headerButton {
-  margin-left: 49px;
+  margin-left: 47px;
 }
 
 .headerButton:first-child {

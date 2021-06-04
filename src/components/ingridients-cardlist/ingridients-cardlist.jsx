@@ -22,7 +22,6 @@ class CardList extends React.Component {
             <>
                 {
                     arrSomeIngridients.map((obj, index) => {
-                        console.log(arrSomeIngridients);
                         return <IngridientCard key={obj._id} image={obj.image} price={obj.price} name={obj.name} />
                     })
                 }

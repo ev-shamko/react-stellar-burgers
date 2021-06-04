@@ -1,7 +1,6 @@
 .main {
   margin: 0 auto;
-  max-width: 1240px;
-  min-width: 1240px;
+  max-width: 1194px;
 }
 
 .headerSection {
@@ -12,7 +11,7 @@
 .constructorContainer {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: left;
 }
 
 .zaglushka {

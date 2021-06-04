@@ -1,7 +1,6 @@
 .container {
-  max-width: 600px;
   min-width: 600px;
-
+  margin-left: 25px;
   box-sizing: border-box;
 
   display: flex;
@@ -17,6 +16,7 @@
   flex-direction: column;
   align-items: flex-end;
   padding: 0;
+  margin-top: 0px;
 }
 
 .topIngridinet {
@@ -38,7 +38,7 @@
 }
 
 .draggableIngridinetContainer > div {
-    margin-bottom: 16px;
+  margin-bottom: 16px;
 }
 
 .draggableItime {
@@ -63,7 +63,7 @@
 }
 
 .totalBar {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

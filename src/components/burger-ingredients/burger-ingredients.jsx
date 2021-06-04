@@ -5,12 +5,6 @@ import CardList from "../ingridients-cardlist/ingridients-cardlist";
 import ingridientsList from "../../utils/data";
 import {
     Tab,
-    /*
-счётчики,
-иконки,
-переключатели,
-типографику,
-систему отступов.*/
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 const testFunc = () => {
@@ -23,8 +17,6 @@ const keyword = "bun";
 const arrOfIngridients = ingridientsList.filter(function (obj) {
     return obj.type === keyword;
 })
-
-console.log(arrOfIngridients);
 
 /*
 const obj = {

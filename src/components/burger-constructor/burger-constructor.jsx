@@ -33,7 +33,6 @@ class BurgerConstructor extends React.Component {
         // если есть ингридиенты между булками, то считаем их стоимость
         if (this.state.draggableIngridients.length > 0) {
             summOfDraggableIngr = this.state.draggableIngridients.reduce(function (accumulator, currentValue) {
-                console.log(accumulator);
                 return accumulator + Number(currentValue.price);
             }, 0);
         }
@@ -44,7 +43,7 @@ class BurgerConstructor extends React.Component {
     render() {
         return (
             <section className={crStyles.container}>
-                <ul className={crStyles.chosenIngridients + ' mt-6 mb-6'}>
+                <ul className={crStyles.chosenIngridients + ' mb-6'}>
 
                     <li className={crStyles.topIngridinet}>
                         <ConstructorElement type="top" isLocked="true" text={this.state.bunIngridient.name + " (верх)"} thumbnail={this.state.bunIngridient.image} price={this.state.bunIngridient.price} />

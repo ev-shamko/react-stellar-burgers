@@ -10,11 +10,10 @@ const IngridientCard = ({image, price, name}) => {
                 <img src={image} className={cardStyles.itemPic} />
                 <div className={cardStyles.price}>
                     <Counter count={1} size="default" />
-                    <span className="m-1 text_type_digits-default">{price}</span>
+                    <span className="m-2 text_type_digits-default">{price}</span>
                     <CurrencyIcon type="primary" />
                 </div>
                 <h3 className="m-1 text_type_main-default">{name}</h3>
-                {console.log(image)}
             </div>
         );
     }

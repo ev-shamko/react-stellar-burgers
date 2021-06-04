@@ -21,14 +21,14 @@ class AppHeader extends React.Component {
                                 </div>
                             </li>
                             <li className={headerStyles.headerButton}>
-                                <div className={headerStyles.authButton + '  text_color_inactive'}>{/* вот здесь через state будем менять цвет текста */}
+                                <div className={headerStyles.navButton + '  text_color_inactive'}>{/* вот здесь через state будем менять цвет текста */}
                                     <ListIcon type="secondary" />
                                     <span className={headerStyles.buttonCaption}>Лента заказов</span>
                                 </div>
                             </li>
                         </ul>
                     </nav>
-                    <a>
+                    <a href="#">
                         <Logo />
                     </a>
 
