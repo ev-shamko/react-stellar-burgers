@@ -53,8 +53,8 @@ const ingridientsInnerObjStructure = PropTypes.shape({
 
 {/* Раньше здесь использовался модуль ConstructorItem - он возвращал разметку перетаскиваемого ингридиента
                 {
-                    this.props.arrSomeIngridients.map((obj) => {
-                        return <ConstructorItem itemName={obj.name} price={obj.price} imageLink={obj.image} />
+                    this.props.arrSomeIngridients.map((obj, index) => {
+                        return <ConstructorItem key={index} itemName={obj.name} price={obj.price} imageLink={obj.image} />
                     })
                 }
 */}

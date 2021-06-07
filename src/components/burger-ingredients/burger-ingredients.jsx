@@ -7,22 +7,41 @@ import CardList from "../ingridients-cardlist/ingridients-cardlist";
 import {
     Tab,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-
-const testFunc = () => {
-    console.log('clicked');
-}
-
 // <BurgerIngredients allIngridients={ingridientsList} /> 
 
 // @ts-ignore
 class BurgerIngredients extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+           currentTab: 'one',
+        }
+
+        this.tabSwitch = this.tabSwitch.bind(this);
+    }
+
+
+    // дока как это написать для функционального компонента: https://yandex-praktikum.github.io/react-developer-burger-ui-components/docs/tab 
+
+    tabSwitch(value) {
+        // console.log(value); // походу принимает не событие, а атрибут/пропс value компонтента <Tab />
+        this.setState({
+            ...this.state,
+            currentTab: value
+        });
+    }
+
     render(props) {
+        
         return (
             <section className={ingrStyles.ingridiensContainer}>
                 <div className={ingrStyles.tabs}>
-                    <Tab value="one" active={true} onClick={testFunc}>Булки</Tab>
-                    <Tab value="two" active={false} onClick={testFunc}>Соусы</Tab>
-                    <Tab value="three" active={false} onClick={testFunc}>Начинки</Tab>
+                    {/* Компонент <Tab /> обрабатывает функцию, переданную в onClick={} и в качестве аргумента передаёт не event, а значение пропса value={} */}
+                    <Tab value="one" active={this.state.currentTab === 'one'} onClick={this.tabSwitch}>Булки</Tab>
+                    <Tab value="two" active={this.state.currentTab === 'two'} onClick={this.tabSwitch}>Соусы</Tab>
+                    <Tab value="three" active={this.state.currentTab === 'three'} onClick={this.tabSwitch}>Начинки</Tab>
                 </div>
                 <div className={ingrStyles.ingrDisplay + ' mt-10'}>
 
@@ -43,7 +62,7 @@ class BurgerIngredients extends React.Component {
                     <div className={ingrStyles.ingrShowcase}>
                         <h3 className="text text_type_main-medium">Начинки</h3>
                         <div className={ingrStyles.ingrList}>
-                        <CardList type={"main"} ingridients={this.props.allIngridients} />
+                            <CardList type={"main"} ingridients={this.props.allIngridients} />
                         </div>
                     </div>
 
@@ -69,7 +88,7 @@ const ingridientsInnerObjStructure = PropTypes.shape({
     image_mobile: PropTypes.string.isRequired,
     image_large: PropTypes.string.isRequired,
     __v: PropTypes.number.isRequired,
-  });
+});
 
 BurgerIngredients.propTypes = {
     allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired) // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
