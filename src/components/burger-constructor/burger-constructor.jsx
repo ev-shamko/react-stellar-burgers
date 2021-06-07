@@ -28,7 +28,7 @@ class BurgerConstructor extends React.Component {
     }
 
     getTotalPrice() {
-        let totalPrice = this.state.bunIngridient.price * 2; // цена верхней и нижней булки
+        const totalPrice = this.state.bunIngridient.price * 2; // цена верхней и нижней булки
         let summOfDraggableIngr = 0;
 
         // если есть ингридиенты между булками, то считаем их стоимость
