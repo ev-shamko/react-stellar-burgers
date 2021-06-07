@@ -22,7 +22,6 @@ class DraggableItemsList extends React.Component {
 
                     })
                 }
-                <DragIcon />
             </>
         )
     }

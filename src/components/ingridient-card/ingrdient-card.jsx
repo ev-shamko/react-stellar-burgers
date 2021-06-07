@@ -1,13 +1,12 @@
 import React from "react";
 import cardStyles from "./ingridient-card.module.css";
-import ingridientsList from "../../utils/data";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 
 // @ts-ignore
 const IngridientCard = ({image, price, name}) => {
         return (
             <div className={cardStyles.ingrCard + ' mb-8'}>
-                <img src={image} className={cardStyles.itemPic} />
+                <img src={image} alt={name} className={cardStyles.itemPic} />
                 <div className={cardStyles.price}>
                     <Counter count={1} size="default" />
                     <span className="m-2 text_type_digits-default">{price}</span>
