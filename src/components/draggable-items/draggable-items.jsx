@@ -3,6 +3,7 @@ import diStyles from "./draggable-items.module.css"
 //import ConstructorItem from "../constructor-item/constructor-item";
 import {
     ConstructorElement,
+    DragIcon 
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 
@@ -14,13 +15,14 @@ class DraggableItemsList extends React.Component {
                     this.props.arrSomeIngridients.map((obj, index) => {
                         return (
                             <div className={diStyles.draggableItime} key={index}>
-                                <button className={diStyles.draggableButton}></button>
+                                <button className={diStyles.draggableButton}><DragIcon /></button>
                                 <ConstructorElement text={obj.name} thumbnail={obj.image} price={obj.price} />
                             </div>
                         )
 
                     })
                 }
+                <DragIcon />
             </>
         )
     }
