@@ -4,7 +4,9 @@ import indexStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
-import ingridientsList from '../../utils/data';
+// import ingridientsList from '../../utils/data';
+
+import Modal from '../modal/modal';
 
 // временно захардкодено
 const ApiUrl = "https://norma.nomoreparties.space/api/ingredients ";
@@ -56,6 +58,7 @@ function App() {
 
   return (
     <>
+      <Modal />
       <AppHeader />
       <main className={indexStyles.main}>
         <section className={indexStyles.headerSection}>
