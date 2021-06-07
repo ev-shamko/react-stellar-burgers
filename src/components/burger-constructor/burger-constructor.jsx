@@ -1,6 +1,6 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
-import ingridientsList from "../../utils/data";
 import DraggableItems from "../draggable-items/draggable-items";
 import {
     ConstructorElement,
@@ -8,21 +8,22 @@ import {
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-// пока что захардодено
-// создаём массив с ингридиентами, которые будут находиться между верхней и нижней булкой. Из этого массива нагененрируем ингридиенты для конструктора
-const arrSomeIngridients = ingridientsList.filter((obj) => {
-    return obj.type === "main";
-})
-
 // @ts-ignore
 class BurgerConstructor extends React.Component {
 
     constructor(props) {
         super(props);
+
+        // пока что захардодено
+        // создаём массив с ингридиентами, которые будут находиться между верхней и нижней булкой. Из этого массива нагененрируем ингридиенты для конструктора
+        this.someIngridients = this.props.allIngridients.filter((obj) => {
+            return obj.type === "main";
+        })
+
         this.state = {
             //пока что захардкодено
-            bunIngridient: ingridientsList[0],
-            draggableIngridients: arrSomeIngridients,
+            bunIngridient: this.props.allIngridients[0],
+            draggableIngridients: this.someIngridients,
         }
     }
 

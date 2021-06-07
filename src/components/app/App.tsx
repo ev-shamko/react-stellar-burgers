@@ -3,7 +3,8 @@ import logo from '../../images/logo.svg';
 import indexStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import BurgerConstructor from '../burger-constructor/burger-constructor'
+import BurgerConstructor from '../burger-constructor/burger-constructor';
+import ingridientsList from '../../utils/data';
 
 function App() {
   return (
@@ -17,8 +18,8 @@ function App() {
          * растущий слева направо. Он выходит за правую границу родительского <main>.
          */}
         <section className={indexStyles.constructorContainer}>
-          <BurgerIngredients />
-          <BurgerConstructor />
+          <BurgerIngredients allIngridients={ingridientsList} />
+          <BurgerConstructor allIngridients={ingridientsList} />
           {/*<div className={indexStyles.zaglushka}></div>*/}
         </section>
 

@@ -1,20 +1,17 @@
 import React from "react";
-import ingrStyles from "./ingridients-cardlist.module.css";
+//import ingrStyles from "./ingridients-cardlist.module.css";
 import IngridientCard from "../ingridient-card/ingrdient-card"
-import ingridientsList from "../../utils/data";
-import {
-    Tab,
 
-} from "@ya.praktikum/react-developer-burger-ui-components";
 
-// <CardList type="bun" />
+// <CardList type={"bun"} ingridients={this.props.allIngridients} />
 
 class CardList extends React.Component {
-    render() {
-        const {type} = this.props; // нельзя просто использовать this.props.type
+    render(props) {
+        const {type, ingridients} = this.props; // нельзя просто использовать this.props.type
 
         // создаём новый массив из ингридиентов определённого типа
-        const arrSomeIngridients = ingridientsList.filter(function (obj) {
+        const arrSomeIngridients = this.props.ingridients.filter(function (obj) {
+            // {console.log(ingridients)}
             return obj.type === type;
         });
 
