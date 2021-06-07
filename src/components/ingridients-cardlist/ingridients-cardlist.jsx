@@ -1,17 +1,16 @@
 import React from "react";
-//import ingrStyles from "./ingridients-cardlist.module.css";
+import PropTypes from 'prop-types';
+
 import IngridientCard from "../ingridient-card/ingrdient-card"
 
 
 // <CardList type={"bun"} ingridients={this.props.allIngridients} />
-
 class CardList extends React.Component {
-    render(props) {
+    render() {
         const { type } = this.props; // нельзя просто использовать this.props.type
 
-        // создаём новый массив из ингридиентов определённого типа
+        // создаём новый массив из ингридиентов определённого типа: "bun", "sauce", "main"
         const arrSomeIngridients = this.props.ingridients.filter(function (obj) {
-            // {console.log(ingridients)}
             return obj.type === type;
         });
 
@@ -32,6 +31,26 @@ class CardList extends React.Component {
             </>
         );
     }
+}
+
+const ingridientsInnerObjStructure = PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    proteins: PropTypes.number.isRequired,
+    fat: PropTypes.number.isRequired,
+    carbohydrates: PropTypes.number.isRequired,
+    calories: PropTypes.number.isRequired,
+    price: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    image_mobile: PropTypes.string.isRequired,
+    image_large: PropTypes.string.isRequired,
+    __v: PropTypes.number.isRequired,
+  });
+
+CardList.propTypes = {
+    type: PropTypes.oneOf(["bun", "sauce", "main"]),
+    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired) // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
 }
 
 /*  Пример объекта, содержащегося в массиве с ингридиентами:
