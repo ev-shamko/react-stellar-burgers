@@ -7,7 +7,7 @@ import IngridientCard from "../ingridient-card/ingrdient-card"
 
 class CardList extends React.Component {
     render(props) {
-        const { type, ingridients } = this.props; // нельзя просто использовать this.props.type
+        const { type } = this.props; // нельзя просто использовать this.props.type
 
         // создаём новый массив из ингридиентов определённого типа
         const arrSomeIngridients = this.props.ingridients.filter(function (obj) {

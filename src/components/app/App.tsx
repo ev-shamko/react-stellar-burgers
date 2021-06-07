@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../images/logo.svg';
+//import logo from '../../images/logo.svg';
 import indexStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
