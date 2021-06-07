@@ -1,0 +1,65 @@
+.header {
+  box-sizing: border-box;
+  width: 100%;
+  
+
+  background-color: #1c1c21;
+}
+
+.header-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerContainer {
+  composes: header-flex;
+
+  box-sizing: border-box;
+
+  min-width: 1080px;
+  max-width: 1296px;
+  height: 88px; /* потом убрать и задавать высоту хедера за счёт содержимого */
+  padding: 16px 0px;
+
+  margin: 0 auto;
+  /*padding: 0 8px;*/
+}
+
+.userPanel {
+  min-width: 346px; /* Важно! Влияет на центровку логотипа в шапке */
+}
+
+.navBurgerBuilder {
+  composes: header-flex;
+  list-style-type: none;
+  padding-left: 50px;
+}
+
+.navButton {
+  composes: header-flex;
+  cursor: pointer;
+}
+
+.authButton {
+  composes: header-flex;
+  composes: navButton; /* хы-хы, работает :) */
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+
+
+.headerButton {
+  margin-left: 47px;
+}
+
+.headerButton:first-child {
+  margin-left: 0px;
+}
+
+/* не работает без усиления специфичности */
+span.buttonCaption {
+  margin-left: 9px;
+  font-family: "Jet Brains Mono"; /* В пакете от практикума в этом правиле опечатка, так что нужно переназначить */
+}

@@ -1,0 +1,24 @@
+.draggableItime {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 8px;
+  }
+  
+  .draggableButton {
+    width: 25px;
+    height: 25px;
+  
+    background-color: transparent;
+    /* background-image: url(/src/images/buttonDruggableDots.svg);
+    background-repeat: no-repeat;
+    background-position: 50% center; */
+
+    padding: 0px;
+  
+    cursor: move;
+    border: none;
+  
+    margin-right: 8px;
+  }
+  

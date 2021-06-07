@@ -1,0 +1,46 @@
+.ingridiensContainer {
+  max-width: 600px; /* Иначе расхреначит флекс-контейнеры с карточками ингридиентов */
+}
+
+.tabs {
+  display: flex;
+  flex-direction: row;
+  max-height: 56px;
+}
+
+.ingrDisplay {
+  display: block;
+
+  min-height: 600px;
+  max-height: 68vh;
+  overflow-y: scroll;
+}
+
+.ingrDisplay::-webkit-scrollbar {
+  width: 8px;
+  left: -30px;
+}
+.ingrDisplay::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+.ingrDisplay::-webkit-scrollbar-thumb {
+  background: #8585ad;
+}
+
+.ingrShowcase {
+  display: block;
+}
+
+.ingrList {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 24px 7px 8px 16px;
+}
+
+.zaglushka {
+  width: 272px;
+  height: 200px;
+  border: 1px solid mediumslateblue;
+}

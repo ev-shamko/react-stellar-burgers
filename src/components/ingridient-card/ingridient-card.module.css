@@ -1,0 +1,24 @@
+.ingrCard {
+  position: relative;
+  width: 272px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.price {
+  display: flex;
+  flex-direction: row;
+  display: flex;
+  align-items: center;
+}
+
+.itemPic {
+  margin: 0 auto;
+}
+
+.counter {
+  position: relative;
+}
