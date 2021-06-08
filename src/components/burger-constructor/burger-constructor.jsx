@@ -43,6 +43,10 @@ class BurgerConstructor extends React.Component {
     }
 
     render() {
+        const openOrderModal = (event) => {
+            return this.props.openModal(event, 'OrderDetails');
+        };
+
         return (
             <section className={crStyles.container}>
                 <ul className={crStyles.chosenIngridients + ' mb-6'}>
@@ -61,7 +65,7 @@ class BurgerConstructor extends React.Component {
                 </ul>
                 <div className={crStyles.totalBar}>
                     <span className={'text text_type_digits-medium mr-10'}>{this.getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
-                    <Button type="primary" size="large" onClick={this.props.openModal}>Оформить заказ</Button>
+                    <Button type="primary" size="large" onClick={openOrderModal}>Оформить заказ</Button>
                 </div>
             </section>
         );

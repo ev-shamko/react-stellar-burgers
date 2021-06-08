@@ -15,8 +15,13 @@ import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-c
 
 // @ts-ignore
 const IngridientCard = ({ image, price, name, openModal }) => {
+
+    const openIngridientDetails = (event) => {
+        return openModal(event, 'IngridientDetails');
+    };
+
     return (
-        <div className={cardStyles.ingrCard + ' mb-8'} onClick={openModal}>
+        <div className={cardStyles.ingrCard + ' mb-8'} onClick={openIngridientDetails}>
             <img src={image} alt={name} className={cardStyles.itemPic} />
             <div className={cardStyles.price}>
                 <Counter count={1} size="default" />

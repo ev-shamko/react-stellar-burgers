@@ -17,17 +17,33 @@ function App() {
   const [ingridientsData, setIngridientsData] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
+
   const [modalIsVisible, setModalVisibility] = React.useState(false);
+  const [currentModalType, setCurrentModalType] = React.useState('none');
+
+
+  /******************************************************** */
+  /******      Управление модальным окном           ********* */
 
   const closeModal = () => {
-    console.log('Отладка: закрываю модальное окно с помощью функии из app.js');
     setModalVisibility(false);
+    setCurrentModalType('none');
   }
 
-  const openModal = () => {
-    console.log('Отладка: ОТКРЫВАЮ модальное окно с помощью функии из app.js');
-    setModalVisibility(true);
+  const openModal = (
+    event = "attention: didn't get an event in first arg of openModal() in app.js",
+    typeOfModal = 'none'
+  ) => {
+    console.log('event in openModal() is ', event);
+    console.log('typeOfModal is ', typeOfModal);
+
+    setModalVisibility(true); // отображаем модальное окно   
+    setCurrentModalType(typeOfModal); //уведомляем Modal, какой тип модалки открыть
   }
+
+
+  /******************************************************** */
+  /******      Получение данных от API           ********* */
 
   // функция для получения массива данных от API
   const getIngridientsData = () => {
@@ -67,9 +83,13 @@ function App() {
   // фетч к API за массивом данных после первичного рендера
   useEffect(() => getIngridientsData(), []);
 
+
+  /******************************************************** */
+  /************      Рендер      ************** */
+
   return (
     <>
-      { modalIsVisible && <Modal closeModal={closeModal} /> }
+      { modalIsVisible && <Modal closeModal={closeModal} typeOfModal={currentModalType} />}
       <AppHeader />
       <main className={indexStyles.main}>
         <section className={indexStyles.headerSection}>
