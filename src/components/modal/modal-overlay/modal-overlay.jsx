@@ -1,21 +1,23 @@
 import React  from 'react';
 import PropTypes from 'prop-types';
-import sMO from './modal-overlay.module.css';
+import stylesMO from './modal-overlay.module.css';
 
-export default function ModalOverlay({handleClose, children}){
+function ModalOverlay({handleClick, children}){
 
   const reaction = () => {
     console.log('Отладка: в ModalOverlay пришло событие клика');
-    handleClose();
+    handleClick();
   }
 
   return(
-    <div className={sMO.modalOverlay} onClick={ reaction }>
+    <div className={stylesMO.modalOverlay} onClick={ reaction }>
       {children}
     </div>
   )
 }
 
 ModalOverlay.propTypes = {
-  handleClose: PropTypes.func
+  handleClick: PropTypes.func.isRequired
 }; 
+
+export default ModalOverlay;

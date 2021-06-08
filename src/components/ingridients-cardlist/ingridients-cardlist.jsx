@@ -51,7 +51,8 @@ const ingridientsInnerObjStructure = PropTypes.shape({
 
 CardList.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]),
-    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired) // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    openModal: PropTypes.func.isRequired
 }
 
 /*  Пример объекта, содержащегося в массиве с ингридиентами:

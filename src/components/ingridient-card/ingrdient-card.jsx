@@ -32,6 +32,7 @@ IngridientCard.propTypes = {
     image: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
+    openModal: PropTypes.func.isRequired
 }
 
 export default IngridientCard;

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,7 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 //import ModalOverlay from '';
 //import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 
-export default function Modal({closeModal}) {
+function Modal({ closeModal }) {
     const modalRoot = document.getElementById("react-modals");
 
     // Функция передаётся в onClick <article>. Предотвращает всплытие события клика с модального окна до ModalOverlay. Иначе клик по любому месту модального окна закроет модальное окно. А надо, чтобы так делал только клик по крестику и клик по ModalOverlay.
@@ -19,7 +19,7 @@ export default function Modal({closeModal}) {
 
     return ReactDOM.createPortal(
         (
-            <ModalOverlay handleClose={closeModal} >
+            <ModalOverlay handleClick={closeModal} >
                 {console.log('Отладка: отрисовываю модальное окно')}
                 <article className={modalStyles.modal} onClick={stopPropagation}>
                     <h2 className={'text text_type_main-large mt-10 ml-10'}>Вы открыли модальное окно</h2>
@@ -29,3 +29,9 @@ export default function Modal({closeModal}) {
         ), modalRoot
     );
 }
+
+Modal.propTypes = {
+    closeModal: PropTypes.func.isRequired,
+};
+
+export default Modal;

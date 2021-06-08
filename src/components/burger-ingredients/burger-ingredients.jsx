@@ -91,7 +91,8 @@ const ingridientsInnerObjStructure = PropTypes.shape({
 });
 
 BurgerIngredients.propTypes = {
-    allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired) // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    openModal: PropTypes.func.isRequired
 }
 
 export default BurgerIngredients;
