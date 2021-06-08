@@ -1,15 +1,18 @@
 import React from 'react';
 import stylesOD from './order-details.module.css';
 import PropTypes from 'prop-types';
+import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 
 function OrderDetais() {
-    return(
+    return (
         <>
-        <h2>034536</h2>
-        <p>идентификатор заказа</p>
-        <img href="" alt="" />
-        <p>Ваш заказ начали готовить</p>
-        <p>Дождитесь готовности на орбитальной станции</p>
+            <h2 className={'text text_type_digits-large mt-30 mb-2'}>034536</h2>
+            <p className={'text_type_main-medium mb-15'}>идентификатор заказа</p>
+            <div className={stylesOD.bgForCheck + ' mb-15'}>
+                {/* <CheckMarkIcon type="primary" /> */} {/* Проще сделать фоновую артинку, чем залезать в размеры иконки из пакета */}
+            </div>
+            <p className={"text text_type_main-default mb-2"}>Ваш заказ начали готовить</p>
+            <p className={"text text_type_main-default mb-30"}>Дождитесь готовности на орбитальной станции</p>
         </>
     )
 }

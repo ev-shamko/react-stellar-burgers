@@ -92,9 +92,11 @@ function App() {
       { modalIsVisible && <Modal closeModal={closeModal} typeOfModal={currentModalType} />}
       <AppHeader />
       <main className={indexStyles.main}>
+        
         <section className={indexStyles.headerSection}>
           <h1 className="text text_type_main-large">Соберите бургер</h1>
         </section>
+
         {/** Ради пиксельпёрфекта секция ниже - это флекс-контейнер,
          * растущий слева направо. Он выходит за правую границу родительского <main>.
          */}
