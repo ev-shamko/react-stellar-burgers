@@ -17,6 +17,17 @@ function App() {
   const [ingridientsData, setIngridientsData] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
+  const [modalIsVisible, setModalVisibility] = React.useState(false);
+
+  const closeModal = () => {
+    console.log('Отладка: закрываю модальное окно с помощью функии из app.js');
+    setModalVisibility(false);
+  }
+
+  const openModal = () => {
+    console.log('Отладка: ОТКРЫВАЮ модальное окно с помощью функии из app.js');
+    setModalVisibility(true);
+  }
 
   // функция для получения массива данных от API
   const getIngridientsData = () => {
@@ -58,7 +69,7 @@ function App() {
 
   return (
     <>
-      <Modal />
+      { modalIsVisible && <Modal closeModal={closeModal} /> }
       <AppHeader />
       <main className={indexStyles.main}>
         <section className={indexStyles.headerSection}>
@@ -77,8 +88,8 @@ function App() {
           2) Условие (!!ingridientsData.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
           {!isLoading && !hasError && ingridientsData && !!ingridientsData.length && (
             <>
-              <BurgerIngredients allIngridients={ingridientsData} />
-              <BurgerConstructor allIngridients={ingridientsData} />
+              <BurgerIngredients allIngridients={ingridientsData} openModal={openModal} />
+              <BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
             </>
           )}
 

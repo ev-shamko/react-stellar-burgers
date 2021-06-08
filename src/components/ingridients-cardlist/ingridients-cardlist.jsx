@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import IngridientCard from "../ingridient-card/ingrdient-card"
 
 
-// <CardList type={"bun"} ingridients={this.props.allIngridients} />
+// <CardList type={"bun"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
 class CardList extends React.Component {
     render() {
         const { type } = this.props; // нельзя просто использовать this.props.type
@@ -24,6 +24,7 @@ class CardList extends React.Component {
                                 image={obj.image}
                                 price={obj.price}
                                 name={obj.name}
+                                openModal={this.props.openModal}
                             />
                         )
                     })

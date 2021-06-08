@@ -8,6 +8,7 @@ import {
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+//<BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
 // @ts-ignore
 class BurgerConstructor extends React.Component {
 
@@ -60,7 +61,7 @@ class BurgerConstructor extends React.Component {
                 </ul>
                 <div className={crStyles.totalBar}>
                     <span className={'text text_type_digits-medium mr-10'}>{this.getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
-                    <Button type="primary" size="large">Оформить заказ</Button>
+                    <Button type="primary" size="large" onClick={this.props.openModal}>Оформить заказ</Button>
                 </div>
             </section>
         );

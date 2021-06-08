@@ -7,8 +7,8 @@ import CardList from "../ingridients-cardlist/ingridients-cardlist";
 import {
     Tab,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-// <BurgerIngredients allIngridients={ingridientsList} /> 
 
+// <BurgerIngredients allIngridients={ingridientsData} openModal={openModal} /> 
 // @ts-ignore
 class BurgerIngredients extends React.Component {
 
@@ -48,21 +48,21 @@ class BurgerIngredients extends React.Component {
                     <div className={ingrStyles.ingrShowcase}>
                         <h3 className="text text_type_main-medium">Булки</h3>
                         <div className={ingrStyles.ingrList}>
-                            <CardList type={"bun"} ingridients={this.props.allIngridients} />
+                            <CardList type={"bun"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
                         </div>
                     </div>
 
                     <div className={ingrStyles.ingrShowcase}>
                         <h3 className="text text_type_main-medium">Соусы</h3>
                         <div className={ingrStyles.ingrList}>
-                            <CardList type={"sauce"} ingridients={this.props.allIngridients} />
+                            <CardList type={"sauce"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
                         </div>
                     </div>
 
                     <div className={ingrStyles.ingrShowcase}>
                         <h3 className="text text_type_main-medium">Начинки</h3>
                         <div className={ingrStyles.ingrList}>
-                            <CardList type={"main"} ingridients={this.props.allIngridients} />
+                            <CardList type={"main"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
                         </div>
                     </div>
 
