@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
+import ORDER_DATA from '../../utils/order-data';
 import {
     ConstructorElement,
     Button,

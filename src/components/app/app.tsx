@@ -4,6 +4,7 @@ import indexStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
+import ORDER_DATA from '../../utils/order-data';
 // import ingridientsList from '../../utils/data';
 
 import Modal from '../modal/modal';
@@ -20,9 +21,9 @@ function App() {
 
   const [modalIsVisible, setModalVisibility] = React.useState(false);
   const [currentModalType, setCurrentModalType] = React.useState('none');
+  const [orderData, setOrderData] = React.useState({});
 
-
-  /******************************************************** */
+    /******************************************************** */
   /******      Управление модальным окном           ********* */
 
   const closeModal = () => {
@@ -59,6 +60,9 @@ function App() {
         setIsLoading(false);
         setHasError(false);
 
+        // ниже захардкоденные данные заказа для отладки попапа с данными заказа
+        setOrderData(ORDER_DATA);
+
         /* // это для отладки: иногда в объекте ответа может приходить ошибка или не то что нужно
         console.log('res ', res);
         console.log('res.data', res.data);
@@ -89,7 +93,7 @@ function App() {
 
   return (
     <>
-      { modalIsVisible && <Modal closeModal={closeModal} typeOfModal={currentModalType} />}
+      { modalIsVisible && <Modal closeModal={closeModal} typeOfModal={currentModalType} orderData={orderData} />}
       <AppHeader />
       <main className={indexStyles.main}>
         

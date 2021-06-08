@@ -11,7 +11,7 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 //import ModalOverlay from '';
 //import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 
-function Modal({ closeModal, typeOfModal }) {
+function Modal({ closeModal, typeOfModal, orderData }) {
     const [gotOrder, setGotOrder] = React.useState(false);
     const modalRoot = document.getElementById("react-modals");
 
@@ -34,7 +34,7 @@ function Modal({ closeModal, typeOfModal }) {
     // при рендере определяет содержимое модального окна: информация о заказе, инфа об ингридиенте либо ошибка
     function renderInnerComponent() {
         if (typeOfModal === "OrderDetails") {
-            return (<OrderDetails />);
+            return (<OrderDetails orderData={orderData} />);
         }
 
         if (typeOfModal === "IngridientDetails") {
@@ -69,7 +69,8 @@ function Modal({ closeModal, typeOfModal }) {
 
 Modal.propTypes = {
     closeModal: PropTypes.func.isRequired,
-    typeOfModal: PropTypes.oneOf(["none", "OrderDetails", "IngridientDetails"])
+    typeOfModal: PropTypes.oneOf(["none", "OrderDetails", "IngridientDetails"]),
+    orderData: PropTypes.object.isRequired
 };
 
 export default Modal;
