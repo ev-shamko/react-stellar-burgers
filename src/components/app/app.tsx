@@ -5,13 +5,12 @@ import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import ORDER_DATA from '../../utils/order-data';
-// import ingridientsList from '../../utils/data';
+// import ingridientsList from '../../utils/data'; // пока не удаляю на случай падения сервера с API
 
 import Modal from '../modal/modal';
 
 // временно захардкодено
-const ApiUrl = "https://norma.nomoreparties.space/api/ingredients ";
-
+const ApiUrl = "https://norma.nomoreparties.space/api/ingredients";
 
 function App() {
 
@@ -53,10 +52,11 @@ function App() {
   /****************************************************** */
 
   // функция для получения массива данных от API
-  const getIngridientsData = () => {
+  // НЕ ЗАБЫТЬ СПРОСИТЬ: почему у меня тут постоянно требуют указания дефолтного значения аргумента или стейта?
+  const getIngridientsData = (url = '') => {
     console.log('Отправляю запрос к API');
 
-    fetch(ApiUrl)
+    fetch(url)
       .then((res) => {
         /* https://github.com/ev-shamko/react-stellar-burgers/pull/2#discussion_r648116469 
         отличный комментарий от ревьюера про то, как этот условный блок ловит ошибку и перенаправляет ее в .catch - - -  плюс ссылки на доку от developer.mozilla.org */
@@ -67,8 +67,16 @@ function App() {
       })
       .then((res) => {
 
+        if (!(Array.isArray(res.data))) {
+          console.log('Promise.reject(This response is not valid)');
+          console.log(`Didn't find array in res.data  :-(   Probably got wrong response from ${url}`);
+          return Promise.reject(res);
+        }
+
+        console.log(res);
+
         setIngridientsData(res.data); // здесь поменяется стейт после первичного рендера и вызовет второй рендер App
-        setIsLoading(false); // здесь тоже поменяется стейт после первичного рендера и вызовет третий перерендер App - нужно объединить стейты в 1 объект
+        setIsLoading(false); // здесь тоже поменяется стейт после первичного рендера и вызовет третий перерендер App - нужно объединить все 3 стейта в 1 объект
         setHasError(false);
 
         // здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
@@ -76,18 +84,24 @@ function App() {
       })
       .catch((err) => {
 
-        console.log(`Error: can't fetch ingridiets data from ${ApiUrl}`);
+        console.log(`Error: can't fetch ingridiets data from ${url}`);
+        console.log(`response from server is: `, err);
         console.log(`err.message is: `, err.message);
 
         setIsLoading(false);
         setHasError(true);
-
-        console.log(`ingridientsData`, ingridientsData);
       });
-  }
+  };
 
   // фетч к API за массивом данных (произойдёт после первичного рендера App)
-  useEffect(() => getIngridientsData(), []);
+  useEffect(() => getIngridientsData(ApiUrl), []);
+
+  // ТЕСТИРУЕМ ОБРАБОТКУ fetch:
+  // ApiUrl - правильный аргумент для getIngridientsData() который вызываем выше
+  // для тестирования обработки неудачных fetch спользуй badFetch. 
+  // Эти открытые API вернёт res.ok и json. Но не будет res.data c массивом объектов, как от правильного API
+  // const badFetchFood = "https://world.openfoodfacts.org/api/v0/product/737628064502.json";
+  // const badFetchPokemon = "https://pokeapi.co/api/v2/pokemon/ditto";
 
 
   /******************************************************** */
