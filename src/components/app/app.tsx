@@ -19,6 +19,7 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [hasError, setHasError] = React.useState(false);
 
+  // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
   const [modalIsVisible, setModalVisibility] = React.useState(false);
   const [currentModalType, setCurrentModalType] = React.useState('none');
   const [orderData, setOrderData] = React.useState({});
@@ -35,8 +36,8 @@ function App() {
     event = "attention: didn't get an event in first arg of openModal() in app.js",
     typeOfModal = 'none'
   ) => {
-    console.log('event in openModal() is ', event);
-    console.log('typeOfModal is ', typeOfModal);
+    // console.log('event in openModal() is ', event);
+    // console.log('typeOfModal is ', typeOfModal);
 
     setModalVisibility(true); // отображаем модальное окно   
     setCurrentModalType(typeOfModal); //уведомляем Modal, какой тип модалки открыть
@@ -60,7 +61,7 @@ function App() {
         setIsLoading(false);
         setHasError(false);
 
-        // ниже захардкоденные данные заказа для отладки попапа с данными заказа
+        // здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
         setOrderData(ORDER_DATA);
 
         /* // это для отладки: иногда в объекте ответа может приходить ошибка или не то что нужно

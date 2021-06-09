@@ -21,7 +21,7 @@
 .closeButton {
     position: absolute;
     left: calc(100% - 70px);
-    top: 59px;   
+    top: 46px;   
 
     background-color: transparent;
     justify-self: right;

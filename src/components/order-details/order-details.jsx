@@ -17,7 +17,7 @@ function OrderDetais({orderData}) {
                 {/* <CheckMarkIcon type="primary" /> */} {/* Проще сделать фоновую картинку, чем залезать в размеры иконки из пакета */}
             </div>
             <p className={"text text_type_main-default mb-2"}>Ваш заказ начали готовить</p>
-            <p className={"text text_type_main-default mb-30"}>Дождитесь готовности на орбитальной станции</p>
+            <p className={"text text_type_main-default text_color_inactive mb-30"}>Дождитесь готовности на орбитальной станции</p>
         </>
     )
 }
