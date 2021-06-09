@@ -26,7 +26,8 @@ function App() {
   const [ingrInModalData, setIngrInModalData] = React.useState({});
 
   /******************************************************** */
-  /******      Управление модальным окном           ********* */
+  /******      Управление модальным окном        ********* */
+  /****************************************************** */
 
   const closeModal = () => {
     setModalVisibility(false);
@@ -43,40 +44,35 @@ function App() {
 
     setModalVisibility(true); // отображаем модальное окно   
     setCurrentModalType(typeOfModal); //уведомляем Modal, какой тип модалки открыть
-    setIngrInModalData(objIngridient);
+    setIngrInModalData(objIngridient); // этот стейт содержит объект с данными об ингридиенте, нужен для рендера IngridientDetails внутри Modal
   }
 
 
   /******************************************************** */
   /******      Получение данных от API           ********* */
+  /****************************************************** */
 
   // функция для получения массива данных от API
   const getIngridientsData = () => {
     console.log('Отправляю запрос к API');
 
     fetch(ApiUrl)
-      .then((res) => res.json())
+      .then((res) => {
+        /* https://github.com/ev-shamko/react-stellar-burgers/pull/2#discussion_r648116469 
+        отличный комментарий от ревьюера про то, как этот условный блок ловит ошибку и перенаправляет ее в .catch - - -  плюс ссылки на доку от developer.mozilla.org */
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(res.status);
+      })
       .then((res) => {
 
-        // setIngridientsData(res.data); // здесь поменяется стейт
-        // setIsLoading(false); // здесь тоже поменяется стейт
-        // setHasError(false);
-
-        (() => {
-          setIngridientsData(res.data); // здесь поменяется стейт
-          setIsLoading(false); // здесь тоже поменяется стейт
-          setHasError(false);
-        })();
+        setIngridientsData(res.data); // здесь поменяется стейт после первичного рендера и вызовет второй рендер App
+        setIsLoading(false); // здесь тоже поменяется стейт после первичного рендера и вызовет третий перерендер App - нужно объединить стейты в 1 объект
+        setHasError(false);
 
         // здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
         setOrderData(ORDER_DATA);
-
-        /* // это для отладки: иногда в объекте ответа может приходить ошибка или не то что нужно
-        console.log('res ', res);
-        console.log('res.data', res.data);
-        console.log(`ingridientsData`, ingridientsData);
-        console.log(`!!ingridientsData`, !!ingridientsData);
-        */
       })
       .catch((err) => {
 
@@ -90,16 +86,17 @@ function App() {
       });
   }
 
-  // фетч к API за массивом данных после первичного рендера
+  // фетч к API за массивом данных (произойдёт после первичного рендера App)
   useEffect(() => getIngridientsData(), []);
 
 
   /******************************************************** */
-  /************      Рендер      ************** */
-
+  /************      Рендер      ************************* */
+  /****************************************************** */
   return (
     <>
-    {console.log('РЕНДЕРЮ app.jsx')}
+      {console.log('РЕНДЕРЮ app.jsx')}
+
       { modalIsVisible &&
         <Modal
           closeModal={closeModal}
