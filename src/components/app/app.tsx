@@ -103,7 +103,8 @@ function App() {
           typeOfModal={currentModalType}
           orderData={orderData}
           ingrInModalData={ingrInModalData}
-        />}
+        />
+      }
       <AppHeader />
       <main className={indexStyles.main}>
 
