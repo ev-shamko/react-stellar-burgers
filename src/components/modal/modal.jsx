@@ -11,7 +11,7 @@ import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 //import ModalOverlay from '';
 //import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components'
 
-function Modal({ closeModal, typeOfModal, orderData }) {
+function Modal({ closeModal, typeOfModal, orderData, ingrInModalData }) {
     const [gotOrder, setGotOrder] = React.useState(false);
     const modalRoot = document.getElementById("react-modals");
 
@@ -38,7 +38,7 @@ function Modal({ closeModal, typeOfModal, orderData }) {
         }
 
         if (typeOfModal === "IngridientDetails") {
-            return (<IngridientDetais />)
+            return (<IngridientDetais ingrInModalData={ingrInModalData} />)
         }
 
         // вот такая ситуация вообще не должна возникать, но мало ли что
@@ -54,7 +54,7 @@ function Modal({ closeModal, typeOfModal, orderData }) {
     return ReactDOM.createPortal(
         (
             <ModalOverlay handleClick={closeModal} >
-                {console.log('Отладка: отрисовываю модальное окно')}
+                {console.log('Отладка: рендерю модальное окно')}
 
                 <article className={modalStyles.modal} onClick={stopPropagation}>
                     <button onClick={closeModal} className={modalStyles.closeButton}>
@@ -70,7 +70,8 @@ function Modal({ closeModal, typeOfModal, orderData }) {
 Modal.propTypes = {
     closeModal: PropTypes.func.isRequired,
     typeOfModal: PropTypes.oneOf(["none", "OrderDetails", "IngridientDetails"]),
-    orderData: PropTypes.object.isRequired
+    orderData: PropTypes.object.isRequired,
+    ingrInModalData: PropTypes.object.isRequired,
 };
 
 export default Modal;

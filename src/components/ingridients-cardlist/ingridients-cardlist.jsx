@@ -20,10 +20,8 @@ class CardList extends React.Component {
                     arrSomeIngridients.map((obj, index) => {
                         return (
                             <IngridientCard
+                                objIngridient={obj}
                                 key={obj._id}
-                                image={obj.image}
-                                price={obj.price}
-                                name={obj.name}
                                 openModal={this.props.openModal}
                             />
                         )
@@ -47,7 +45,7 @@ const ingridientsInnerObjStructure = PropTypes.shape({
     image_mobile: PropTypes.string.isRequired,
     image_large: PropTypes.string.isRequired,
     __v: PropTypes.number.isRequired,
-  });
+});
 
 CardList.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]),

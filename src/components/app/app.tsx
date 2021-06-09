@@ -23,8 +23,9 @@ function App() {
   const [modalIsVisible, setModalVisibility] = React.useState(false);
   const [currentModalType, setCurrentModalType] = React.useState('none');
   const [orderData, setOrderData] = React.useState({});
+  const [ingrInModalData, setIngrInModalData] = React.useState({});
 
-    /******************************************************** */
+  /******************************************************** */
   /******      Управление модальным окном           ********* */
 
   const closeModal = () => {
@@ -34,13 +35,15 @@ function App() {
 
   const openModal = (
     event = "attention: didn't get an event in first arg of openModal() in app.js",
-    typeOfModal = 'none'
+    typeOfModal = 'none',
+    objIngridient = {}
   ) => {
     // console.log('event in openModal() is ', event);
     // console.log('typeOfModal is ', typeOfModal);
 
     setModalVisibility(true); // отображаем модальное окно   
     setCurrentModalType(typeOfModal); //уведомляем Modal, какой тип модалки открыть
+    setIngrInModalData(objIngridient);
   }
 
 
@@ -94,10 +97,16 @@ function App() {
 
   return (
     <>
-      { modalIsVisible && <Modal closeModal={closeModal} typeOfModal={currentModalType} orderData={orderData} />}
+      { modalIsVisible &&
+        <Modal
+          closeModal={closeModal}
+          typeOfModal={currentModalType}
+          orderData={orderData}
+          ingrInModalData={ingrInModalData}
+        />}
       <AppHeader />
       <main className={indexStyles.main}>
-        
+
         <section className={indexStyles.headerSection}>
           <h1 className="text text_type_main-large">Соберите бургер</h1>
         </section>

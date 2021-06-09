@@ -5,7 +5,7 @@ import stylesMO from './modal-overlay.module.css';
 function ModalOverlay({handleClick, children}){
 
   const reaction = () => {
-    console.log('Отладка: в ModalOverlay пришло событие клика');
+    // console.log('Отладка: в ModalOverlay пришло событие клика');
     handleClick();
   }
 
