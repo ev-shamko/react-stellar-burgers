@@ -7,6 +7,7 @@ import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-component
 // на момент 1 спринта orderData - это стейт app.js
 // он захардкоден и становится равен объекту с данными после успешного фетча к API за списком ингридиентов
 
+// <OrderDetails orderData={orderData} />
 function OrderDetais({orderData}) {
 
     return (

@@ -8,6 +8,8 @@ import ORDER_DATA from '../../utils/order-data';
 // import ingridientsList from '../../utils/data'; // пока не удаляю на случай падения сервера с API
 
 import Modal from '../modal/modal';
+import OrderDetails from '../order-details/order-details';
+import IngridientDetais from '../ingridient-details/ingridient-details';
 
 // временно захардкодено
 const ApiUrl = "https://norma.nomoreparties.space/api/ingredients";
@@ -99,7 +101,7 @@ function App() {
   // ТЕСТИРУЕМ ОБРАБОТКУ fetch:
   // ApiUrl - правильный аргумент для getIngridientsData() который вызываем выше
   // для тестирования обработки неудачных fetch спользуй badFetch. 
-  // Эти открытые API вернёт res.ok и json. Но не будет res.data c массивом объектов, как от правильного API
+  // Эти открытые API вернут res.ok и json. Но не будет res.data c массивом объектов, как от правильного API
   // const badFetchFood = "https://world.openfoodfacts.org/api/v0/product/737628064502.json";
   // const badFetchPokemon = "https://pokeapi.co/api/v2/pokemon/ditto";
 
@@ -111,17 +113,23 @@ function App() {
     <>
       {console.log('РЕНДЕРЮ app.jsx')}
 
-      { modalIsVisible &&
-        <Modal
-          closeModal={closeModal}
-          typeOfModal={currentModalType}
-          orderData={orderData}
-          ingrInModalData={ingrInModalData}
-        />
+      {/* рендеринг попапа с инфой об ингридиенте бургера */}
+      { modalIsVisible && (currentModalType === 'IngridientDetails') &&
+        <Modal closeModal={closeModal}>
+          <IngridientDetais ingrInModalData={ingrInModalData} />
+        </Modal>
       }
-      <AppHeader />
-      <main className={indexStyles.main}>
 
+      {/* рендеринг попапа с деталями заказа */}
+      { modalIsVisible && (currentModalType === 'OrderDetails') &&
+        <Modal closeModal={closeModal}>
+          <OrderDetails orderData={orderData} />
+        </Modal>
+      }
+
+      <AppHeader />
+
+      <main className={indexStyles.main}>
         <section className={indexStyles.headerSection}>
           <h1 className="text text_type_main-large">Соберите бургер</h1>
         </section>
@@ -135,7 +143,7 @@ function App() {
           * Это очень важно непосредственно для компонента  BurgerConstructor, который роняет приложение при первичном рендере без fetch или без правильных пропсов после fetch
 
           ***Про условия отрисовки:
-          1) Условие ingridientsData пересчитается в false, если в результате fetch сервер вернул объект ответа без свойства res.data (т.е. оно будет undefined) - так иногда бывает со стороны https://norma.nomoreparties.space/*
+          1) Условие ingridientsData пересчитается в false, если в результате fetch сервер вернул объект ответа без свойства res.data (т.е. оно будет undefined) - так иногда бывает со стороны https://norma.nomoreparties.space/*  - в принципе, теперь это условие можно убрать
           2) Условие (!!ingridientsData.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
           {!isLoading && !hasError && ingridientsData && !!ingridientsData.length && (
             <>
@@ -145,7 +153,6 @@ function App() {
           )}
 
         </section>
-
       </main>
     </>
   );
