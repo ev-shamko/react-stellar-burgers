@@ -52,17 +52,21 @@ function App() {
 
   // функция для получения массива данных от API
   const getIngridientsData = () => {
-    setIngridientsData([]);
-    setIsLoading(true);
-    setHasError(false);
+    console.log('Отправляю запрос к API');
 
     fetch(ApiUrl)
       .then((res) => res.json())
       .then((res) => {
-        setIngridientsData(res.data);
 
-        setIsLoading(false);
-        setHasError(false);
+        // setIngridientsData(res.data); // здесь поменяется стейт
+        // setIsLoading(false); // здесь тоже поменяется стейт
+        // setHasError(false);
+
+        (() => {
+          setIngridientsData(res.data); // здесь поменяется стейт
+          setIsLoading(false); // здесь тоже поменяется стейт
+          setHasError(false);
+        })();
 
         // здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
         setOrderData(ORDER_DATA);
@@ -75,8 +79,6 @@ function App() {
         */
       })
       .catch((err) => {
-        setIsLoading(false);
-        setHasError(true);
 
         console.log(`Error: can't fetch ingridiets data from ${ApiUrl}`);
         console.log(`err.message is: `, err.message);
@@ -97,6 +99,7 @@ function App() {
 
   return (
     <>
+    {console.log('РЕНДЕРЮ app.jsx')}
       { modalIsVisible &&
         <Modal
           closeModal={closeModal}
