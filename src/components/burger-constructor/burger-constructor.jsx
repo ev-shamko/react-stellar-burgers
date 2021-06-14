@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
 
+import { IngridientsListContext } from '../../services/ingridientsContext';
+
 import {
     ConstructorElement,
     Button,
@@ -11,70 +13,61 @@ import {
 
 //<BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
 // @ts-ignore
-class BurgerConstructor extends React.Component {
+function BurgerConstructor({ allIngridients, openModal }) {
 
-    constructor(props) {
-        super(props);
+    const someIngridients = allIngridients.filter((obj) => {
+        return obj.type === "main";
+    });
 
-        // пока что захардодено
-        // создаём массив с ингридиентами, которые будут находиться между верхней и нижней булкой. Из этого массива нагененрируем ингридиенты для конструктора
-        this.someIngridients = this.props.allIngridients.filter((obj) => {
-            return obj.type === "main";
-        })
+    const [bunIngridient, setBunIngridient] = React.useState(someIngridients[0]);
+    const [draggableIngridients, setDraggableIngridients] = React.useState(someIngridients);
 
-        this.state = {
-            //пока что захардкодено
-            bunIngridient: this.props.allIngridients[0],
-            draggableIngridients: this.someIngridients,
-        }
-    }
-
-    getTotalPrice() {
-        const totalPrice = this.state.bunIngridient.price * 2; // цена верхней и нижней булки
+    function getTotalPrice() {
+        const totalPrice = bunIngridient.price * 2; // цена верхней и нижней булки
         let summOfDraggableIngr = 0;
 
         // если есть ингридиенты между булками, то считаем их стоимость
-        if (this.state.draggableIngridients.length > 0) {
-            summOfDraggableIngr = this.state.draggableIngridients.reduce(function (accumulator, currentValue) {
+        if (draggableIngridients.length > 0) {
+            summOfDraggableIngr = draggableIngridients.reduce(function (accumulator, currentValue) {
                 return accumulator + Number(currentValue.price);
             }, 0);
         }
 
         return totalPrice + summOfDraggableIngr;
-    }
+    };
 
-    render() {
-        const openOrderModal = (event) => {
-            return this.props.openModal(event, 'OrderDetails');
-        };
+    const openOrderModal = (event) => {
+        return openModal(event, 'OrderDetails');
+    };
 
-        return (
-            <section className={crStyles.container}>
-                <ul className={crStyles.chosenIngridients + ' mb-6'}>
+    return (
+        <section className={crStyles.container}>
+            {console.log('Рендерю BurgerConstructor')}
+            <ul className={crStyles.chosenIngridients + ' mb-6'}>
 
-                    <li className={crStyles.topIngridinet}>
-                        <ConstructorElement type="top" isLocked="true" text={this.state.bunIngridient.name + " (верх)"} thumbnail={this.state.bunIngridient.image} price={this.state.bunIngridient.price} />
-                    </li>
+                <li className={crStyles.topIngridinet}>
+                    <ConstructorElement type="top" isLocked="true" text={bunIngridient.name + " (верх)"} thumbnail={bunIngridient.image} price={bunIngridient.price} />
+                </li>
 
-                    <li className={crStyles.draggableIngridinetContainer}>
-                        <DraggableItems arrSomeIngridients={this.state.draggableIngridients} />
-                    </li>
+                <li className={crStyles.draggableIngridinetContainer}>
+                    <DraggableItems arrSomeIngridients={draggableIngridients} />
+                </li>
 
-                    <li className={crStyles.bottomIngridinet}>
-                        <ConstructorElement type="bottom" isLocked="true" text={this.state.bunIngridient.name + " (низ)"} thumbnail={this.state.bunIngridient.image} price={this.state.bunIngridient.price} />
-                    </li>
-                </ul>
-                <div className={crStyles.totalBar}>
-                    <span className={'text text_type_digits-medium mr-10'}>{this.getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
-                    <Button type="primary" size="large" onClick={openOrderModal}>Оформить заказ</Button>
-                </div>
-            </section>
-        );
-    }
+                <li className={crStyles.bottomIngridinet}>
+                    <ConstructorElement type="bottom" isLocked="true" text={bunIngridient.name + " (низ)"} thumbnail={bunIngridient.image} price={bunIngridient.price} />
+                </li>
+            </ul>
+            <div className={crStyles.totalBar}>
+                <span className={'text text_type_digits-medium mr-10'}>{getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
+                <Button type="primary" size="large" onClick={openOrderModal}>Оформить заказ</Button>
+            </div>
+        </section>
+    );
+    // }
 }
 
-// в этом индентификаторе записан валидатор для объектов, находящихся внутри массива this.props.allIngridients
-// мы ожидаем, что массив this.props.allIngridients будет состоять из объектов с такой структурой
+// в этом индентификаторе записан валидатор для объектов, находящихся внутри массива allIngridients
+// мы ожидаем, что массив tallIngridients будет состоять из объектов с такой структурой
 const ingridientsInnerObjStructure = PropTypes.shape({
     _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -88,14 +81,14 @@ const ingridientsInnerObjStructure = PropTypes.shape({
     image_mobile: PropTypes.string.isRequired,
     image_large: PropTypes.string.isRequired,
     __v: PropTypes.number.isRequired,
-  });
+});
 
-  BurgerConstructor.propTypes = {
+BurgerConstructor.propTypes = {
     allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
     openModal: PropTypes.func.isRequired
 }
 
-/*  Пример объекта, содержащегося в массиве с ингридиентами this.props.allIngridients :
+/*  Пример объекта, содержащегося в массиве с ингридиентами allIngridients :
 {
     "_id": "60666c42cc7b410027a1a9b1",
     "name": "Краторная булка N-200i",
