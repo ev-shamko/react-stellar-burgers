@@ -1,12 +1,19 @@
 import React, { useEffect } from 'react';
 //import logo from '../../images/logo.svg';
 import indexStyles from './app.module.css';
+
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
+
+import { IngridientsListContext } from '../../services/ingridientsContext';
+
+// Импорт захардкоденных данных
 import ORDER_DATA from '../../utils/order-data';
 // import ingridientsList from '../../utils/data'; // пока не удаляю на случай падения сервера с API
 
+
+// Импорты компонентов модального окна
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngridientDetais from '../ingridient-details/ingridient-details';
@@ -114,14 +121,14 @@ function App() {
       {console.log('РЕНДЕРЮ app.jsx')}
 
       {/* рендеринг попапа с инфой об ингридиенте бургера */}
-      { modalIsVisible && (currentModalType === 'IngridientDetails') &&
+      {modalIsVisible && (currentModalType === 'IngridientDetails') &&
         <Modal closeModal={closeModal}>
           <IngridientDetais ingrInModalData={ingrInModalData} />
         </Modal>
       }
 
       {/* рендеринг попапа с деталями заказа */}
-      { modalIsVisible && (currentModalType === 'OrderDetails') &&
+      {modalIsVisible && (currentModalType === 'OrderDetails') &&
         <Modal closeModal={closeModal}>
           <OrderDetails orderData={orderData} />
         </Modal>
@@ -147,8 +154,10 @@ function App() {
           2) Условие (!!ingridientsData.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
           {!isLoading && !hasError && ingridientsData && !!ingridientsData.length && (
             <>
-              <BurgerIngredients allIngridients={ingridientsData} openModal={openModal} />
-              <BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
+              <IngridientsListContext.Provider value={{ ingridientsData, setIngridientsData }}>
+                <BurgerIngredients allIngridients={ingridientsData} openModal={openModal} />
+                <BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
+              </IngridientsListContext.Provider>
             </>
           )}
 
