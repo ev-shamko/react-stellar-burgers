@@ -86,7 +86,7 @@ function App() {
 
         // здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
         setOrderData(ORDER_DATA);
-        
+
         setIngridientsData(res.data); // здесь поменяется стейт после первичного рендера и вызовет второй рендер App
         setIsLoading(false); // здесь тоже поменяется стейт после первичного рендера и вызовет третий перерендер App - нужно объединить все 3 стейта в 1 объект
         setHasError(false);
@@ -158,7 +158,7 @@ function App() {
             <>
               <IngridientsListContext.Provider value={{ ingridientsData }}>
                 <BurgerIngredients openModal={openModal} />
-                <BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
+                <BurgerConstructor openModal={openModal} />
               </IngridientsListContext.Provider>
             </>
           )}

@@ -11,16 +11,21 @@ import {
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-//<BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
+//<BurgerConstructor openModal={openModal} />
 // @ts-ignore
-function BurgerConstructor({ allIngridients, openModal }) {
+function BurgerConstructor({ openModal }) {
 
-    const someIngridients = allIngridients.filter((obj) => {
+    const { ingridientsData } = React.useContext(IngridientsListContext);
+
+    // ******************* Захардкоденные дефолтные данные в конструкторе
+    const someIngridients = ingridientsData.filter((obj) => {
         return obj.type === "main";
     });
 
     const [bunIngridient, setBunIngridient] = React.useState(someIngridients[0]);
     const [draggableIngridients, setDraggableIngridients] = React.useState(someIngridients);
+
+    // ******************************
 
     function getTotalPrice() {
         const totalPrice = bunIngridient.price * 2; // цена верхней и нижней булки
@@ -42,49 +47,38 @@ function BurgerConstructor({ allIngridients, openModal }) {
 
     return (
         <section className={crStyles.container}>
-            {console.log('Рендерю BurgerConstructor')}
+            {console.log('Рендерю >>BurgerConstructor<<')}
+
             <ul className={crStyles.chosenIngridients + ' mb-6'}>
 
+                {/* Верхняя булка */}
                 <li className={crStyles.topIngridinet}>
                     <ConstructorElement type="top" isLocked="true" text={bunIngridient.name + " (верх)"} thumbnail={bunIngridient.image} price={bunIngridient.price} />
                 </li>
 
+                {/* Контейнер с настраиваемыми ингридиентами */}
                 <li className={crStyles.draggableIngridinetContainer}>
                     <DraggableItems arrSomeIngridients={draggableIngridients} />
                 </li>
 
+                {/* Нижняя булка */}
                 <li className={crStyles.bottomIngridinet}>
                     <ConstructorElement type="bottom" isLocked="true" text={bunIngridient.name + " (низ)"} thumbnail={bunIngridient.image} price={bunIngridient.price} />
                 </li>
+
             </ul>
+
             <div className={crStyles.totalBar}>
                 <span className={'text text_type_digits-medium mr-10'}>{getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
                 <Button type="primary" size="large" onClick={openOrderModal}>Оформить заказ</Button>
             </div>
+            
         </section>
     );
     // }
 }
 
-// в этом индентификаторе записан валидатор для объектов, находящихся внутри массива allIngridients
-// мы ожидаем, что массив tallIngridients будет состоять из объектов с такой структурой
-const ingridientsInnerObjStructure = PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    calories: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    image_mobile: PropTypes.string.isRequired,
-    image_large: PropTypes.string.isRequired,
-    __v: PropTypes.number.isRequired,
-});
-
 BurgerConstructor.propTypes = {
-    allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
     openModal: PropTypes.func.isRequired
 }
 
