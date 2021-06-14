@@ -154,8 +154,8 @@ function App() {
           2) Условие (!!ingridientsData.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
           {!isLoading && !hasError && ingridientsData && !!ingridientsData.length && (
             <>
-              <IngridientsListContext.Provider value={{ ingridientsData, setIngridientsData }}>
-                <BurgerIngredients allIngridients={ingridientsData} openModal={openModal} />
+              <IngridientsListContext.Provider value={{ ingridientsData }}>
+                <BurgerIngredients openModal={openModal} />
                 <BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
               </IngridientsListContext.Provider>
             </>

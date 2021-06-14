@@ -1,16 +1,32 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import { IngridientsListContext } from '../../services/ingridientsContext';
 
 import IngridientCard from "../ingridient-card/ingrdient-card"
 
+// TODO: переписать в функциональный компонент
 
-// <CardList type={"bun"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
+// *********  Как работает этот компонет:
+// полный список ингридиентов (массив объектов) получаем из стейта
+// на его основании рендерим новый массив по типу ингридиента, полученного в пропсе
+
+// <CardList type={"bun"} openModal={this.props.openModal} />
 class CardList extends React.Component {
+
+    // Определяем contextType, чтобы получить значение контекста.
+    // React найдёт (выше по дереву) ближайший Provider-компонент,
+    // предоставляющий этот контекст, и использует его значение.
+    static contextType = IngridientsListContext;
+
+
     render() {
         const { type } = this.props; // нельзя просто использовать this.props.type
+        
+        // проверяем, получили ли массив с данными ингридиентов
+        // console.log(this.context.ingridientsData);
 
         // создаём новый массив из ингридиентов определённого типа: "bun", "sauce", "main"
-        const arrSomeIngridients = this.props.ingridients.filter(function (obj) {
+        const arrSomeIngridients = this.context.ingridientsData.filter(function (obj) {
             return obj.type === type;
         });
 
@@ -32,26 +48,10 @@ class CardList extends React.Component {
     }
 }
 
-const ingridientsInnerObjStructure = PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    calories: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    image_mobile: PropTypes.string.isRequired,
-    image_large: PropTypes.string.isRequired,
-    __v: PropTypes.number.isRequired,
-});
-
 CardList.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]),
-    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
-    openModal: PropTypes.func.isRequired
-}
+    openModal: PropTypes.func.isRequired,
+};
 
 /*  Пример объекта, содержащегося в массиве с ингридиентами:
 {
