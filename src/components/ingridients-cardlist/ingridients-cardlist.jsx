@@ -4,7 +4,7 @@ import { IngridientsListContext } from '../../services/ingridientsContext';
 
 import IngridientCard from "../ingridient-card/ingrdient-card"
 
-// TODO: переписать в функциональный компонент
+// TODO: переписать в функциональный компонент. Или оставить классовый, чтобы был пример перед глазами?
 
 // *********  Как работает этот компонет:
 // полный список ингридиентов (массив объектов) получаем из стейта
@@ -36,6 +36,7 @@ class CardList extends React.Component {
                                 objIngridient={obj}
                                 key={obj._id}
                                 openModal={this.props.openModal}
+                                setConstructorState={this.props.setConstructorState}
                             />
                         )
                     })

@@ -8,8 +8,7 @@ import BurgerConstructor from '../burger-constructor/burger-constructor';
 
 import { IngridientsListContext } from '../../services/ingridientsContext';
 import {
-  BurgerBunsContext,
-  DraggableIngridientsContext
+  ConstructorContext
 } from '../../services/burgerConstructorContext';
 
 // Импорт захардкоденных данных
@@ -59,8 +58,35 @@ function App() {
 
   // ********************************
 
-  const [bunIngridient, setBunIngridient] = React.useState({});
-  const [draggableIngridients, setDraggableIngridients] = React.useState([]);
+  const constructorInitialState = {
+    bun: {},
+    draggableIngridients: []
+  };
+
+  function constructorReducer(state, action) {
+    switch (action.type) {
+      case "add bun":
+        return {
+          ...state,
+          bun: action.content,
+        };
+      case "add sauce":
+        return {
+          ...state,
+          draggableIngridients: state.draggableIngridients.concat(action.content)  // добавляем в исходный массив объектов новый объект
+        };
+      case "add main":
+        return {
+          ...state,
+          draggableIngridients: state.draggableIngridients.concat(action.content)  // добавляем в исходный массив объектов новый объект
+        };
+      default:
+        return state;
+    }
+
+  }
+
+  const [constructorState, setConstructorState] = React.useReducer(constructorReducer, constructorInitialState, undefined);
 
   // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
   const [modalIsVisible, setModalVisibility] = React.useState(false);
@@ -97,7 +123,7 @@ function App() {
 
   // функция для получения массива данных от API
   const getIngridientsData = (url = '') => {
-    console.log('Отправляю запрос к API c ингридиентами');
+    // console.log('Отправляю запрос к API c ингридиентами');
 
     fetch(url)
       .then((res) => {
@@ -148,7 +174,7 @@ function App() {
 
   return (
     <>
-      {console.log('РЕНДЕРЮ app.jsx')}
+      {/* {console.log('РЕНДЕРЮ app.jsx')} */}
 
       {/* рендеринг попапа с инфой об ингридиенте бургера - ingrInModalData*/}
       {modalIsVisible && (currentModalType === 'IngridientDetails') &&
@@ -181,18 +207,16 @@ function App() {
           2) Условие (!!ingridientsData.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
           {!ingridientsState.isLoading && !ingridientsState.hasError && ingridientsState.ingridientsData && !!ingridientsState.ingridientsData.length && (
             <>
-              <IngridientsListContext.Provider value={{ ingridientsState }}>
-                <BurgerBunsContext.Provider value={{ bunIngridient, setBunIngridient }}>
-                  <DraggableIngridientsContext.Provider value={{ draggableIngridients, setDraggableIngridients }}>
+              <IngridientsListContext.Provider value={{ ingridientsState }}>               
+                    <ConstructorContext.Provider value={{ constructorState, setConstructorState }}>
 
-                    {/* попап  - ingrInModalData */}
-                    <BurgerIngredients openModal={openModal} />
+                      {/* попап  - ingrInModalData */}
+                      <BurgerIngredients openModal={openModal} />
 
-                    {/* попап  - orderData */}
-                    <BurgerConstructor openModal={openModal} />
+                      {/* попап  - orderData */}
+                      <BurgerConstructor openModal={openModal} />
 
-                  </DraggableIngridientsContext.Provider>
-                </BurgerBunsContext.Provider>
+                    </ConstructorContext.Provider>
               </IngridientsListContext.Provider>
             </>
           )}

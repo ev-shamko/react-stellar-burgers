@@ -8,9 +8,6 @@
   align-items: flex-end;
 }
 
-.container > div {
-}
-
 .chosenIngridients {
   display: flex;
   flex-direction: column;
