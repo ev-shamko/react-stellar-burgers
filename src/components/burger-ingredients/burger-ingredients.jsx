@@ -7,48 +7,51 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 // <BurgerIngredients openModal={openModal} /> 
-function BurgerIngredients ( {/*allIngridients,*/ openModal } ) {
+function BurgerIngredients({/*allIngridients,*/ openModal }) {
 
     // этот стейт нужен для переключения активного таба в компоненте <Tab />
     // компонент <Tab /> "под капотом" передаёт этому методу в качестве аргумента значение пропса value
     const [currentTab, setCurrentTab] = React.useState('one');
 
-        return (
-            <section className={ingrStyles.ingridiensContainer}>
-                {console.log('Рендерю компонент BurgerIngridients')}
-                <div className={ingrStyles.tabs}>
-                    {/* Компонент <Tab /> в функцию из onClick={} в качестве аргумента передаёт не event, а значение пропса value={} */}
-                    <Tab value="one" active={currentTab === 'one'} onClick={setCurrentTab}>Булки</Tab>
-                    <Tab value="two" active={currentTab === 'two'} onClick={setCurrentTab}>Соусы</Tab>
-                    <Tab value="three" active={currentTab === 'three'} onClick={setCurrentTab}>Начинки</Tab>
+    return (
+        <section className={ingrStyles.ingridiensContainer}>
+            {console.log('Рендерю компонент BurgerIngridients')}
+            <div className={ingrStyles.tabs}>
+                {/* Компонент <Tab /> в функцию из onClick={} в качестве аргумента передаёт не event, а значение пропса value={} */}
+                <Tab value="one" active={currentTab === 'one'} onClick={setCurrentTab}>Булки</Tab>
+                <Tab value="two" active={currentTab === 'two'} onClick={setCurrentTab}>Соусы</Tab>
+                <Tab value="three" active={currentTab === 'three'} onClick={setCurrentTab}>Начинки</Tab>
+            </div>
+            <div className={ingrStyles.ingrDisplay + ' mt-10'}>
+
+                {/* Булки */}
+                <div className={ingrStyles.ingrShowcase}>
+                    <h3 className="text text_type_main-medium">Булки</h3>
+                    <div className={ingrStyles.ingrList}>
+                        <CardList type={"bun"} openModal={openModal} />
+                    </div>
                 </div>
-                <div className={ingrStyles.ingrDisplay + ' mt-10'}>
 
-                    <div className={ingrStyles.ingrShowcase}>
-                        <h3 className="text text_type_main-medium">Булки</h3>
-                        <div className={ingrStyles.ingrList}>
-                            <CardList type={"bun"} openModal={openModal} />
-                        </div>
+                {/* Соусы */}
+                <div className={ingrStyles.ingrShowcase}>
+                    <h3 className="text text_type_main-medium">Соусы</h3>
+                    <div className={ingrStyles.ingrList}>
+                        <CardList type={"sauce"} openModal={openModal} />
                     </div>
-
-                    <div className={ingrStyles.ingrShowcase}>
-                        <h3 className="text text_type_main-medium">Соусы</h3>
-                        <div className={ingrStyles.ingrList}>
-                            <CardList type={"sauce"} openModal={openModal} />
-                        </div>
-                    </div>
-
-                    <div className={ingrStyles.ingrShowcase}>
-                        <h3 className="text text_type_main-medium">Начинки</h3>
-                        <div className={ingrStyles.ingrList}>
-                            <CardList type={"main"} openModal={openModal} />
-                        </div>
-                    </div>
-
-
                 </div>
-            </section>
-        );
+
+                {/* Начинки */}
+                <div className={ingrStyles.ingrShowcase}>
+                    <h3 className="text text_type_main-medium">Начинки</h3>
+                    <div className={ingrStyles.ingrList}>
+                        <CardList type={"main"} openModal={openModal} />
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+    );
 }
 
 // в этом индентификаторе записан валидатор для объектов, находящихся внутри массива this.props.allIngridients

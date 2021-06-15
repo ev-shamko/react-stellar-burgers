@@ -7,6 +7,10 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 
 import { IngridientsListContext } from '../../services/ingridientsContext';
+import {
+  BurgerBunsContext,
+  DraggableIngridientsContext
+} from '../../services/burgerConstructorContext';
 
 // Импорт захардкоденных данных
 import ORDER_DATA from '../../utils/order-data';
@@ -55,6 +59,9 @@ function App() {
 
   // ********************************
 
+  const [bunIngridient, setBunIngridient] = React.useState({});
+  const [draggableIngridients, setDraggableIngridients] = React.useState([]);
+
   // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
   const [modalIsVisible, setModalVisibility] = React.useState(false);
   const [currentModalType, setCurrentModalType] = React.useState('none');
@@ -89,7 +96,7 @@ function App() {
   /****************************************************** */
 
   // функция для получения массива данных от API
-    const getIngridientsData = (url = '') => {
+  const getIngridientsData = (url = '') => {
     console.log('Отправляю запрос к API c ингридиентами');
 
     fetch(url)
@@ -175,13 +182,17 @@ function App() {
           {!ingridientsState.isLoading && !ingridientsState.hasError && ingridientsState.ingridientsData && !!ingridientsState.ingridientsData.length && (
             <>
               <IngridientsListContext.Provider value={{ ingridientsState }}>
+                <BurgerBunsContext.Provider value={{ bunIngridient, setBunIngridient }}>
+                  <DraggableIngridientsContext.Provider value={{ draggableIngridients, setDraggableIngridients }}>
 
-                {/* попап  - ingrInModalData */}
-                <BurgerIngredients openModal={openModal} />
-                
-                {/* попап  - orderData */}
-                <BurgerConstructor openModal={openModal} />
+                    {/* попап  - ingrInModalData */}
+                    <BurgerIngredients openModal={openModal} />
 
+                    {/* попап  - orderData */}
+                    <BurgerConstructor openModal={openModal} />
+
+                  </DraggableIngridientsContext.Provider>
+                </BurgerBunsContext.Provider>
               </IngridientsListContext.Provider>
             </>
           )}

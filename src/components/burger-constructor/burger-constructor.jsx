@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
 
 import { IngridientsListContext } from '../../services/ingridientsContext';
+import {
+    BurgerBunsContext,
+    DraggableIngridientsContext
+} from '../../services/burgerConstructorContext';
 
 import {
     ConstructorElement,
@@ -16,29 +20,53 @@ import {
 function BurgerConstructor({ openModal }) {
 
     const { ingridientsState } = React.useContext(IngridientsListContext);
+    const {bunIngridient, setBunIngridient} = React.useContext(BurgerBunsContext);
+    const {draggableIngridients, setDraggableIngridients} = React.useContext(DraggableIngridientsContext);
+
+    // setBunIngridient(ingridientsState.ingridientsData[0]);
+    // console.log(
+    //     'Привет из констуктора бургеров! Вот значение булок из нового стейта: ',
+    //     bunIngridient
+    // );
 
     // ******************* Захардкоденные дефолтные данные в конструкторе
+
+    // эти ингридиенты попадут в конструктор при загрузке страницы
     const someIngridients = ingridientsState.ingridientsData.filter((obj) => {
-        return obj.type === "main";
+        return obj.type === "sauce";
     });
 
-    const [bunIngridient, setBunIngridient] = React.useState(ingridientsState.ingridientsData[0]);
-    const [draggableIngridients, setDraggableIngridients] = React.useState(someIngridients);
+    // стейты для булок и настраиваемых ингридиентов
+    // const [bunIngridientOld, setBunIngridientOld] = React.useState(ingridientsState.ingridientsData[0]);
+    // const [draggableIngridientsOld, setDraggableIngridientsOld] = React.useState(someIngridients);
 
     // ******************************
 
+    // Пока что захардкодены дефолтные компоненты в конструкторе бургеров
+
+useEffect(() => {
+    setBunIngridient(ingridientsState.ingridientsData[0]);
+    setDraggableIngridients(someIngridients);
+    console.log(
+        'Привет из констуктора бургеров! Вот значение булок и соусов из нового стейта: ',
+        bunIngridient
+    );
+    console.log(draggableIngridients);
+}, []);
+    // ******************************
+
     function getTotalPrice() {
-        const totalPrice = bunIngridient.price * 2; // цена верхней и нижней булки
-        let summOfDraggableIngr = 0;
+        const priceOfBun = bunIngridient.price * 2; // цена верхней и нижней булки
+        let priceOfDraggableIngr = 0;
 
         // если есть ингридиенты между булками, то считаем их стоимость
         if (draggableIngridients.length > 0) {
-            summOfDraggableIngr = draggableIngridients.reduce(function (accumulator, currentValue) {
+            priceOfDraggableIngr = draggableIngridients.reduce(function (accumulator, currentValue) {
                 return accumulator + Number(currentValue.price);
             }, 0);
         }
 
-        return totalPrice + summOfDraggableIngr;
+        return priceOfBun + priceOfDraggableIngr;
     };
 
     const openOrderModal = (event) => {
@@ -72,7 +100,7 @@ function BurgerConstructor({ openModal }) {
                 <span className={'text text_type_digits-medium mr-10'}>{getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
                 <Button type="primary" size="large" onClick={openOrderModal}>Оформить заказ</Button>
             </div>
-            
+
         </section>
     );
     // }
