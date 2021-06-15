@@ -23,9 +23,37 @@ const ApiUrl = "https://norma.nomoreparties.space/api/ingredients";
 
 function App() {
 
-  const [ingridientsData, setIngridientsData] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [hasError, setHasError] = React.useState(false);
+  // ************ Рефакторинг стейтов, отвечающих за получение от API массива ингридиентов бургера
+  // Раньше было 3 отдельных стейта
+
+  const ingridientsInitialState = {
+    ingridientsData: [],
+    isLoading: false,
+    hasError: false
+  };
+
+  function ingridientsReducer(state, action) {
+    switch (action.type) {
+      case 'got-data':
+        return {
+          ingridientsData: action.value,
+          isLoading: false,
+          hasError: false
+        };
+      case 'fetch-error':
+        return {
+          ingridientsData: [],
+          isLoading: false,
+          hasError: true
+        }
+      default:
+        throw new Error(`Wrong type of action in ingridientsState reducer: ${action.type}`);
+    }
+  };
+
+  const [ingridientsState, setIngridientsState] = React.useReducer(ingridientsReducer, ingridientsInitialState, undefined);
+
+  // ********************************
 
   // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
   const [modalIsVisible, setModalVisibility] = React.useState(false);
@@ -61,9 +89,8 @@ function App() {
   /****************************************************** */
 
   // функция для получения массива данных от API
-  // НЕ ЗАБЫТЬ СПРОСИТЬ: почему у меня тут постоянно требуют указания дефолтного значения аргумента или стейта?
-  const getIngridientsData = (url = '') => {
-    console.log('Отправляю запрос к API');
+    const getIngridientsData = (url = '') => {
+    console.log('Отправляю запрос к API c ингридиентами');
 
     fetch(url)
       .then((res) => {
@@ -81,26 +108,17 @@ function App() {
           console.log(`Didn't find array in res.data  :-(   Probably got wrong response from ${url}`);
           return Promise.reject(res);
         }
-
-        console.log(res);
-
-        // здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
+        // setOrderData - здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
         setOrderData(ORDER_DATA);
 
-        setIngridientsData(res.data); // здесь поменяется стейт после первичного рендера и вызовет второй рендер App
-        setIsLoading(false); // здесь тоже поменяется стейт после первичного рендера и вызовет третий перерендер App - нужно объединить все 3 стейта в 1 объект
-        setHasError(false);
-
-
+        setIngridientsState({ type: 'got-data', value: res.data });
       })
       .catch((err) => {
-
         console.log(`Error: can't fetch ingridiets data from ${url}`);
         console.log(`response from server is: `, err);
         console.log(`err.message is: `, err.message);
 
-        setIsLoading(false);
-        setHasError(true);
+        setIngridientsState({ type: 'fetch-error' });
       });
   };
 
@@ -118,18 +136,21 @@ function App() {
   /******************************************************** */
   /************      Рендер      ************************* */
   /****************************************************** */
+
+  // https://www.bxnotes.ru/conspect/lib/react/react-notes/rendering/ - хорошая статья по рендерингу в реакте, надо заюзать
+
   return (
     <>
       {console.log('РЕНДЕРЮ app.jsx')}
 
-      {/* рендеринг попапа с инфой об ингридиенте бургера */}
+      {/* рендеринг попапа с инфой об ингридиенте бургера - ingrInModalData*/}
       {modalIsVisible && (currentModalType === 'IngridientDetails') &&
         <Modal closeModal={closeModal}>
           <IngridientDetais ingrInModalData={ingrInModalData} />
         </Modal>
       }
 
-      {/* рендеринг попапа с деталями заказа */}
+      {/* рендеринг попапа с деталями заказа - orderData */}
       {modalIsVisible && (currentModalType === 'OrderDetails') &&
         <Modal closeModal={closeModal}>
           <OrderDetails orderData={orderData} />
@@ -143,9 +164,6 @@ function App() {
           <h1 className="text text_type_main-large">Соберите бургер</h1>
         </section>
 
-        {/** Ради пиксельпёрфекта секция ниже - это флекс-контейнер,
-         * растущий слева направо. Он выходит за правую границу родительского <main>.
-         */}
         <section className={indexStyles.constructorContainer}>
 
           {/* Здесь стоит условие: отрисовка компонентов только после успешного получения данных правильного формата
@@ -154,11 +172,16 @@ function App() {
           ***Про условия отрисовки:
           1) Условие ingridientsData пересчитается в false, если в результате fetch сервер вернул объект ответа без свойства res.data (т.е. оно будет undefined) - так иногда бывает со стороны https://norma.nomoreparties.space/*  - в принципе, теперь это условие можно убрать
           2) Условие (!!ingridientsData.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
-          {!isLoading && !hasError && ingridientsData && !!ingridientsData.length && (
+          {!ingridientsState.isLoading && !ingridientsState.hasError && ingridientsState.ingridientsData && !!ingridientsState.ingridientsData.length && (
             <>
-              <IngridientsListContext.Provider value={{ ingridientsData }}>
+              <IngridientsListContext.Provider value={{ ingridientsState }}>
+
+                {/* попап  - ingrInModalData */}
                 <BurgerIngredients openModal={openModal} />
+                
+                {/* попап  - orderData */}
                 <BurgerConstructor openModal={openModal} />
+
               </IngridientsListContext.Provider>
             </>
           )}

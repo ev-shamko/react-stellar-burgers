@@ -15,14 +15,14 @@ import {
 // @ts-ignore
 function BurgerConstructor({ openModal }) {
 
-    const { ingridientsData } = React.useContext(IngridientsListContext);
+    const { ingridientsState } = React.useContext(IngridientsListContext);
 
     // ******************* Захардкоденные дефолтные данные в конструкторе
-    const someIngridients = ingridientsData.filter((obj) => {
+    const someIngridients = ingridientsState.ingridientsData.filter((obj) => {
         return obj.type === "main";
     });
 
-    const [bunIngridient, setBunIngridient] = React.useState(someIngridients[0]);
+    const [bunIngridient, setBunIngridient] = React.useState(ingridientsState.ingridientsData[0]);
     const [draggableIngridients, setDraggableIngridients] = React.useState(someIngridients);
 
     // ******************************

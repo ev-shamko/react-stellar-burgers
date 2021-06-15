@@ -21,12 +21,9 @@ class CardList extends React.Component {
 
     render() {
         const { type } = this.props; // нельзя просто использовать this.props.type
-        
-        // проверяем, получили ли массив с данными ингридиентов
-        // console.log(this.context.ingridientsData);
 
         // создаём новый массив из ингридиентов определённого типа: "bun", "sauce", "main"
-        const arrSomeIngridients = this.context.ingridientsData.filter(function (obj) {
+        const arrSomeIngridients = this.context.ingridientsState.ingridientsData.filter(function (obj) {
             return obj.type === type;
         });
 
