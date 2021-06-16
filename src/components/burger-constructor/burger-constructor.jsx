@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
 
-import { IngridientsListContext } from '../../services/ingridientsContext';
 import {
     ConstructorContext
 } from '../../services/burgerConstructorContext';
@@ -18,9 +17,7 @@ import {
 // @ts-ignore
 function BurgerConstructor({ openModal }) {
 
-    const { ingridientsState } = React.useContext(IngridientsListContext);
-    const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
-
+    const { constructorState } = React.useContext(ConstructorContext);
 
     // ******** Можно включить захардкодены дефолтные компоненты в конструкторе бургеров
 
@@ -64,7 +61,6 @@ function BurgerConstructor({ openModal }) {
                         </li>
                     )
                 }
-
 
                 {/* Контейнер с настраиваемыми ингридиентами: отрисуется, если что-то уже выбрано */}
                 {(constructorState.draggableIngridients.length > 0) &&
@@ -110,21 +106,5 @@ function BurgerConstructor({ openModal }) {
 BurgerConstructor.propTypes = {
     openModal: PropTypes.func.isRequired
 }
-
-/*  Пример объекта, содержащегося в массиве с ингридиентами allIngridients :
-{
-    "_id": "60666c42cc7b410027a1a9b1",
-    "name": "Краторная булка N-200i",
-    "type": "bun",
-    "proteins": 80,
-    "fat": 24,
-    "carbohydrates": 53,
-    "calories": 420,
-    "price": 1255,
-    "image": "https://code.s3.yandex.net/react/code/bun-02.png",
-    "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
-    "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
-    "__v": 0
-}*/
 
 export default BurgerConstructor;

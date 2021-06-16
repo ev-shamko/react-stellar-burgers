@@ -35,7 +35,7 @@ class AppHeader extends React.Component {
                     {/* На будущее:
 Логотип в шапке центруктся через space-between, поэтому левая и правая <nav> должны быть примерно одинаковой ширины, но кнопка авторизации чуть уже.
 Можно высчитывать ширину кнопки авторизации через js, но пока захардкодено в css. */}
-                    <nav className={headerStyles.userPanel + ' ' + 'text text_type_main-default'}>
+                    <nav className={headerStyles.userPanel + ' text text_type_main-default'}>
                         <div className={headerStyles.authButton + '  text_color_inactive'}> 
                             <ProfileIcon type="secondary" />
                             <span className={headerStyles.buttonCaption}>Личный кабинет</span>

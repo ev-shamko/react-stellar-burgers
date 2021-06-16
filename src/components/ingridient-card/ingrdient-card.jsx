@@ -1,5 +1,8 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import {
+    ConstructorContext
+} from '../../services/burgerConstructorContext';
 
 import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -12,14 +15,17 @@ import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-c
 */
 
 // @ts-ignore
-const IngridientCard = ({ objIngridient, openModal, setConstructorState }) => {
+const IngridientCard = ({ objIngridient, openModal }) => {
+
+    const { setConstructorState } = React.useContext(ConstructorContext);
 
     const openIngridientDetails = (event) => {
         return openModal(event, 'IngridientDetails', objIngridient);
     };
 
+    // с action.type получилось изящно, я молодец
     const addIngridientInConstructor = () => {
-        setConstructorState({type: `add ${objIngridient.type}`, content: objIngridient}); // меняем стейт редьюесорм
+        setConstructorState({type: `add ${objIngridient.type}`, content: objIngridient});
     }
 
         return (
@@ -55,7 +61,7 @@ const ingridientsInnerObjStructure = PropTypes.shape({
 });
 
 IngridientCard.propTypes = {
-    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    objIngridient: PropTypes.shape(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
     openModal: PropTypes.func.isRequired
 }
 
