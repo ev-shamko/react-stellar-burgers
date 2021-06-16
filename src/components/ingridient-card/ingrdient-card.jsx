@@ -5,32 +5,50 @@ import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 
 /* <IngridientCard
+        objIngridient={obj}
         key={obj._id}
-        image={obj.image}
-        price={obj.price}
-        name={obj.name}
-        />
+        openModal={this.props.openModal}
+    />
 */
 
 // @ts-ignore
-const IngridientCard = ({ image, price, name }) => {
+const IngridientCard = ({ objIngridient, openModal }) => {
+
+    const openIngridientDetails = (event) => {
+        return openModal(event, 'IngridientDetails', objIngridient);
+    };
+
     return (
-        <div className={cardStyles.ingrCard + ' mb-8'}>
-            <img src={image} alt={name} className={cardStyles.itemPic} />
+        <div className={cardStyles.ingrCard + ' mb-8'} onClick={openIngridientDetails}>
+            <img src={objIngridient.image} alt={objIngridient.name} className={cardStyles.itemPic} />
             <div className={cardStyles.price}>
                 <Counter count={1} size="default" />
-                <span className="m-2 text_type_digits-default">{price}</span>
+                <span className="m-2 text_type_digits-default">{objIngridient.price}</span>
                 <CurrencyIcon type="primary" />
             </div>
-            <h3 className="m-1 text_type_main-default">{name}</h3>
+            <h3 className="m-1 text_type_main-default">{objIngridient.name}</h3>
         </div>
     );
 }
 
-IngridientCard.propTypes = {
-    image: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
+const ingridientsInnerObjStructure = PropTypes.shape({
+    _id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    proteins: PropTypes.number.isRequired,
+    fat: PropTypes.number.isRequired,
+    carbohydrates: PropTypes.number.isRequired,
+    calories: PropTypes.number.isRequired,
+    price: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    image_mobile: PropTypes.string.isRequired,
+    image_large: PropTypes.string.isRequired,
+    __v: PropTypes.number.isRequired,
+});
+
+IngridientCard.propTypes = {
+    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    openModal: PropTypes.func.isRequired
 }
 
 export default IngridientCard;

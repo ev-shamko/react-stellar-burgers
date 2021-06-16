@@ -2,12 +2,14 @@ import React from "react";
 import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
+
 import {
     ConstructorElement,
     Button,
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+//<BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
 // @ts-ignore
 class BurgerConstructor extends React.Component {
 
@@ -42,6 +44,10 @@ class BurgerConstructor extends React.Component {
     }
 
     render() {
+        const openOrderModal = (event) => {
+            return this.props.openModal(event, 'OrderDetails');
+        };
+
         return (
             <section className={crStyles.container}>
                 <ul className={crStyles.chosenIngridients + ' mb-6'}>
@@ -60,7 +66,7 @@ class BurgerConstructor extends React.Component {
                 </ul>
                 <div className={crStyles.totalBar}>
                     <span className={'text text_type_digits-medium mr-10'}>{this.getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
-                    <Button type="primary" size="large">Оформить заказ</Button>
+                    <Button type="primary" size="large" onClick={openOrderModal}>Оформить заказ</Button>
                 </div>
             </section>
         );
@@ -85,7 +91,8 @@ const ingridientsInnerObjStructure = PropTypes.shape({
   });
 
   BurgerConstructor.propTypes = {
-    allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired) // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    openModal: PropTypes.func.isRequired
 }
 
 /*  Пример объекта, содержащегося в массиве с ингридиентами this.props.allIngridients :

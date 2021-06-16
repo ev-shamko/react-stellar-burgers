@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import IngridientCard from "../ingridient-card/ingrdient-card"
 
 
-// <CardList type={"bun"} ingridients={this.props.allIngridients} />
+// <CardList type={"bun"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
 class CardList extends React.Component {
     render() {
         const { type } = this.props; // нельзя просто использовать this.props.type
@@ -20,10 +20,9 @@ class CardList extends React.Component {
                     arrSomeIngridients.map((obj, index) => {
                         return (
                             <IngridientCard
+                                objIngridient={obj}
                                 key={obj._id}
-                                image={obj.image}
-                                price={obj.price}
-                                name={obj.name}
+                                openModal={this.props.openModal}
                             />
                         )
                     })
@@ -46,11 +45,12 @@ const ingridientsInnerObjStructure = PropTypes.shape({
     image_mobile: PropTypes.string.isRequired,
     image_large: PropTypes.string.isRequired,
     __v: PropTypes.number.isRequired,
-  });
+});
 
 CardList.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]),
-    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired) // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    openModal: PropTypes.func.isRequired
 }
 
 /*  Пример объекта, содержащегося в массиве с ингридиентами:

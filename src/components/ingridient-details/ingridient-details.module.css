@@ -1,0 +1,36 @@
+.modalHeader {
+    text-align: left;
+    margin-right: auto;
+}
+
+.ingrImage {
+    /* width: 400px; */
+}
+
+.ingrInfo {
+display: flex;
+flex-direction: row;
+decoration: none;
+padding: 0;
+}
+
+.nutrient {
+display: flex;
+flex-direction: column;
+margin-right: 40px;
+align-items: center;
+}
+
+.nutrient:last-child {
+    margin-right: 0px;
+}
+
+.nutrientHeader {
+margin: 0;
+margin-bottom: 9px;
+}
+
+.nutrientValue {
+    margin: 0;
+
+}
