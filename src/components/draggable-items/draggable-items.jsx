@@ -4,30 +4,38 @@ import diStyles from "./draggable-items.module.css"
 //import ConstructorItem from "../constructor-item/constructor-item";
 import {
     ConstructorElement,
-    DragIcon 
+    DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 
-// <DraggableItems arrSomeIngridients={this.state.draggableIngridients} />
-// draggableIngridients д.б. массивом с ингридиентами, по сути, как исходный массив с данными, но без булок
-class DraggableItemsList extends React.Component {
-    render() {
-        return (
-            <>
-                {
-                    this.props.arrSomeIngridients.map((obj, index) => {
-                        return (
-                            <div className={diStyles.draggableItime} key={index}>
-                                <button className={diStyles.draggableButton}><DragIcon /></button>
-                                <ConstructorElement text={obj.name} thumbnail={obj.image} price={obj.price} />
-                            </div>
-                        )
+// <DraggableItems arrSomeIngridients={constructorState.draggableIngridients} />
+// draggableIngridients - массив с объектами. Находится в стейте родительского компонента
+function DraggableItemsList( {arrSomeIngridients} ) {
 
-                    })
-                }
-            </>
-        )
+    // вопрос в том, следует ли передавать редьюсеру новый массив,
+    // или лучше передать индекс, а редьюсер уж сам пусть перезаписывает стейт
+    const testDeleteFunc = (arrInParentState, index) => {
+        const newArr = arrInParentState.slice(0); // копируем данные из стейта родительского компонента
+        return newArr.splice(index, 1);
     }
+
+
+    return (
+        <>
+            {
+                arrSomeIngridients.map((obj, index) => {
+                    return (
+                        <div className={diStyles.draggableItime} key={index}>
+                            <button className={diStyles.draggableButton}><DragIcon /></button>
+                            <ConstructorElement text={obj.name} thumbnail={obj.image} price={obj.price} />
+                        </div>
+                    )
+
+                })
+            }
+        </>
+    )
+
 }
 
 const ingridientsInnerObjStructure = PropTypes.shape({
@@ -43,9 +51,9 @@ const ingridientsInnerObjStructure = PropTypes.shape({
     image_mobile: PropTypes.string.isRequired,
     image_large: PropTypes.string.isRequired,
     __v: PropTypes.number.isRequired,
-  });
+});
 
-  DraggableItemsList.propTypes = {
+DraggableItemsList.propTypes = {
     ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired) // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
 }
 

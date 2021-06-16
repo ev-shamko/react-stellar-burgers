@@ -56,7 +56,7 @@ function App() {
 
   const [ingridientsState, setIngridientsState] = React.useReducer(ingridientsReducer, ingridientsInitialState, undefined);
 
-  // ********************************
+  // ************ Стейт, хранящий информацию для BurgerConstructor, позволяет добавлять в него данные из BurgerIngridients
 
   const constructorInitialState = {
     bun: {},
@@ -83,20 +83,19 @@ function App() {
       default:
         return state;
     }
-
   }
 
   const [constructorState, setConstructorState] = React.useReducer(constructorReducer, constructorInitialState, undefined);
+
+  /******************************************************** */
+  /******      Управление модальным окном        ********* */
+  /****************************************************** */
 
   // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
   const [modalIsVisible, setModalVisibility] = React.useState(false);
   const [currentModalType, setCurrentModalType] = React.useState('none');
   const [orderData, setOrderData] = React.useState({});
   const [ingrInModalData, setIngrInModalData] = React.useState({});
-
-  /******************************************************** */
-  /******      Управление модальным окном        ********* */
-  /****************************************************** */
 
   const closeModal = () => {
     setModalVisibility(false);
@@ -171,6 +170,7 @@ function App() {
   /****************************************************** */
 
   // https://www.bxnotes.ru/conspect/lib/react/react-notes/rendering/ - хорошая статья по рендерингу в реакте, надо заюзать
+  // https://max-frontend.gitbook.io/redux-course-ru-v2/sozdanie/optimizatsiya-refaktoring/optimizatsiya-pererisovok - статья про оптимизацию рендера
 
   return (
     <>
@@ -207,16 +207,16 @@ function App() {
           2) Условие (!!ingridientsData.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
           {!ingridientsState.isLoading && !ingridientsState.hasError && ingridientsState.ingridientsData && !!ingridientsState.ingridientsData.length && (
             <>
-              <IngridientsListContext.Provider value={{ ingridientsState }}>               
-                    <ConstructorContext.Provider value={{ constructorState, setConstructorState }}>
+              <IngridientsListContext.Provider value={{ ingridientsState }}>
+                <ConstructorContext.Provider value={{ constructorState, setConstructorState }}>
 
-                      {/* попап  - ingrInModalData */}
-                      <BurgerIngredients openModal={openModal} />
+                  {/* попап  - ingrInModalData */}
+                  <BurgerIngredients openModal={openModal} />
 
-                      {/* попап  - orderData */}
-                      <BurgerConstructor openModal={openModal} />
+                  {/* попап  - orderData */}
+                  <BurgerConstructor openModal={openModal} />
 
-                    </ConstructorContext.Provider>
+                </ConstructorContext.Provider>
               </IngridientsListContext.Provider>
             </>
           )}
