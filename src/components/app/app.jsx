@@ -7,12 +7,11 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 
 import { IngridientsListContext } from '../../services/ingridientsContext';
-import {
-  ConstructorContext
-} from '../../services/burgerConstructorContext';
+import { OrderStateContext } from '../../services/orderStateContext';
+import { ConstructorContext } from '../../services/burgerConstructorContext';
 
 // Импорт захардкоденных данных
-import ORDER_DATA from '../../utils/order-data';
+// import ORDER_DATA from '../../utils/order-data';
 // import ingridientsList from '../../utils/data'; // пока не удаляю на случай падения сервера с API
 
 
@@ -80,17 +79,18 @@ function App() {
           ...state,
           draggableIngridients: state.draggableIngridients.concat(action.content)  // добавляем в исходный массив объектов новый объект
         };
-        case "update draggableIngridients":
-          return {
-            ...state,
-            draggableIngridients: action.content // в action.content должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже уданён
-          }
+      case "update draggableIngridients":
+        return {
+          ...state,
+          draggableIngridients: action.content // в action.content должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже уданён
+        }
       default:
         return state;
     }
   }
 
   const [constructorState, setConstructorState] = React.useReducer(constructorReducer, constructorInitialState, undefined);
+  const [orderState, setOrderState] = React.useState({});
 
   /******************************************************** */
   /******      Управление модальным окном        ********* */
@@ -99,7 +99,7 @@ function App() {
   // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
   const [modalIsVisible, setModalVisibility] = React.useState(false);
   const [currentModalType, setCurrentModalType] = React.useState('none');
-  const [orderData, setOrderData] = React.useState({});
+  // const [orderData, setOrderData] = React.useState({});
   const [ingrInModalData, setIngrInModalData] = React.useState({});
 
   const closeModal = () => {
@@ -146,7 +146,7 @@ function App() {
           return Promise.reject(res);
         }
         // setOrderData - здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
-        setOrderData(ORDER_DATA);
+        // setOrderData(ORDER_DATA);
 
         setIngridientsState({ type: 'got-data', value: res.data });
       })
@@ -180,21 +180,6 @@ function App() {
   return (
     <>
       {/* {console.log('РЕНДЕРЮ app.jsx')} */}
-
-      {/* рендеринг попапа с инфой об ингридиенте бургера - ingrInModalData*/}
-      {modalIsVisible && (currentModalType === 'IngridientDetails') &&
-        <Modal closeModal={closeModal}>
-          <IngridientDetais ingrInModalData={ingrInModalData} />
-        </Modal>
-      }
-
-      {/* рендеринг попапа с деталями заказа - orderData */}
-      {modalIsVisible && (currentModalType === 'OrderDetails') &&
-        <Modal closeModal={closeModal}>
-          <OrderDetails orderData={orderData} />
-        </Modal>
-      }
-
       <AppHeader />
 
       <main className={indexStyles.main}>
@@ -214,13 +199,29 @@ function App() {
             <>
               <IngridientsListContext.Provider value={{ ingridientsState }}>
                 <ConstructorContext.Provider value={{ constructorState, setConstructorState }}>
+                  <OrderStateContext.Provider value={{ orderState, setOrderState }}>
 
-                  {/* попап  - ingrInModalData */}
-                  <BurgerIngredients openModal={openModal} />
+                    {/* попап  - ingrInModalData */}
+                    <BurgerIngredients openModal={openModal} />
 
-                  {/* попап  - orderData */}
-                  <BurgerConstructor openModal={openModal} />
+                    {/* попап  - orderData */}
+                    <BurgerConstructor openModal={openModal} />
 
+                    {/* рендеринг попапа с инфой об ингридиенте бургера - ingrInModalData*/}
+                    {modalIsVisible && (currentModalType === 'IngridientDetails') &&
+                      <Modal closeModal={closeModal}>
+                        <IngridientDetais ingrInModalData={ingrInModalData} />
+                      </Modal>
+                    }
+
+                    {/* рендеринг попапа с деталями заказа - orderData */}
+                    {modalIsVisible && (currentModalType === 'OrderDetails') &&
+                      <Modal closeModal={closeModal}>
+                        <OrderDetails />
+                      </Modal>
+                    }
+
+                  </OrderStateContext.Provider>
                 </ConstructorContext.Provider>
               </IngridientsListContext.Provider>
             </>

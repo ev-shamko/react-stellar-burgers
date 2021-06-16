@@ -4,10 +4,10 @@ import stylesMO from './modal-overlay.module.css';
 
 function ModalOverlay({ handleClick, children }) {
 
-  const reaction = () => {
-    // console.log('Отладка: в ModalOverlay пришло событие клика');
-    handleClick();
-  }
+  // const reaction = () => {
+  //   // console.log('Отладка: в ModalOverlay пришло событие клика');
+  //   handleClick();
+  // }
 
   React.useEffect(() => {
     const escHandler = (event) => { (event.key === 'Escape') && handleClick(); }
@@ -18,7 +18,7 @@ function ModalOverlay({ handleClick, children }) {
   }, [])
 
   return (
-    <div className={stylesMO.modalOverlay} onClick={reaction}>
+    <div className={stylesMO.modalOverlay} onClick={handleClick}>
       {children}
     </div>
   )
