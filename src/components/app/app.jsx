@@ -80,6 +80,11 @@ function App() {
           ...state,
           draggableIngridients: state.draggableIngridients.concat(action.content)  // добавляем в исходный массив объектов новый объект
         };
+        case "update draggableIngridients":
+          return {
+            ...state,
+            draggableIngridients: action.content // в action.content должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже уданён
+          }
       default:
         return state;
     }

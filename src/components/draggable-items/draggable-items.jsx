@@ -1,41 +1,42 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import diStyles from "./draggable-items.module.css"
+import { ConstructorContext } from '../../services/burgerConstructorContext'
 //import ConstructorItem from "../constructor-item/constructor-item";
 import {
     ConstructorElement,
     DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-
-// <DraggableItems arrSomeIngridients={constructorState.draggableIngridients} />
-// draggableIngridients - массив с объектами. Находится в стейте родительского компонента
-function DraggableItemsList( {arrSomeIngridients} ) {
-
-    // вопрос в том, следует ли передавать редьюсеру новый массив,
-    // или лучше передать индекс, а редьюсер уж сам пусть перезаписывает стейт
-    const testDeleteFunc = (arrInParentState, index) => {
-        const newArr = arrInParentState.slice(0); // копируем данные из стейта родительского компонента
-        return newArr.splice(index, 1);
-    }
-
+function DraggableItemsList() {
+    const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
 
     return (
         <>
             {
-                arrSomeIngridients.map((obj, index) => {
+                constructorState.draggableIngridients.map((obj, index) => {
+
+                    const deleteThisIngridient = () => {
+                        // копируем данные из стейта родительского компонента в эту переменную
+                        const arrOfIngridients = constructorState.draggableIngridients.slice(0);
+
+                        // удаляем из массива ингридиент с текущим индексом
+                        arrOfIngridients.splice(index, 1);
+
+                        // записываем в стейт новый массив ингридиентов
+                        return setConstructorState({ type: "update draggableIngridients", content: arrOfIngridients });;
+                    }
+
                     return (
                         <div className={diStyles.draggableItime} key={index}>
                             <button className={diStyles.draggableButton}><DragIcon /></button>
-                            <ConstructorElement text={obj.name} thumbnail={obj.image} price={obj.price} />
+                            <ConstructorElement text={obj.name} thumbnail={obj.image} price={obj.price} handleClose={deleteThisIngridient} />
                         </div>
                     )
-
                 })
             }
         </>
     )
-
 }
 
 const ingridientsInnerObjStructure = PropTypes.shape({

@@ -70,7 +70,7 @@ function BurgerConstructor({ openModal }) {
                 {(constructorState.draggableIngridients.length > 0) &&
                     (
                         <li className={crStyles.draggableIngridinetContainer}>
-                            <DraggableItems arrSomeIngridients={constructorState.draggableIngridients} />
+                            <DraggableItems />
                         </li>
                     )
                 }
