@@ -5,6 +5,7 @@ import indexStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
+import actionTypes from '../../utils/actionTypes';
 
 import { IngridientsListContext } from '../../services/ingridientsContext';
 import { OrderStateContext } from '../../services/orderStateContext';
@@ -36,13 +37,13 @@ function App() {
 
   function ingridientsReducer(state, action) {
     switch (action.type) {
-      case 'got-data':
+      case actionTypes.GOT_DATA:
         return {
           ingridientsData: action.value,
           isLoading: false,
           hasError: false
         };
-      case 'fetch-error':
+      case actionTypes.FETCH_ERROR:
         return {
           ingridientsData: [],
           isLoading: false,
@@ -64,27 +65,28 @@ function App() {
 
   function constructorReducer(state, action) {
     switch (action.type) {
-      case "add bun":
+      case actionTypes.ADD_BUN:
         return {
           ...state,
           bun: action.content,
         };
-      case "add sauce":
+      case actionTypes.ADD_SAUCE:
         return {
           ...state,
           draggableIngridients: state.draggableIngridients.concat(action.content)  // добавляем в исходный массив объектов новый объект
         };
-      case "add main":
+      case actionTypes.ADD_MAIN:
         return {
           ...state,
           draggableIngridients: state.draggableIngridients.concat(action.content)  // добавляем в исходный массив объектов новый объект
         };
-      case "update draggableIngridients":
+      case actionTypes.UPDATE_DRAGGABLE_INGRIDIENTS:
+        console.log('actionTypes.UPDATE_DRAGGABLE_INGRIDIENTS');
         return {
           ...state,
           draggableIngridients: action.content // в action.content должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже уданён
         };
-      case 'REMOVE_ALL_INGRIDIENTS':
+      case actionTypes.REMOVE_ALL_INGRIDIENTS:
         return {
           bun: {},
           draggableIngridients: []
@@ -153,14 +155,15 @@ function App() {
         // setOrderData - здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
         // setOrderData(ORDER_DATA);
 
-        setIngridientsState({ type: 'got-data', value: res.data });
+        setIngridientsState({ type: actionTypes.GOT_DATA, value: res.data });
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(`Error: can't fetch ingridiets data from ${url}`);
         console.log(`response from server is: `, err);
         console.log(`err.message is: `, err.message);
 
-        setIngridientsState({ type: 'fetch-error' });
+        setIngridientsState({ type: actionTypes.FETCH_ERROR });
       });
   };
 

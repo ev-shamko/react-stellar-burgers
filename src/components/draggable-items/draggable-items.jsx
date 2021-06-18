@@ -1,6 +1,7 @@
 import React from "react";
 import diStyles from "./draggable-items.module.css"
 import { ConstructorContext } from '../../services/burgerConstructorContext'
+import actionTypes from '../../utils/actionTypes';
 
 import {
     ConstructorElement,
@@ -23,7 +24,7 @@ function DraggableItemsList() {
                         arrOfIngridients.splice(index, 1);
 
                         // записываем в стейт новый массив ингридиентов
-                        return setConstructorState({ type: "update draggableIngridients", content: arrOfIngridients });;
+                        return setConstructorState({ type: actionTypes.UPDATE_DRAGGABLE_INGRIDIENTS, content: arrOfIngridients });;
                     }
 
                     return (

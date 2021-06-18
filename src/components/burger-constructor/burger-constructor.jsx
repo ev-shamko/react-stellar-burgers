@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
+import actionTypes from '../../utils/actionTypes';
 
 import { OrderStateContext } from '../../services/orderStateContext';
 import { ConstructorContext } from '../../services/burgerConstructorContext';
@@ -92,7 +93,7 @@ function BurgerConstructor({ openModal }) {
             })
             .then(() => {
                 openModal(event, 'OrderDetails'); 
-                setConstructorState({ type: 'REMOVE_ALL_INGRIDIENTS' });
+                setConstructorState({ type: actionTypes.REMOVE_ALL_INGRIDIENTS });
             })
             .catch((err) => {
                 console.log(`Error: some error ocured during posting order`);
