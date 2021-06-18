@@ -27,12 +27,14 @@ const IngridientCard = ({ objIngridient, openModal }) => {
     const addIngridientInConstructor = () => {
         setConstructorState({type: `add ${objIngridient.type}`, content: objIngridient});
     }
+    
+    const handleClick = (event) => {
+        openIngridientDetails(event);
+        addIngridientInConstructor();
+    }
 
         return (
-        <div className={cardStyles.ingrCard + ' mb-8'} onClick={openIngridientDetails}>
-            {/* В разметку карточки ингридиента добавлена дополнительная обёртка (div), 
-            чтобы по клику на ингридиент запускалась ещё одна функция: добавление ингридиента в конструктор */}
-            <div onClick={addIngridientInConstructor}>
+        <div className={cardStyles.ingrCard + ' mb-8'} onClick={handleClick}>
                 <img src={objIngridient.image} alt={objIngridient.name} className={cardStyles.itemPic} />
                 <div className={cardStyles.price}>
                     <Counter count={1} size="default" />
@@ -40,7 +42,6 @@ const IngridientCard = ({ objIngridient, openModal }) => {
                     <CurrencyIcon type="primary" />
                 </div>
                 <h3 className="m-1 text_type_main-default">{objIngridient.name}</h3>
-            </div>
         </div>
     );
 }
