@@ -16,7 +16,7 @@ import {
 // @ts-ignore
 function BurgerConstructor({ openModal }) {
 
-    const { constructorState } = React.useContext(ConstructorContext);
+    const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
     const { setOrderState } = React.useContext(OrderStateContext);
 
     /*{
@@ -92,6 +92,7 @@ function BurgerConstructor({ openModal }) {
             })
             .then(() => {
                 openModal(event, 'OrderDetails'); 
+                setConstructorState({ type: 'REMOVE_ALL_INGRIDIENTS' });
             })
             .catch((err) => {
                 console.log(`Error: some error ocured during posting order`);

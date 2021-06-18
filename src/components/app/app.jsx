@@ -83,6 +83,11 @@ function App() {
         return {
           ...state,
           draggableIngridients: action.content // в action.content должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже уданён
+        };
+      case 'REMOVE_ALL_INGRIDIENTS':
+        return {
+          bun: {},
+          draggableIngridients: []
         }
       default:
         return state;
