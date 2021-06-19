@@ -81,7 +81,6 @@ function App() {
           draggableIngridients: state.draggableIngridients.concat(action.content)  // добавляем в исходный массив объектов новый объект
         };
       case actionTypes.UPDATE_DRAGGABLE_INGRIDIENTS:
-        console.log('actionTypes.UPDATE_DRAGGABLE_INGRIDIENTS');
         return {
           ...state,
           draggableIngridients: action.content // в action.content должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже уданён
