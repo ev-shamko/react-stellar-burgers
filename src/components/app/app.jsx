@@ -156,7 +156,6 @@ function App() {
         // setOrderData(ORDER_DATA);
 
         setIngridientsState({ type: actionTypes.GOT_DATA, value: res.data });
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(`Error: can't fetch ingridiets data from ${url}`);
