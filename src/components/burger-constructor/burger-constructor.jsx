@@ -2,6 +2,10 @@ import React from "react";
 import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
+import actionTypes from '../../utils/actionTypes';
+
+import { OrderStateContext } from '../../services/orderStateContext';
+import { ConstructorContext } from '../../services/burgerConstructorContext';
 
 import {
     ConstructorElement,
@@ -9,106 +13,157 @@ import {
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-//<BurgerConstructor allIngridients={ingridientsData} openModal={openModal} />
+//<BurgerConstructor openModal={openModal} />
 // @ts-ignore
-class BurgerConstructor extends React.Component {
+function BurgerConstructor({ openModal }) {
 
-    constructor(props) {
-        super(props);
+    const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
+    const { setOrderState } = React.useContext(OrderStateContext);
 
-        // пока что захардодено
-        // создаём массив с ингридиентами, которые будут находиться между верхней и нижней булкой. Из этого массива нагененрируем ингридиенты для конструктора
-        this.someIngridients = this.props.allIngridients.filter((obj) => {
-            return obj.type === "main";
-        })
+    /*{
+    bun: {},
+    draggableIngridients: [{}, {}]
+  };
+  */
 
-        this.state = {
-            //пока что захардкодено
-            bunIngridient: this.props.allIngridients[0],
-            draggableIngridients: this.someIngridients,
-        }
-    }
+    // ******** Можно включить захардкодены дефолтные компоненты в конструкторе бургеров
 
-    getTotalPrice() {
-        const totalPrice = this.state.bunIngridient.price * 2; // цена верхней и нижней булки
-        let summOfDraggableIngr = 0;
+    // useEffect(() => {
+    // для отладки проставляем дефолтные ингридиенты в конструкторе
+    // setConstructorState({ type: 'add sauce', content: ingridientsState.ingridientsData[3] });
+    // setConstructorState({ type: 'add bun', content: ingridientsState.ingridientsData[0] });
+    // }, []);
+
+    // ******************************
+
+    function getTotalPrice() {
+        const priceOfBun = constructorState.bun.price * 2; // цена верхней и нижней булки
+        let priceOfDraggableIngr = 0;
 
         // если есть ингридиенты между булками, то считаем их стоимость
-        if (this.state.draggableIngridients.length > 0) {
-            summOfDraggableIngr = this.state.draggableIngridients.reduce(function (accumulator, currentValue) {
+        if (constructorState.draggableIngridients.length > 0) {
+            priceOfDraggableIngr = constructorState.draggableIngridients.reduce(function (accumulator, currentValue) {
                 return accumulator + Number(currentValue.price);
             }, 0);
         }
 
-        return totalPrice + summOfDraggableIngr;
+        return priceOfBun + priceOfDraggableIngr;
+    };
+
+
+
+    // функция создаёт объект тела POST-запроса к API 
+    /* Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  */
+    function createPostBody() {
+        const arrForOrder = [];
+
+        // добавляем id булки
+        arrForOrder.push(constructorState.bun["_id"]);
+
+        // добавляем id остальных ингридиентов
+        constructorState.draggableIngridients.map((obj) => {
+            arrForOrder.push(obj["_id"]);
+            return true;
+        });
+
+        const bodyOfPost = { "ingredients": arrForOrder };
+        return bodyOfPost;
     }
 
-    render() {
-        const openOrderModal = (event) => {
-            return this.props.openModal(event, 'OrderDetails');
-        };
+    const postBurgerOrder = (event) => {
 
-        return (
-            <section className={crStyles.container}>
-                <ul className={crStyles.chosenIngridients + ' mb-6'}>
+        const POST_URL = 'https://norma.nomoreparties.space/api/orders'
 
-                    <li className={crStyles.topIngridinet}>
-                        <ConstructorElement type="top" isLocked="true" text={this.state.bunIngridient.name + " (верх)"} thumbnail={this.state.bunIngridient.image} price={this.state.bunIngridient.price} />
-                    </li>
-
-                    <li className={crStyles.draggableIngridinetContainer}>
-                        <DraggableItems arrSomeIngridients={this.state.draggableIngridients} />
-                    </li>
-
-                    <li className={crStyles.bottomIngridinet}>
-                        <ConstructorElement type="bottom" isLocked="true" text={this.state.bunIngridient.name + " (низ)"} thumbnail={this.state.bunIngridient.image} price={this.state.bunIngridient.price} />
-                    </li>
-                </ul>
-                <div className={crStyles.totalBar}>
-                    <span className={'text text_type_digits-medium mr-10'}>{this.getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
-                    <Button type="primary" size="large" onClick={openOrderModal}>Оформить заказ</Button>
-                </div>
-            </section>
-        );
+        fetch(POST_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(createPostBody())
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return Promise.reject(res.status);
+            })
+            .then((res) => {
+                console.log('in fetch: Получен номер заказа', res.order.number);
+                setOrderState(res); // записываем в стейт объект ответа от сервера
+            })
+            .then(() => {
+                openModal(event, 'OrderDetails'); 
+                setConstructorState({ type: actionTypes.REMOVE_ALL_INGRIDIENTS });
+            })
+            .catch((err) => {
+                console.log(`Error: some error ocured during posting order`);
+                console.log(`response from server is: `, err);
+            });
     }
+
+    const sendOrderToApi = (event) => {
+        postBurgerOrder(event)
+        return true;
+    };
+
+    return (
+        <section className={crStyles.container}>
+            {/* {console.log('Рендерю >>BurgerConstructor<<')} */}
+
+            <ul className={crStyles.chosenIngridients + ' mb-6'}>
+
+                {/* Верхняя булка: отрисуется, если пользователь уже выбрал булку  */}
+                {(constructorState.bun.name) &&
+                    (
+                        <li className={crStyles.topIngridinet}>
+                            <ConstructorElement type="top" isLocked="true" text={constructorState.bun.name + " (верх)"} thumbnail={constructorState.bun.image} price={constructorState.bun.price} />
+                        </li>
+                    )
+                }
+
+                {/* Контейнер с настраиваемыми ингридиентами: отрисуется, если что-то уже выбрано */}
+                {(constructorState.draggableIngridients.length > 0) &&
+                    (
+                        <li className={crStyles.draggableIngridinetContainer}>
+                            <DraggableItems />
+                        </li>
+                    )
+                }
+
+                {/* Нижняя булка: отрисуется, если пользователь уже выбрал булку  */}
+                {(constructorState.bun.name) &&
+                    (
+                        <li className={crStyles.bottomIngridinet}>
+                            <ConstructorElement type="bottom" isLocked="true" text={constructorState.bun.name + " (низ)"} thumbnail={constructorState.bun.image} price={constructorState.bun.price} />
+                        </li>
+                    )
+                }
+
+            </ul>
+
+            <div className={crStyles.totalBar}>
+                {/* Если пользователь не выбрал бургерную булку, то не будет отрисовываться поле с общей стоимостью и кнопка заказа */}
+                {(constructorState.bun.name) &&
+                    (
+                        <>
+                            <span className={'text text_type_digits-medium mr-10'}>{getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
+                            <Button type="primary" size="large" onClick={sendOrderToApi}>Оформить заказ</Button>
+                        </>
+                    )
+                    ||
+                    (
+                        <span className={'text text_type_main-medium mr-10'}>Выберите булку для бургера</span>
+                    )
+                }
+            </div>
+
+        </section>
+    );
+    // }
 }
 
-// в этом индентификаторе записан валидатор для объектов, находящихся внутри массива this.props.allIngridients
-// мы ожидаем, что массив this.props.allIngridients будет состоять из объектов с такой структурой
-const ingridientsInnerObjStructure = PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    calories: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    image_mobile: PropTypes.string.isRequired,
-    image_large: PropTypes.string.isRequired,
-    __v: PropTypes.number.isRequired,
-  });
-
-  BurgerConstructor.propTypes = {
-    allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+BurgerConstructor.propTypes = {
     openModal: PropTypes.func.isRequired
 }
-
-/*  Пример объекта, содержащегося в массиве с ингридиентами this.props.allIngridients :
-{
-    "_id": "60666c42cc7b410027a1a9b1",
-    "name": "Краторная булка N-200i",
-    "type": "bun",
-    "proteins": 80,
-    "fat": 24,
-    "carbohydrates": 53,
-    "calories": 420,
-    "price": 1255,
-    "image": "https://code.s3.yandex.net/react/code/bun-02.png",
-    "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
-    "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
-    "__v": 0
-}*/
 
 export default BurgerConstructor;

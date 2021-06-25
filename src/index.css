@@ -1,14 +1,4 @@
-/*
-
-body {
-  margin: 0;
-  background-color:cadetblue;
-
+/* Это фикс для пакета @ya.praktikum/react-developer-burger-ui-components */
+.constructor-element__text {
+  width: 254px;
 }
-
-#root {
-  background-color:dodgerblue;
-  min-height: 500px;
-}
-
-*/

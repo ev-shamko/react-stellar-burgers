@@ -17,7 +17,7 @@ function Modal({ closeModal, children }) {
     return ReactDOM.createPortal(
         (
             <ModalOverlay handleClick={closeModal} >
-                {console.log('Отладка: рендерю модальное окно')}
+                {/* {console.log('Отладка: рендерю модальное окно')} */}
 
                 <article className={modalStyles.modal} onClick={stopPropagation}>
                     <button onClick={closeModal} className={modalStyles.closeButton}>

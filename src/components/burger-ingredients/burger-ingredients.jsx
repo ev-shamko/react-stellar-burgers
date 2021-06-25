@@ -1,114 +1,84 @@
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from 'prop-types';
-
 import ingrStyles from "./burger-ingredients.module.css";
-//import IngridientCard from "../ingridient-card/ingrdient-card";
 import CardList from "../ingridients-cardlist/ingridients-cardlist";
+
 import {
     Tab,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-// <BurgerIngredients allIngridients={ingridientsData} openModal={openModal} /> 
-// @ts-ignore
-class BurgerIngredients extends React.Component {
+// <BurgerIngredients openModal={openModal} /> 
+function BurgerIngredients({ openModal }) {
 
-    constructor(props) {
-        super(props);
+    // этот стейт нужен для переключения активного таба в компоненте <Tab />
+    // компонент <Tab /> "под капотом" передаёт этому методу в качестве аргумента значение пропса value
+    const [currentTab, setCurrentTab] = React.useState('one');
 
-        this.state = {
-           currentTab: 'one',
-        }
+    // рефы и scrollIntoRef используются для автопрокрутки блока с ингридиентами при клике на табы с названиями типов ингридиентов
+    const bunRef = useRef(null);
+    const sauceRef = useRef(null);
+    const mainRef = useRef(null);
 
-        this.tabSwitch = this.tabSwitch.bind(this);
+    function scrollIntoRef(stringArg) {
+        // в этом объекте ключи должны соответствовать типам ингридиентов бургера.
+        // Пока что всего 3 типа ингридиентов. Если будут добавлены другие типы ингридиентов, нужно дополнить объект
+        const objRefKeys = {
+            'bun' : bunRef,
+            'sauce' : sauceRef,
+            'main' : mainRef
+        };
+
+        objRefKeys[stringArg].current.scrollIntoView({ block: "start", behavior: "smooth" });
     }
 
+    const handleClick = (value) => {
+        setCurrentTab(value);
+        scrollIntoRef(value);
+    };
 
-    // дока как это написать для функционального компонента: https://yandex-praktikum.github.io/react-developer-burger-ui-components/docs/tab 
+    return (
+        <section className={ingrStyles.ingridiensContainer}>
+            {/* {console.log('Рендерю компонент BurgerIngridients')} */}
+            <div className={ingrStyles.tabs}>
+                {/* Компонент <Tab /> в функцию из onClick={} в качестве аргумента передаёт не event, а значение пропса value={} */}
+                <Tab value="bun" active={currentTab === 'bun'} onClick={handleClick}>Булки</Tab>
+                <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleClick}>Соусы</Tab>
+                <Tab value="main" active={currentTab === 'main'} onClick={handleClick}>Начинки</Tab>
+            </div>
 
-    tabSwitch(value) {
-        // console.log(value); // походу принимает не событие, а атрибут/пропс value компонтента <Tab />
-        this.setState({
-            ...this.state,
-            currentTab: value
-        });
-    }
+            <div className={ingrStyles.ingrDisplay + ' mt-10'}>
 
-    render(props) {
-        
-        return (
-            <section className={ingrStyles.ingridiensContainer}>
-                <div className={ingrStyles.tabs}>
-                    {/* Компонент <Tab /> обрабатывает функцию, переданную в onClick={} и в качестве аргумента передаёт не event, а значение пропса value={} */}
-                    <Tab value="one" active={this.state.currentTab === 'one'} onClick={this.tabSwitch}>Булки</Tab>
-                    <Tab value="two" active={this.state.currentTab === 'two'} onClick={this.tabSwitch}>Соусы</Tab>
-                    <Tab value="three" active={this.state.currentTab === 'three'} onClick={this.tabSwitch}>Начинки</Tab>
+                {/* Булки */}
+                <div className={ingrStyles.ingrShowcase} ref={bunRef}>
+                    <h3 className="text text_type_main-medium">Булки</h3>
+                    <div className={ingrStyles.ingrList}>
+                        <CardList type={"bun"} openModal={openModal} />
+                    </div>
                 </div>
-                <div className={ingrStyles.ingrDisplay + ' mt-10'}>
 
-                    <div className={ingrStyles.ingrShowcase}>
-                        <h3 className="text text_type_main-medium">Булки</h3>
-                        <div className={ingrStyles.ingrList}>
-                            <CardList type={"bun"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
-                        </div>
+                {/* Соусы */}
+                <div className={ingrStyles.ingrShowcase} ref={sauceRef}>
+                    <h3 className="text text_type_main-medium">Соусы</h3>
+                    <div className={ingrStyles.ingrList}>
+                        <CardList type={"sauce"} openModal={openModal} />
                     </div>
-
-                    <div className={ingrStyles.ingrShowcase}>
-                        <h3 className="text text_type_main-medium">Соусы</h3>
-                        <div className={ingrStyles.ingrList}>
-                            <CardList type={"sauce"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
-                        </div>
-                    </div>
-
-                    <div className={ingrStyles.ingrShowcase}>
-                        <h3 className="text text_type_main-medium">Начинки</h3>
-                        <div className={ingrStyles.ingrList}>
-                            <CardList type={"main"} ingridients={this.props.allIngridients} openModal={this.props.openModal} />
-                        </div>
-                    </div>
-
-
                 </div>
-            </section>
-        );
-    }
+
+                {/* Начинки */}
+                <div className={ingrStyles.ingrShowcase} ref={mainRef}>
+                    <h3 className="text text_type_main-medium">Начинки</h3>
+                    <div className={ingrStyles.ingrList}>
+                        <CardList type={"main"} openModal={openModal} />
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    );
 }
 
-// в этом индентификаторе записан валидатор для объектов, находящихся внутри массива this.props.allIngridients
-// мы ожидаем, что массив this.props.allIngridients будет состоять из объектов с такой структурой
-const ingridientsInnerObjStructure = PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    calories: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    image_mobile: PropTypes.string.isRequired,
-    image_large: PropTypes.string.isRequired,
-    __v: PropTypes.number.isRequired,
-});
-
 BurgerIngredients.propTypes = {
-    allIngridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
     openModal: PropTypes.func.isRequired
 }
 
 export default BurgerIngredients;
-
-/*  Пример объекта, содержащегося в массиве с ингридиентами this.props.allIngridients :
-{
-    "_id": "60666c42cc7b410027a1a9b1",
-    "name": "Краторная булка N-200i",
-    "type": "bun",
-    "proteins": 80,
-    "fat": 24,
-    "carbohydrates": 53,
-    "calories": 420,
-    "price": 1255,
-    "image": "https://code.s3.yandex.net/react/code/bun-02.png",
-    "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
-    "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
-    "__v": 0
-}*/

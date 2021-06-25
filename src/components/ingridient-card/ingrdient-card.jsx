@@ -1,5 +1,8 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import {
+    ConstructorContext
+} from '../../services/burgerConstructorContext';
 
 import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -14,19 +17,31 @@ import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-c
 // @ts-ignore
 const IngridientCard = ({ objIngridient, openModal }) => {
 
+    const { setConstructorState } = React.useContext(ConstructorContext);
+
     const openIngridientDetails = (event) => {
         return openModal(event, 'IngridientDetails', objIngridient);
     };
 
-    return (
-        <div className={cardStyles.ingrCard + ' mb-8'} onClick={openIngridientDetails}>
-            <img src={objIngridient.image} alt={objIngridient.name} className={cardStyles.itemPic} />
-            <div className={cardStyles.price}>
-                <Counter count={1} size="default" />
-                <span className="m-2 text_type_digits-default">{objIngridient.price}</span>
-                <CurrencyIcon type="primary" />
-            </div>
-            <h3 className="m-1 text_type_main-default">{objIngridient.name}</h3>
+    // с action.type получилось изящно, я молодец
+    const addIngridientInConstructor = () => {
+        setConstructorState({type: `ADD_${objIngridient.type.toUpperCase()}`, content: objIngridient});
+    }
+    
+    const handleClick = (event) => {
+        openIngridientDetails(event);
+        addIngridientInConstructor();
+    }
+
+        return (
+        <div className={cardStyles.ingrCard + ' mb-8'} onClick={handleClick}>
+                <img src={objIngridient.image} alt={objIngridient.name} className={cardStyles.itemPic} />
+                <div className={cardStyles.price}>
+                    <Counter count={1} size="default" />
+                    <span className="m-2 text_type_digits-default">{objIngridient.price}</span>
+                    <CurrencyIcon type="primary" />
+                </div>
+                <h3 className="m-1 text_type_main-default">{objIngridient.name}</h3>
         </div>
     );
 }
@@ -47,7 +62,7 @@ const ingridientsInnerObjStructure = PropTypes.shape({
 });
 
 IngridientCard.propTypes = {
-    ingridients: PropTypes.arrayOf(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
+    objIngridient: PropTypes.shape(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
     openModal: PropTypes.func.isRequired
 }
 
