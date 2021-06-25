@@ -25,7 +25,7 @@ const IngridientCard = ({ objIngridient, openModal }) => {
 
     // с action.type получилось изящно, я молодец
     const addIngridientInConstructor = () => {
-        setConstructorState({type: `add ${objIngridient.type}`, content: objIngridient});
+        setConstructorState({type: `ADD_${objIngridient.type.toUpperCase()}`, content: objIngridient});
     }
     
     const handleClick = (event) => {

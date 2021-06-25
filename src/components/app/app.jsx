@@ -83,7 +83,7 @@ function App() {
       case actionTypes.UPDATE_DRAGGABLE_INGRIDIENTS:
         return {
           ...state,
-          draggableIngridients: action.content // в action.content должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже уданён
+          draggableIngridients: action.content // в action.content должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже удалён
         };
       case actionTypes.REMOVE_ALL_INGRIDIENTS:
         return {

@@ -1,8 +1,8 @@
 const actionTypes = {
-    ADD_BUN: 'add bun',
-    ADD_SAUCE: 'add sauce',
-    ADD_MAIN: 'add main',
-    UPDATE_DRAGGABLE_INGRIDIENTS: 'update draggableIngridients',
+    ADD_BUN: 'ADD_BUN',
+    ADD_SAUCE: 'ADD_SAUCE',
+    ADD_MAIN: 'ADD_MAIN',
+    UPDATE_DRAGGABLE_INGRIDIENTS: 'UPDATE_DRAGGABLE_INGRIDIENTS',
     REMOVE_ALL_INGRIDIENTS: 'REMOVE_ALL_INGRIDIENTS',
 
     GOT_DATA: 'GOT_DATA',
