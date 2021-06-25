@@ -20,8 +20,15 @@ function BurgerIngredients({ openModal }) {
     const mainRef = useRef(null);
 
     function scrollIntoRef(stringArg) {
-        const ref = eval(stringArg + 'Ref');
-        ref.current.scrollIntoView({ block: "start", behavior: "smooth" });
+        // в этом объекте ключи должны соответствовать типам ингридиентов бургера.
+        // Пока что всего 3 типа ингридиентов. Если будут добавлены другие типы ингридиентов, нужно дополнить объект
+        const objRefKeys = {
+            'bun' : bunRef,
+            'sauce' : sauceRef,
+            'main' : mainRef
+        };
+
+        objRefKeys[stringArg].current.scrollIntoView({ block: "start", behavior: "smooth" });
     }
 
     const handleClick = (value) => {
