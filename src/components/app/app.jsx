@@ -10,6 +10,7 @@ import actionTypes from '../../utils/actionTypes';
 import { IngridientsListContext } from '../../services/ingridientsContext';
 import { OrderStateContext } from '../../services/orderStateContext';
 import { ConstructorContext } from '../../services/burgerConstructorContext';
+import { useSelector, useDispatch } from 'react-redux';
 
 // Импорт захардкоденных данных
 // import ORDER_DATA from '../../utils/order-data';
@@ -25,6 +26,8 @@ import IngridientDetais from '../ingridient-details/ingridient-details';
 const ApiUrl = "https://norma.nomoreparties.space/api/ingredients";
 
 function App() {
+
+  const dispatch = useDispatch();
 
   // ************ Рефакторинг стейтов, отвечающих за получение от API массива ингридиентов бургера
   // Раньше было 3 отдельных стейта
@@ -103,13 +106,17 @@ function App() {
   /****************************************************** */
 
   // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
-  const [modalIsVisible, setModalVisibility] = React.useState(false);
+  //const [modalIsVisible, setModalVisibility] = React.useState(false);
   const [currentModalType, setCurrentModalType] = React.useState('none');
   // const [orderData, setOrderData] = React.useState({});
   const [ingrInModalData, setIngrInModalData] = React.useState({});
 
   const closeModal = () => {
-    setModalVisibility(false);
+    // setModalVisibility(false);
+    dispatch({
+      type: 'TOGGLE_MODAL_VISIBILITY',
+      value: false,
+    });
     setCurrentModalType('none');
   }
 
@@ -121,7 +128,11 @@ function App() {
     // console.log('event in openModal() is ', event);
     // console.log('typeOfModal is ', typeOfModal);
 
-    setModalVisibility(true); // отображаем модальное окно   
+    //setModalVisibility(true); // отображаем модальное окно   
+    dispatch({
+      type: 'TOGGLE_MODAL_VISIBILITY',
+      value: true,
+    });
     setCurrentModalType(typeOfModal); //уведомляем Modal, какой тип модалки открыть
     setIngrInModalData(objIngridient); // этот стейт содержит объект с данными об ингридиенте, нужен для рендера IngridientDetails внутри Modal
   }
@@ -182,6 +193,7 @@ function App() {
 
   // https://www.bxnotes.ru/conspect/lib/react/react-notes/rendering/ - хорошая статья по рендерингу в реакте, надо заюзать
   // https://max-frontend.gitbook.io/redux-course-ru-v2/sozdanie/optimizatsiya-refaktoring/optimizatsiya-pererisovok - статья про оптимизацию рендера
+  const modalIsVisible = useSelector(store => store.burgerVendor.modalIsVisible);
 
   return (
     <>
@@ -190,7 +202,7 @@ function App() {
 
       <main className={indexStyles.main}>
         <section className={indexStyles.headerSection}>
-          <h1 className="text text_type_main-large">Соберите бургер</h1>
+          <h1 className="text text_type_main-large">Соберите бургер Ntcn</h1>
         </section>
 
         <section className={indexStyles.constructorContainer}>
@@ -214,7 +226,7 @@ function App() {
                     <BurgerConstructor openModal={openModal} />
 
                     {/* рендеринг попапа с инфой об ингридиенте бургера - ingrInModalData*/}
-                    {modalIsVisible && (currentModalType === 'IngridientDetails') &&
+                    {modalIsVisible /*&& (currentModalType === 'IngridientDetails')*/ &&
                       <Modal closeModal={closeModal}>
                         <IngridientDetais ingrInModalData={ingrInModalData} />
                       </Modal>
