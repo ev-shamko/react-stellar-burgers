@@ -1,7 +1,6 @@
 import React from 'react';
 import stylesOD from './order-details.module.css';
-
-import { OrderStateContext } from '../../services/orderStateContext';
+import { useSelector } from 'react-redux';
 
 // напоминалка:
 // на момент 1 спринта orderData - это стейт app.js
@@ -9,7 +8,8 @@ import { OrderStateContext } from '../../services/orderStateContext';
 
 // <OrderDetails orderData={orderData} />
 function OrderDetais() {
-    const { orderState } = React.useContext(OrderStateContext);
+    const orderState = useSelector(store => store.burgerVendor.orderData);
+
 
     return (
         <>

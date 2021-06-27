@@ -1,14 +1,9 @@
-// импорт экшенов
 import {
     TOGGLE_MODAL_VISIBILITY,
     SET_CURRENT_MODAL_TYPE,
     SET_INGRIDIENT_IN_MODAL,
     SET_ORDER_STATE
 } from '../actions/burgerVendor';
-
-// исходное состояние
-
-
 
 
 const initialState = {
@@ -26,7 +21,9 @@ const initialState = {
     modalIsVisible: false,
     currentModalType: 'none',
     ingrInModalData: {},
-  };
+
+    orderData: {},
+};
 
 // создание редьюсера
 // выполняю рекомендацию к проекту: на данном этапе собираю все редьюсеры в одном файле
@@ -37,6 +34,25 @@ export const burgerVendorReducer = (state = initialState, action) => {
             return {
                 ...state,
                 modalIsVisible: action.value, // true/false
+            }
+        }
+        case SET_CURRENT_MODAL_TYPE: {
+            return {
+                ...state,
+                currentModalType: action.value, // 'none', 'IngridientDetails', 'OrderDetails'
+            }
+        }
+        case SET_INGRIDIENT_IN_MODAL: {
+            return {
+                ...state,
+                ingrInModalData: action.value // {}
+            }
+        }
+        case SET_ORDER_STATE: {
+            console.log('SET_ORDER_STATE: ', action.value )
+            return {
+                ...state,
+                orderData: action.value, // {}
             }
         }
         default: {

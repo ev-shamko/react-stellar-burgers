@@ -4,8 +4,9 @@ import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
 import actionTypes from '../../utils/actionTypes';
 
-import { OrderStateContext } from '../../services/orderStateContext';
 import { ConstructorContext } from '../../services/burgerConstructorContext';
+import { useDispatch } from 'react-redux';
+import { SET_ORDER_STATE } from '../../services/actions/burgerVendor';
 
 import {
     ConstructorElement,
@@ -16,9 +17,10 @@ import {
 //<BurgerConstructor openModal={openModal} />
 // @ts-ignore
 function BurgerConstructor({ openModal }) {
+    const dispatch = useDispatch();
 
     const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
-    const { setOrderState } = React.useContext(OrderStateContext);
+    //const { setOrderState } = React.useContext(OrderStateContext);
 
     /*{
     bun: {},
@@ -89,7 +91,11 @@ function BurgerConstructor({ openModal }) {
             })
             .then((res) => {
                 console.log('in fetch: Получен номер заказа', res.order.number);
-                setOrderState(res); // записываем в стейт объект ответа от сервера
+                // сохраняем объект ответа от сервера с инфой о заказе в редакс-хранилище
+                dispatch({
+                    type: SET_ORDER_STATE,
+                    value: res,
+                });
             })
             .then(() => {
                 openModal(event, 'OrderDetails'); 

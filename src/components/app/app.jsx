@@ -12,6 +12,12 @@ import { OrderStateContext } from '../../services/orderStateContext';
 import { ConstructorContext } from '../../services/burgerConstructorContext';
 import { useSelector, useDispatch } from 'react-redux';
 
+import {
+  TOGGLE_MODAL_VISIBILITY,
+  SET_CURRENT_MODAL_TYPE,
+  SET_INGRIDIENT_IN_MODAL,
+} from '../../services/actions/burgerVendor';
+
 // Импорт захардкоденных данных
 // import ORDER_DATA from '../../utils/order-data';
 // import ingridientsList from '../../utils/data'; // пока не удаляю на случай падения сервера с API
@@ -99,7 +105,8 @@ function App() {
   }
 
   const [constructorState, setConstructorState] = React.useReducer(constructorReducer, constructorInitialState, undefined);
-  const [orderState, setOrderState] = React.useState({});
+  //const [orderState, setOrderState] = React.useState({});
+  
 
   /******************************************************** */
   /******      Управление модальным окном        ********* */
@@ -107,17 +114,25 @@ function App() {
 
   // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
   //const [modalIsVisible, setModalVisibility] = React.useState(false);
-  const [currentModalType, setCurrentModalType] = React.useState('none');
+  //const [currentModalType, setCurrentModalType] = React.useState('none');
   // const [orderData, setOrderData] = React.useState({});
-  const [ingrInModalData, setIngrInModalData] = React.useState({});
+  //const [ingrInModalData, setIngrInModalData] = React.useState({});
+
+  const modalIsVisible = useSelector(store => store.burgerVendor.modalIsVisible);
+  const currentModalType = useSelector(store => store.burgerVendor.currentModalType);
+  const ingrInModalData = useSelector(store => store.burgerVendor.ingrInModalData);
+  const orderState = useSelector(store =>  store.burgerVendor.orderData);
 
   const closeModal = () => {
-    // setModalVisibility(false);
     dispatch({
-      type: 'TOGGLE_MODAL_VISIBILITY',
+      type: TOGGLE_MODAL_VISIBILITY,
       value: false,
     });
-    setCurrentModalType('none');
+
+    dispatch({
+      type: SET_CURRENT_MODAL_TYPE,
+      value: 'none',
+    });
   }
 
   const openModal = (
@@ -125,16 +140,22 @@ function App() {
     typeOfModal = 'none',
     objIngridient = {}
   ) => {
-    // console.log('event in openModal() is ', event);
-    // console.log('typeOfModal is ', typeOfModal);
-
-    //setModalVisibility(true); // отображаем модальное окно   
     dispatch({
-      type: 'TOGGLE_MODAL_VISIBILITY',
+      type: TOGGLE_MODAL_VISIBILITY,
       value: true,
     });
-    setCurrentModalType(typeOfModal); //уведомляем Modal, какой тип модалки открыть
-    setIngrInModalData(objIngridient); // этот стейт содержит объект с данными об ингридиенте, нужен для рендера IngridientDetails внутри Modal
+
+    dispatch({
+      type: SET_CURRENT_MODAL_TYPE,
+      value: typeOfModal,
+    });
+
+    // если метод примет аргумент objIngridient, то модальное окно с информацие об ингридиенте возьмёт данные из объекта, записанного в store.burgerVendor.ingrInModalData
+    // если мы открываем модалку про заказ, а не модалку про ингридиент, то метод openModal() не примет аргумент objIngridient, и в хранилище запишется пустой объект {}
+    dispatch({
+      type: SET_INGRIDIENT_IN_MODAL,
+      value: objIngridient,
+    });
   }
 
 
@@ -193,7 +214,7 @@ function App() {
 
   // https://www.bxnotes.ru/conspect/lib/react/react-notes/rendering/ - хорошая статья по рендерингу в реакте, надо заюзать
   // https://max-frontend.gitbook.io/redux-course-ru-v2/sozdanie/optimizatsiya-refaktoring/optimizatsiya-pererisovok - статья про оптимизацию рендера
-  const modalIsVisible = useSelector(store => store.burgerVendor.modalIsVisible);
+
 
   return (
     <>
@@ -217,7 +238,7 @@ function App() {
             <>
               <IngridientsListContext.Provider value={{ ingridientsState }}>
                 <ConstructorContext.Provider value={{ constructorState, setConstructorState }}>
-                  <OrderStateContext.Provider value={{ orderState, setOrderState }}>
+
 
                     {/* попап  - ingrInModalData */}
                     <BurgerIngredients openModal={openModal} />
@@ -226,7 +247,7 @@ function App() {
                     <BurgerConstructor openModal={openModal} />
 
                     {/* рендеринг попапа с инфой об ингридиенте бургера - ingrInModalData*/}
-                    {modalIsVisible /*&& (currentModalType === 'IngridientDetails')*/ &&
+                    {modalIsVisible && (currentModalType === 'IngridientDetails') &&
                       <Modal closeModal={closeModal}>
                         <IngridientDetais ingrInModalData={ingrInModalData} />
                       </Modal>
@@ -239,7 +260,7 @@ function App() {
                       </Modal>
                     }
 
-                  </OrderStateContext.Provider>
+
                 </ConstructorContext.Provider>
               </IngridientsListContext.Provider>
             </>
