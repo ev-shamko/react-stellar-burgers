@@ -7,15 +7,17 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import actionTypes from '../../utils/actionTypes';
 
-import { IngridientsListContext } from '../../services/ingridientsContext';
-import { OrderStateContext } from '../../services/orderStateContext';
+//import { IngridientsListContext } from '../../services/ingridientsContext';
+//import { OrderStateContext } from '../../services/orderStateContext';
 import { ConstructorContext } from '../../services/burgerConstructorContext';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
   TOGGLE_MODAL_VISIBILITY,
   SET_CURRENT_MODAL_TYPE,
-  SET_INGRIDIENT_IN_MODAL,
+  //SET_INGRIDIENT_IN_MODAL,
+  INGRIDIENT_FETCH_SUCCESS,
+  INGRIDIENT_FETCH_ERROR,
 } from '../../services/actions/burgerVendor';
 
 // Импорт захардкоденных данных
@@ -63,7 +65,7 @@ function App() {
     }
   };
 
-  const [ingridientsState, setIngridientsState] = React.useReducer(ingridientsReducer, ingridientsInitialState, undefined);
+  //const [ingridientsState, setIngridientsState] = React.useReducer(ingridientsReducer, ingridientsInitialState, undefined);
 
   // ************ Стейт, хранящий информацию для BurgerConstructor, позволяет добавлять в него данные из BurgerIngridients
 
@@ -109,54 +111,16 @@ function App() {
   
 
   /******************************************************** */
-  /******      Управление модальным окном        ********* */
+  /******      Импорт стейтов из редакса        ********* */
   /****************************************************** */
-
-  // по-хорошему, перенести бы эти стейты в Modal, чтобы все приложение не перерендеривалось
-  //const [modalIsVisible, setModalVisibility] = React.useState(false);
-  //const [currentModalType, setCurrentModalType] = React.useState('none');
-  // const [orderData, setOrderData] = React.useState({});
-  //const [ingrInModalData, setIngrInModalData] = React.useState({});
 
   const modalIsVisible = useSelector(store => store.burgerVendor.modalIsVisible);
   const currentModalType = useSelector(store => store.burgerVendor.currentModalType);
   const ingrInModalData = useSelector(store => store.burgerVendor.ingrInModalData);
   const orderState = useSelector(store =>  store.burgerVendor.orderData);
-
-  const closeModal = () => {
-    dispatch({
-      type: TOGGLE_MODAL_VISIBILITY,
-      value: false,
-    });
-
-    dispatch({
-      type: SET_CURRENT_MODAL_TYPE,
-      value: 'none',
-    });
-  }
-
-  const openModal = (
-    event = "attention: didn't get an event in first arg of openModal() in app.js",
-    typeOfModal = 'none',
-    objIngridient = {}
-  ) => {
-    dispatch({
-      type: TOGGLE_MODAL_VISIBILITY,
-      value: true,
-    });
-
-    dispatch({
-      type: SET_CURRENT_MODAL_TYPE,
-      value: typeOfModal,
-    });
-
-    // если метод примет аргумент objIngridient, то модальное окно с информацие об ингридиенте возьмёт данные из объекта, записанного в store.burgerVendor.ingrInModalData
-    // если мы открываем модалку про заказ, а не модалку про ингридиент, то метод openModal() не примет аргумент objIngridient, и в хранилище запишется пустой объект {}
-    dispatch({
-      type: SET_INGRIDIENT_IN_MODAL,
-      value: objIngridient,
-    });
-  }
+  const arrOfIngridients = useSelector(store => store.burgerVendor.ingridientsData.arrOfIngridients);
+  const dataIsLoading = useSelector(store => store.burgerVendor.ingridientsData.ingrDataIsLoading);
+  const dataHasError = useSelector(store => store.burgerVendor.ingridientsData.ingrDataHasError);
 
 
   /******************************************************** */
@@ -185,15 +149,19 @@ function App() {
         }
         // setOrderData - здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
         // setOrderData(ORDER_DATA);
-
-        setIngridientsState({ type: actionTypes.GOT_DATA, value: res.data });
+        dispatch({
+          type: INGRIDIENT_FETCH_SUCCESS,
+          value: res.data,
+        })
       })
       .catch((err) => {
         console.log(`Error: can't fetch ingridiets data from ${url}`);
         console.log(`response from server is: `, err);
         console.log(`err.message is: `, err.message);
 
-        setIngridientsState({ type: actionTypes.FETCH_ERROR });
+        dispatch({
+          type: INGRIDIENT_FETCH_ERROR,
+        })
       });
   };
 
@@ -223,7 +191,7 @@ function App() {
 
       <main className={indexStyles.main}>
         <section className={indexStyles.headerSection}>
-          <h1 className="text text_type_main-large">Соберите бургер Ntcn</h1>
+          <h1 className="text text_type_main-large">Соберите бургер</h1>
         </section>
 
         <section className={indexStyles.constructorContainer}>
@@ -232,40 +200,34 @@ function App() {
           * Это очень важно непосредственно для компонента  BurgerConstructor, который роняет приложение при первичном рендере без fetch или без правильных пропсов после fetch
 
           ***Про условия отрисовки:
-          1) Условие ingridientsData пересчитается в false, если в результате fetch сервер вернул объект ответа без свойства res.data (т.е. оно будет undefined) - так иногда бывает со стороны https://norma.nomoreparties.space/*  - в принципе, теперь это условие можно убрать
-          2) Условие (!!ingridientsData.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
-          {!ingridientsState.isLoading && !ingridientsState.hasError && ingridientsState.ingridientsData && !!ingridientsState.ingridientsData.length && (
+          Условие (!!arrOfIngridients.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
+          {!dataIsLoading && !dataHasError && !!arrOfIngridients.length && (
             <>
-              <IngridientsListContext.Provider value={{ ingridientsState }}>
                 <ConstructorContext.Provider value={{ constructorState, setConstructorState }}>
 
-
                     {/* попап  - ingrInModalData */}
-                    <BurgerIngredients openModal={openModal} />
+                    <BurgerIngredients />
 
                     {/* попап  - orderData */}
-                    <BurgerConstructor openModal={openModal} />
+                    <BurgerConstructor />
 
                     {/* рендеринг попапа с инфой об ингридиенте бургера - ingrInModalData*/}
                     {modalIsVisible && (currentModalType === 'IngridientDetails') &&
-                      <Modal closeModal={closeModal}>
+                      <Modal>
                         <IngridientDetais ingrInModalData={ingrInModalData} />
                       </Modal>
                     }
 
                     {/* рендеринг попапа с деталями заказа - orderData */}
                     {modalIsVisible && (currentModalType === 'OrderDetails') &&
-                      <Modal closeModal={closeModal}>
+                      <Modal>
                         <OrderDetails />
                       </Modal>
                     }
 
-
                 </ConstructorContext.Provider>
-              </IngridientsListContext.Provider>
             </>
           )}
-
         </section>
       </main>
     </>

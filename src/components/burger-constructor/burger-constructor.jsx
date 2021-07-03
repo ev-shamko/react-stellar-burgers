@@ -6,7 +6,11 @@ import actionTypes from '../../utils/actionTypes';
 
 import { ConstructorContext } from '../../services/burgerConstructorContext';
 import { useDispatch } from 'react-redux';
-import { SET_ORDER_STATE } from '../../services/actions/burgerVendor';
+import {
+    SET_ORDER_STATE,
+    OPEN_MODAL,
+    SET_MODAL_TYPE,
+} from '../../services/actions/burgerVendor';
 
 import {
     ConstructorElement,
@@ -16,7 +20,7 @@ import {
 
 //<BurgerConstructor openModal={openModal} />
 // @ts-ignore
-function BurgerConstructor({ openModal }) {
+function BurgerConstructor() {
     const dispatch = useDispatch();
 
     const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
@@ -27,14 +31,6 @@ function BurgerConstructor({ openModal }) {
     draggableIngridients: [{}, {}]
   };
   */
-
-    // ******** Можно включить захардкодены дефолтные компоненты в конструкторе бургеров
-
-    // useEffect(() => {
-    // для отладки проставляем дефолтные ингридиенты в конструкторе
-    // setConstructorState({ type: 'add sauce', content: ingridientsState.ingridientsData[3] });
-    // setConstructorState({ type: 'add bun', content: ingridientsState.ingridientsData[0] });
-    // }, []);
 
     // ******************************
 
@@ -98,7 +94,14 @@ function BurgerConstructor({ openModal }) {
                 });
             })
             .then(() => {
-                openModal(event, 'OrderDetails'); 
+                dispatch({
+                    type: OPEN_MODAL,
+                });
+                dispatch({
+                    type: SET_MODAL_TYPE,
+                    value: 'OrderDetails',
+                });
+                //openModal(event, 'OrderDetails');
                 setConstructorState({ type: actionTypes.REMOVE_ALL_INGRIDIENTS });
             })
             .catch((err) => {
@@ -168,8 +171,8 @@ function BurgerConstructor({ openModal }) {
     // }
 }
 
-BurgerConstructor.propTypes = {
-    openModal: PropTypes.func.isRequired
-}
+// BurgerConstructor.propTypes = {
+//     openModal: PropTypes.func.isRequired
+// }
 
 export default BurgerConstructor;

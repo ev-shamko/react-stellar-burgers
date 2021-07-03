@@ -2,15 +2,21 @@ import {
     TOGGLE_MODAL_VISIBILITY,
     SET_CURRENT_MODAL_TYPE,
     SET_INGRIDIENT_IN_MODAL,
-    SET_ORDER_STATE
+    SET_ORDER_STATE,
+    INGRIDIENT_FETCH_SUCCESS,
+    INGRIDIENT_FETCH_ERROR,
+    OPEN_MODAL,
+    CLOSE_MODAL,
+    SET_MODAL_TYPE,
 } from '../actions/burgerVendor';
 
 
 const initialState = {
-    // для получения списка ингридиентов от API
-    ingridientsData: [],
-    isLoading: false,
-    hasError: false,
+    ingridientsData: {
+        arrOfIngridients: [],
+        ingrDataIsLoading: false,
+        ingrDataHasError: false,
+    },
 
     // constructorInitialState
     // В предыдущую итерацию тут был Стейт, хранящий информацию для BurgerConstructor, позволяет добавлять в него данные из BurgerIngridients
@@ -49,10 +55,48 @@ export const burgerVendorReducer = (state = initialState, action) => {
             }
         }
         case SET_ORDER_STATE: {
-            console.log('SET_ORDER_STATE: ', action.value )
+            console.log('SET_ORDER_STATE: ', action.value)
             return {
                 ...state,
                 orderData: action.value, // {}
+            }
+        }
+        case INGRIDIENT_FETCH_SUCCESS: {
+            return {
+                ...state,
+                ingridientsData: {
+                    arrOfIngridients: action.value,
+                    ingrDataIsLoading: false,
+                    ingrDataHasError: false,
+                },
+            }
+        }
+        case INGRIDIENT_FETCH_ERROR: {
+            return {
+                ...state,
+                ingridientsData: {
+                    ingridientsData: [],
+                    isLoading: false,
+                    hasError: true
+                },
+            }
+        }
+        case OPEN_MODAL: {
+            return {
+                ...state,
+                modalIsVisible: true,
+            }
+        }
+        case CLOSE_MODAL: {
+            return {
+                ...state,
+                modalIsVisible: false,
+            }
+        }
+        case SET_MODAL_TYPE: {
+            return {
+                ...state,
+                currentModalType: action.value, // 'none' / 'IngridientDetails' / 'OrderDetails'
             }
         }
         default: {

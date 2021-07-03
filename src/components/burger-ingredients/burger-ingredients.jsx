@@ -8,7 +8,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 // <BurgerIngredients openModal={openModal} /> 
-function BurgerIngredients({ openModal }) {
+function BurgerIngredients() {
 
     // этот стейт нужен для переключения активного таба в компоненте <Tab />
     // компонент <Tab /> "под капотом" передаёт этому методу в качестве аргумента значение пропса value
@@ -52,7 +52,7 @@ function BurgerIngredients({ openModal }) {
                 <div className={ingrStyles.ingrShowcase} ref={bunRef}>
                     <h3 className="text text_type_main-medium">Булки</h3>
                     <div className={ingrStyles.ingrList}>
-                        <CardList type={"bun"} openModal={openModal} />
+                        <CardList type={"bun"} />
                     </div>
                 </div>
 
@@ -60,7 +60,7 @@ function BurgerIngredients({ openModal }) {
                 <div className={ingrStyles.ingrShowcase} ref={sauceRef}>
                     <h3 className="text text_type_main-medium">Соусы</h3>
                     <div className={ingrStyles.ingrList}>
-                        <CardList type={"sauce"} openModal={openModal} />
+                        <CardList type={"sauce"} />
                     </div>
                 </div>
 
@@ -68,7 +68,7 @@ function BurgerIngredients({ openModal }) {
                 <div className={ingrStyles.ingrShowcase} ref={mainRef}>
                     <h3 className="text text_type_main-medium">Начинки</h3>
                     <div className={ingrStyles.ingrList}>
-                        <CardList type={"main"} openModal={openModal} />
+                        <CardList type={"main"} />
                     </div>
                 </div>
 
@@ -77,8 +77,8 @@ function BurgerIngredients({ openModal }) {
     );
 }
 
-BurgerIngredients.propTypes = {
-    openModal: PropTypes.func.isRequired
-}
+// BurgerIngredients.propTypes = {
+//     openModal: PropTypes.func.isRequired
+// }
 
 export default BurgerIngredients;

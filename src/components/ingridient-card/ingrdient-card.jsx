@@ -7,6 +7,13 @@ import {
 import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { useDispatch } from 'react-redux';
+import {
+    OPEN_MODAL,
+    SET_MODAL_TYPE,
+    SET_INGRIDIENT_IN_MODAL,
+} from '../../services/actions/burgerVendor';
+
 /* <IngridientCard
         objIngridient={obj}
         key={obj._id}
@@ -15,33 +22,45 @@ import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-c
 */
 
 // @ts-ignore
-const IngridientCard = ({ objIngridient, openModal }) => {
+const IngridientCard = ({ objIngridient }) => {
+    const dispatch = useDispatch();
 
     const { setConstructorState } = React.useContext(ConstructorContext);
 
     const openIngridientDetails = (event) => {
-        return openModal(event, 'IngridientDetails', objIngridient);
+        dispatch({
+            type: OPEN_MODAL,
+        });
+        dispatch({
+            type: SET_MODAL_TYPE,
+            value: 'IngridientDetails',
+        });
+        dispatch({
+            type: SET_INGRIDIENT_IN_MODAL,
+            value: objIngridient,
+        });
+        //return openModal(event, 'IngridientDetails', objIngridient);
     };
 
     // с action.type получилось изящно, я молодец
     const addIngridientInConstructor = () => {
-        setConstructorState({type: `ADD_${objIngridient.type.toUpperCase()}`, content: objIngridient});
+        setConstructorState({ type: `ADD_${objIngridient.type.toUpperCase()}`, content: objIngridient });
     }
-    
+
     const handleClick = (event) => {
         openIngridientDetails(event);
         addIngridientInConstructor();
     }
 
-        return (
+    return (
         <div className={cardStyles.ingrCard + ' mb-8'} onClick={handleClick}>
-                <img src={objIngridient.image} alt={objIngridient.name} className={cardStyles.itemPic} />
-                <div className={cardStyles.price}>
-                    <Counter count={1} size="default" />
-                    <span className="m-2 text_type_digits-default">{objIngridient.price}</span>
-                    <CurrencyIcon type="primary" />
-                </div>
-                <h3 className="m-1 text_type_main-default">{objIngridient.name}</h3>
+            <img src={objIngridient.image} alt={objIngridient.name} className={cardStyles.itemPic} />
+            <div className={cardStyles.price}>
+                <Counter count={1} size="default" />
+                <span className="m-2 text_type_digits-default">{objIngridient.price}</span>
+                <CurrencyIcon type="primary" />
+            </div>
+            <h3 className="m-1 text_type_main-default">{objIngridient.name}</h3>
         </div>
     );
 }
@@ -63,7 +82,7 @@ const ingridientsInnerObjStructure = PropTypes.shape({
 
 IngridientCard.propTypes = {
     objIngridient: PropTypes.shape(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
-    openModal: PropTypes.func.isRequired
+    //openModal: PropTypes.func.isRequired
 }
 
 export default IngridientCard;
