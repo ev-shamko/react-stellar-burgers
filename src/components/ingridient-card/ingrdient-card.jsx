@@ -1,9 +1,5 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import {
-    ConstructorContext
-} from '../../services/burgerConstructorContext';
-
 import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 
@@ -13,22 +9,19 @@ import {
     SET_MODAL_TYPE,
     SET_INGRIDIENT_IN_MODAL,
     ADD_BUN,
-    ADD_SAUCE, // прямо сейчас я не вызываю эти переменные, а сразу генерирую строку. Нипарядок!
+    ADD_SAUCE,
     ADD_MAIN,
 } from '../../services/actions/burgerVendor';
 
 /* <IngridientCard
         objIngridient={obj}
         key={obj._id}
-        openModal={this.props.openModal}
     />
 */
 
 // @ts-ignore
 const IngridientCard = ({ objIngridient }) => {
     const dispatch = useDispatch();
-
-    // const { setConstructorState } = React.useContext(ConstructorContext);
 
     const openIngridientDetails = (event) => {
         dispatch({
@@ -42,16 +35,27 @@ const IngridientCard = ({ objIngridient }) => {
             type: SET_INGRIDIENT_IN_MODAL,
             value: objIngridient,
         });
-        //return openModal(event, 'IngridientDetails', objIngridient);
     };
 
-    // с action.type получилось изящно, я молодец
+    // функция возвращает нужный экшн в зависимости от типа ингридиента
+    // это нужно для добавления ингридиета в стейт
+    const getAction = (typeOfIngridient) => {
+        if (typeOfIngridient === 'bun') {
+            return ADD_BUN;
+        }
+
+        if (typeOfIngridient === 'sauce') {
+            return ADD_SAUCE;
+        }
+
+        if (typeOfIngridient === 'main') {
+            return ADD_MAIN;
+        }
+    };
+
     const addIngridientInConstructor = () => {
-        // отсюда потом удалить управление старым стейтом
-        // setConstructorState({ type: `ADD_${objIngridient.type.toUpperCase()}`, content: objIngridient });
-        
         dispatch({
-            type: `ADD_${objIngridient.type.toUpperCase()}`,
+            type: getAction(objIngridient.type), // в зависимости от типа добавляемого ингридиента сюда подставится нужный экшн
             value: objIngridient,
         })
     };
@@ -59,7 +63,7 @@ const IngridientCard = ({ objIngridient }) => {
     const handleClick = (event) => {
         openIngridientDetails(event);
         addIngridientInConstructor();
-    }
+    };
 
     return (
         <div className={cardStyles.ingrCard + ' mb-8'} onClick={handleClick}>
@@ -90,8 +94,7 @@ const ingridientsInnerObjStructure = PropTypes.shape({
 });
 
 IngridientCard.propTypes = {
-    objIngridient: PropTypes.shape(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
-    //openModal: PropTypes.func.isRequired
+    objIngridient: PropTypes.shape(ingridientsInnerObjStructure.isRequired),
 }
 
 export default IngridientCard;
