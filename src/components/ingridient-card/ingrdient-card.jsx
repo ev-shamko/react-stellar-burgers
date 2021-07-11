@@ -12,6 +12,9 @@ import {
     OPEN_MODAL,
     SET_MODAL_TYPE,
     SET_INGRIDIENT_IN_MODAL,
+    ADD_BUN,
+    ADD_SAUCE, // прямо сейчас я не вызываю эти переменные, а сразу генерирую строку. Нипарядок!
+    ADD_MAIN,
 } from '../../services/actions/burgerVendor';
 
 /* <IngridientCard
@@ -25,7 +28,7 @@ import {
 const IngridientCard = ({ objIngridient }) => {
     const dispatch = useDispatch();
 
-    const { setConstructorState } = React.useContext(ConstructorContext);
+    // const { setConstructorState } = React.useContext(ConstructorContext);
 
     const openIngridientDetails = (event) => {
         dispatch({
@@ -44,8 +47,14 @@ const IngridientCard = ({ objIngridient }) => {
 
     // с action.type получилось изящно, я молодец
     const addIngridientInConstructor = () => {
-        setConstructorState({ type: `ADD_${objIngridient.type.toUpperCase()}`, content: objIngridient });
-    }
+        // отсюда потом удалить управление старым стейтом
+        // setConstructorState({ type: `ADD_${objIngridient.type.toUpperCase()}`, content: objIngridient });
+        
+        dispatch({
+            type: `ADD_${objIngridient.type.toUpperCase()}`,
+            value: objIngridient,
+        })
+    };
 
     const handleClick = (event) => {
         openIngridientDetails(event);

@@ -5,11 +5,12 @@ import DraggableItems from "../draggable-items/draggable-items";
 import actionTypes from '../../utils/actionTypes';
 
 import { ConstructorContext } from '../../services/burgerConstructorContext';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     SET_ORDER_STATE,
     OPEN_MODAL,
     SET_MODAL_TYPE,
+    REMOVE_ALL_INGRIDIENTS,
 } from '../../services/actions/burgerVendor';
 
 import {
@@ -22,6 +23,8 @@ import {
 // @ts-ignore
 function BurgerConstructor() {
     const dispatch = useDispatch();
+    const chosenBun = useSelector(store => store.burgerVendor.bun); // объект с данными о булке
+    const chosenDraggableIngridients = useSelector(store => store.burgerVendor.draggableIngridients); // массив объектов с данными об ингридиентах, которые выбрал пользователь
 
     const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
     //const { setOrderState } = React.useContext(OrderStateContext);
@@ -35,12 +38,12 @@ function BurgerConstructor() {
     // ******************************
 
     function getTotalPrice() {
-        const priceOfBun = constructorState.bun.price * 2; // цена верхней и нижней булки
+        const priceOfBun = chosenBun.price * 2; // цена верхней и нижней булки
         let priceOfDraggableIngr = 0;
 
         // если есть ингридиенты между булками, то считаем их стоимость
-        if (constructorState.draggableIngridients.length > 0) {
-            priceOfDraggableIngr = constructorState.draggableIngridients.reduce(function (accumulator, currentValue) {
+        if (chosenDraggableIngridients.length > 0) {
+            priceOfDraggableIngr = chosenDraggableIngridients.reduce(function (accumulator, currentValue) {
                 return accumulator + Number(currentValue.price);
             }, 0);
         }
@@ -56,10 +59,10 @@ function BurgerConstructor() {
         const arrForOrder = [];
 
         // добавляем id булки
-        arrForOrder.push(constructorState.bun["_id"]);
+        arrForOrder.push(chosenBun["_id"]);
 
         // добавляем id остальных ингридиентов
-        constructorState.draggableIngridients.map((obj) => {
+        chosenDraggableIngridients.map((obj) => {
             arrForOrder.push(obj["_id"]);
             return true;
         });
@@ -102,7 +105,11 @@ function BurgerConstructor() {
                     value: 'OrderDetails',
                 });
                 //openModal(event, 'OrderDetails');
-                setConstructorState({ type: actionTypes.REMOVE_ALL_INGRIDIENTS });
+
+                dispatch({
+                    type: REMOVE_ALL_INGRIDIENTS,
+                });
+                // setConstructorState({ type: actionTypes.REMOVE_ALL_INGRIDIENTS });
             })
             .catch((err) => {
                 console.log(`Error: some error ocured during posting order`);
@@ -122,16 +129,16 @@ function BurgerConstructor() {
             <ul className={crStyles.chosenIngridients + ' mb-6'}>
 
                 {/* Верхняя булка: отрисуется, если пользователь уже выбрал булку  */}
-                {(constructorState.bun.name) &&
+                {(chosenBun.name) &&
                     (
                         <li className={crStyles.topIngridinet}>
-                            <ConstructorElement type="top" isLocked="true" text={constructorState.bun.name + " (верх)"} thumbnail={constructorState.bun.image} price={constructorState.bun.price} />
+                            <ConstructorElement type="top" isLocked="true" text={chosenBun.name + " (верх)"} thumbnail={chosenBun.image} price={chosenBun.price} />
                         </li>
                     )
                 }
 
                 {/* Контейнер с настраиваемыми ингридиентами: отрисуется, если что-то уже выбрано */}
-                {(constructorState.draggableIngridients.length > 0) &&
+                {(chosenDraggableIngridients.length > 0) &&
                     (
                         <li className={crStyles.draggableIngridinetContainer}>
                             <DraggableItems />
@@ -140,10 +147,10 @@ function BurgerConstructor() {
                 }
 
                 {/* Нижняя булка: отрисуется, если пользователь уже выбрал булку  */}
-                {(constructorState.bun.name) &&
+                {(chosenBun.name) &&
                     (
                         <li className={crStyles.bottomIngridinet}>
-                            <ConstructorElement type="bottom" isLocked="true" text={constructorState.bun.name + " (низ)"} thumbnail={constructorState.bun.image} price={constructorState.bun.price} />
+                            <ConstructorElement type="bottom" isLocked="true" text={chosenBun.name + " (низ)"} thumbnail={chosenBun.image} price={chosenBun.price} />
                         </li>
                     )
                 }
@@ -152,7 +159,7 @@ function BurgerConstructor() {
 
             <div className={crStyles.totalBar}>
                 {/* Если пользователь не выбрал бургерную булку, то не будет отрисовываться поле с общей стоимостью и кнопка заказа */}
-                {(constructorState.bun.name) &&
+                {(chosenBun.name) &&
                     (
                         <>
                             <span className={'text text_type_digits-medium mr-10'}>{getTotalPrice()}<CurrencyIcon type={'primary'} /></span>

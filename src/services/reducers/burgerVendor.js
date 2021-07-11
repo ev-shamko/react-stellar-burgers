@@ -8,6 +8,11 @@ import {
     OPEN_MODAL,
     CLOSE_MODAL,
     SET_MODAL_TYPE,
+    ADD_BUN,
+    ADD_SAUCE,
+    ADD_MAIN,
+    UPDATE_DRAGGABLE_INGRIDIENTS,
+    REMOVE_ALL_INGRIDIENTS,
 } from '../actions/burgerVendor';
 
 
@@ -97,6 +102,37 @@ export const burgerVendorReducer = (state = initialState, action) => {
             return {
                 ...state,
                 currentModalType: action.value, // 'none' / 'IngridientDetails' / 'OrderDetails'
+            }
+        }
+        case ADD_BUN: {
+            return {
+                ...state,
+                bun: action.value, // объект с данными о булке
+            }
+        }
+        case ADD_SAUCE: {
+            return {
+                ...state,
+                draggableIngridients: state.draggableIngridients.concat(action.value)  // добавляем в исходный массив объектов новый объект
+            }
+        }
+        case ADD_MAIN: {
+            return {
+                ...state,
+                draggableIngridients: state.draggableIngridients.concat(action.value)  // добавляем в исходный массив объектов новый объект
+            };
+        }
+        case UPDATE_DRAGGABLE_INGRIDIENTS: {
+            return {
+                ...state,
+                draggableIngridients: action.value // в action.value должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже удалён
+            };
+        }
+        case REMOVE_ALL_INGRIDIENTS: {
+            return {
+                ...state,
+                bun: {},
+                draggableIngridients: []
             }
         }
         default: {
