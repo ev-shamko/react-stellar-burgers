@@ -203,7 +203,7 @@ function App() {
           Условие (!!arrOfIngridients.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch */}
           {!dataIsLoading && !dataHasError && !!arrOfIngridients.length && (
             <>
-                <ConstructorContext.Provider value={{ constructorState, setConstructorState }}>
+                {/* <ConstructorContext.Provider value={{ constructorState, setConstructorState }}> */}
 
                     {/* попап  - ingrInModalData */}
                     <BurgerIngredients />
@@ -225,7 +225,7 @@ function App() {
                       </Modal>
                     }
 
-                </ConstructorContext.Provider>
+                {/* </ConstructorContext.Provider> */}
             </>
           )}
         </section>

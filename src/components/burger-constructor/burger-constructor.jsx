@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
-import actionTypes from '../../utils/actionTypes';
 
-import { ConstructorContext } from '../../services/burgerConstructorContext';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     SET_ORDER_STATE,
@@ -19,21 +17,11 @@ import {
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-//<BurgerConstructor openModal={openModal} />
 // @ts-ignore
 function BurgerConstructor() {
     const dispatch = useDispatch();
-    const chosenBun = useSelector(store => store.burgerVendor.bun); // объект с данными о булке
-    const chosenDraggableIngridients = useSelector(store => store.burgerVendor.draggableIngridients); // массив объектов с данными об ингридиентах, которые выбрал пользователь
-
-    const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
-    //const { setOrderState } = React.useContext(OrderStateContext);
-
-    /*{
-    bun: {},
-    draggableIngridients: [{}, {}]
-  };
-  */
+    const chosenBun = useSelector(store => store.burgerVendor.bun); // объект с данными о булке, выбранной пользователем
+    const chosenDraggableIngr = useSelector(store => store.burgerVendor.draggableIngridients); // массив объектов с данными об ингридиентах, которые выбрал пользователь
 
     // ******************************
 
@@ -42,8 +30,8 @@ function BurgerConstructor() {
         let priceOfDraggableIngr = 0;
 
         // если есть ингридиенты между булками, то считаем их стоимость
-        if (chosenDraggableIngridients.length > 0) {
-            priceOfDraggableIngr = chosenDraggableIngridients.reduce(function (accumulator, currentValue) {
+        if (chosenDraggableIngr.length > 0) {
+            priceOfDraggableIngr = chosenDraggableIngr.reduce(function (accumulator, currentValue) {
                 return accumulator + Number(currentValue.price);
             }, 0);
         }
@@ -51,28 +39,25 @@ function BurgerConstructor() {
         return priceOfBun + priceOfDraggableIngr;
     };
 
-
-
     // функция создаёт объект тела POST-запроса к API 
-    /* Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  */
+    /* Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  Первый id в формате строки - это булка, полседующие - остальные ингридиенты*/
     function createPostBody() {
-        const arrForOrder = [];
+        const arrWithOrderData = [];
 
         // добавляем id булки
-        arrForOrder.push(chosenBun["_id"]);
+        arrWithOrderData.push(chosenBun["_id"]);
 
-        // добавляем id остальных ингридиентов
-        chosenDraggableIngridients.map((obj) => {
-            arrForOrder.push(obj["_id"]);
-            return true;
+        // пушим id остальных ингридиентов в массив с данными о заказе
+        chosenDraggableIngr.forEach((obj) => {
+            arrWithOrderData.push(obj["_id"]);
         });
 
-        const bodyOfPost = { "ingredients": arrForOrder };
-        return bodyOfPost;
+        return { "ingredients": arrWithOrderData };
     }
 
     const postBurgerOrder = (event) => {
 
+        // TODO: использовать константу из utils
         const POST_URL = 'https://norma.nomoreparties.space/api/orders'
 
         fetch(POST_URL, {
@@ -104,12 +89,10 @@ function BurgerConstructor() {
                     type: SET_MODAL_TYPE,
                     value: 'OrderDetails',
                 });
-                //openModal(event, 'OrderDetails');
 
                 dispatch({
                     type: REMOVE_ALL_INGRIDIENTS,
                 });
-                // setConstructorState({ type: actionTypes.REMOVE_ALL_INGRIDIENTS });
             })
             .catch((err) => {
                 console.log(`Error: some error ocured during posting order`);
@@ -117,9 +100,8 @@ function BurgerConstructor() {
             });
     }
 
-    const sendOrderToApi = (event) => {
-        postBurgerOrder(event)
-        return true;
+    const sendOrderToApi = (event) => {        
+        return postBurgerOrder(event);
     };
 
     return (
@@ -138,7 +120,7 @@ function BurgerConstructor() {
                 }
 
                 {/* Контейнер с настраиваемыми ингридиентами: отрисуется, если что-то уже выбрано */}
-                {(chosenDraggableIngridients.length > 0) &&
+                {(chosenDraggableIngr.length > 0) &&
                     (
                         <li className={crStyles.draggableIngridinetContainer}>
                             <DraggableItems />
@@ -158,7 +140,7 @@ function BurgerConstructor() {
             </ul>
 
             <div className={crStyles.totalBar}>
-                {/* Если пользователь не выбрал бургерную булку, то не будет отрисовываться поле с общей стоимостью и кнопка заказа */}
+                {/* Блок со стоимостью и кнопкой заказа: Если пользователь не выбрал бургерную булку, то этот блок не будет отрисовываться */}
                 {(chosenBun.name) &&
                     (
                         <>
