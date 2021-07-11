@@ -1,8 +1,6 @@
 import React from "react";
-import PropTypes from 'prop-types';
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
-
 import { useDispatch, useSelector } from 'react-redux';
 import {
     SET_ORDER_STATE,
@@ -10,7 +8,6 @@ import {
     SET_MODAL_TYPE,
     REMOVE_ALL_INGRIDIENTS,
 } from '../../services/actions/burgerVendor';
-
 import {
     ConstructorElement,
     Button,
@@ -20,10 +17,9 @@ import {
 // @ts-ignore
 function BurgerConstructor() {
     const dispatch = useDispatch();
-    const chosenBun = useSelector(store => store.burgerVendor.bun); // объект с данными о булке, выбранной пользователем
-    const chosenDraggableIngr = useSelector(store => store.burgerVendor.draggableIngridients); // массив объектов с данными об ингридиентах, которые выбрал пользователь
-
-    // ******************************
+    // стейты с данными о булке и остальных ингридиентах бургера
+    const chosenBun = useSelector(store => store.burgerVendor.bun);
+    const chosenDraggableIngr = useSelector(store => store.burgerVendor.draggableIngridients);
 
     function getTotalPrice() {
         const priceOfBun = chosenBun.price * 2; // цена верхней и нижней булки
@@ -159,9 +155,5 @@ function BurgerConstructor() {
     );
     // }
 }
-
-// BurgerConstructor.propTypes = {
-//     openModal: PropTypes.func.isRequired
-// }
 
 export default BurgerConstructor;
