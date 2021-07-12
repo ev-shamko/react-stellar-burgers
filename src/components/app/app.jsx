@@ -5,21 +5,20 @@ import indexStyles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  INGRIDIENT_FETCH_SUCCESS,
-  INGRIDIENT_FETCH_ERROR,
-} from '../../services/actions/burgerVendor';
-
-// import ingridientsList from '../../utils/data'; // пока не удаляю на случай падения сервера с API
-
-// Импорты компонентов модального окна
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngridientDetais from '../ingridient-details/ingridient-details';
 
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  INGRIDIENT_FETCH_SUCCESS,
+  INGRIDIENT_FETCH_ERROR,
+  getIngridientsData,
+} from '../../services/actions/burgerVendor';
+
 // временно захардкодено
-const ApiUrl = "https://norma.nomoreparties.space/api/ingredients";
+import { urlApiGetIngridients } from '../../utils/api-url';
+// import ingridientsList from '../../utils/data'; // пока не удаляю на случай падения сервера с API
 
 function App() {
 
@@ -29,61 +28,64 @@ function App() {
   /******      Импорт стейтов из редакса        ********* */
   /****************************************************** */
 
-  const modalIsVisible = useSelector(store => store.burgerVendor.modalIsVisible);
-  const currentModalType = useSelector(store => store.burgerVendor.currentModalType);
-  const ingrInModalData = useSelector(store => store.burgerVendor.ingrInModalData);
-  const arrOfIngridients = useSelector(store => store.burgerVendor.ingridientsData.arrOfIngridients);
-  const dataIsLoading = useSelector(store => store.burgerVendor.ingridientsData.ingrDataIsLoading);
-  const dataHasError = useSelector(store => store.burgerVendor.ingridientsData.ingrDataHasError);
-
+  const { modalIsVisible, currentModalType, ingrInModalData, arrOfIngridients, dataIsLoading, dataHasError } = useSelector(store => ({
+    modalIsVisible: store.burgerVendor.modalIsVisible,
+    currentModalType: store.burgerVendor.currentModalType,
+    ingrInModalData: store.burgerVendor.ingrInModalData,
+    arrOfIngridients: store.burgerVendor.ingridientsData.arrOfIngridients,
+    dataIsLoading: store.burgerVendor.ingridientsData.ingrDataIsLoading,
+    dataHasError: store.burgerVendor.ingridientsData.ingrDataHasError,
+  }));
 
   /******************************************************** */
   /******      Получение данных от API           ********* */
   /****************************************************** */
 
   // функция для получения массива данных от API
-  const getIngridientsData = (url = '') => {
-    // console.log('Отправляю запрос к API c ингридиентами');
+  // const getIngridientsDataOld = (url = '') => {
+  //   // console.log('Отправляю запрос к API c ингридиентами');
 
-    fetch(url)
-      .then((res) => {
-        /* https://github.com/ev-shamko/react-stellar-burgers/pull/2#discussion_r648116469 
-        отличный комментарий от ревьюера про то, как этот условный блок ловит ошибку и перенаправляет ее в .catch - - -  плюс ссылки на доку от developer.mozilla.org */
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(res.status);
-      })
-      .then((res) => {
+  //   fetch(url)
+  //     .then((res) => {
+  //       /* https://github.com/ev-shamko/react-stellar-burgers/pull/2#discussion_r648116469 
+  //       отличный комментарий от ревьюера про то, как этот условный блок ловит ошибку и перенаправляет ее в .catch - - -  плюс ссылки на доку от developer.mozilla.org */
+  //       if (res.ok) {
+  //         return res.json();
+  //       }
+  //       return Promise.reject(res.status);
+  //     })
+  //     .then((res) => {
 
-        if (!(Array.isArray(res.data))) {
-          console.log('Promise.reject(This response is not valid)');
-          console.log(`Didn't find array in res.data  :-(   Probably got wrong response from ${url}`);
-          return Promise.reject(res);
-        }
-        // setOrderData - здесь захардкоденные данные заказа (для отладки попапа с данными заказа)
-        // setOrderData(ORDER_DATA);
-        dispatch({
-          type: INGRIDIENT_FETCH_SUCCESS,
-          value: res.data,
-        })
-      })
-      .catch((err) => {
-        console.log(`Error: can't fetch ingridiets data from ${url}`);
-        console.log(`response from server is: `, err);
-        console.log(`err.message is: `, err.message);
+  //       if (!(Array.isArray(res.data))) {
+  //         console.log('Promise.reject(This response is not valid)');
+  //         console.log(`Didn't find array in res.data  :-(   Probably got wrong response from ${url}`);
+  //         return Promise.reject(res);
+  //       }
 
-        dispatch({
-          type: INGRIDIENT_FETCH_ERROR,
-        })
-      });
-  };
+  //       dispatch({
+  //         type: INGRIDIENT_FETCH_SUCCESS,
+  //         value: res.data,
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Error: can't fetch ingridiets data from ${url}`);
+  //       console.log(`response from server is: `, err);
+  //       console.log(`err.message is: `, err.message);
+
+  //       dispatch({
+  //         type: INGRIDIENT_FETCH_ERROR,
+  //       })
+  //     });
+  // };
 
   // фетч к API за массивом данных (произойдёт после первичного рендера App)
-  useEffect(() => getIngridientsData(ApiUrl), []);
+  // useEffect(() => getIngridientsDataOld(urlApiGetIngridients), []);
+  // в dispatch передана функция, что возможно благодаря thunk
+  useEffect(() => dispatch(getIngridientsData()), []);
+
 
   // ТЕСТИРУЕМ ОБРАБОТКУ fetch:
-  // ApiUrl - правильный аргумент для getIngridientsData() который вызываем выше
+  // ApiIngridients - правильный аргумент для getIngridientsData() который вызываем выше
   // для тестирования обработки неудачных fetch спользуй badFetch. 
   // Эти открытые API вернут res.ok и json. Но не будет res.data c массивом объектов, как от правильного API
   // const badFetchFood = "https://world.openfoodfacts.org/api/v0/product/737628064502.json";

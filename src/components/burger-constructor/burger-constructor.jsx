@@ -1,6 +1,7 @@
 import React from "react";
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
+
 import { useDispatch, useSelector } from 'react-redux';
 import {
     SET_ORDER_STATE,
@@ -8,11 +9,14 @@ import {
     SET_MODAL_TYPE,
     REMOVE_ALL_INGRIDIENTS,
 } from '../../services/actions/burgerVendor';
+
 import {
     ConstructorElement,
     Button,
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
+
+import { urlApiPostOrder } from '../../utils/api-url';
 
 // @ts-ignore
 function BurgerConstructor() {
@@ -21,14 +25,15 @@ function BurgerConstructor() {
     const chosenBun = useSelector(store => store.burgerVendor.bun);
     const chosenDraggableIngr = useSelector(store => store.burgerVendor.draggableIngridients);
 
+    // подсчитываем стоимость всех ингридиентов, инфу берём из стейта редакса
     function getTotalPrice() {
         const priceOfBun = chosenBun.price * 2; // цена верхней и нижней булки
         let priceOfDraggableIngr = 0;
 
         // если есть ингридиенты между булками, то считаем их стоимость
         if (chosenDraggableIngr.length > 0) {
-            priceOfDraggableIngr = chosenDraggableIngr.reduce(function (accumulator, currentValue) {
-                return accumulator + Number(currentValue.price);
+            priceOfDraggableIngr = chosenDraggableIngr.reduce(function (summ, ingridient) {
+                return summ + Number(ingridient.price);
             }, 0);
         }
 
@@ -53,10 +58,7 @@ function BurgerConstructor() {
 
     const postBurgerOrder = (event) => {
 
-        // TODO: использовать константу из utils
-        const POST_URL = 'https://norma.nomoreparties.space/api/orders'
-
-        fetch(POST_URL, {
+        fetch(urlApiPostOrder, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'

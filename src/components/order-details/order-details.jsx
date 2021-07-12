@@ -2,14 +2,10 @@ import React from 'react';
 import stylesOD from './order-details.module.css';
 import { useSelector } from 'react-redux';
 
-// напоминалка:
-// на момент 1 спринта orderData - это стейт app.js
-// он захардкоден и становится равен объекту с данными после успешного фетча к API за списком ингридиентов
 
 // <OrderDetails orderData={orderData} />
 function OrderDetais() {
     const orderState = useSelector(store => store.burgerVendor.orderData);
-
 
     return (
         <>
