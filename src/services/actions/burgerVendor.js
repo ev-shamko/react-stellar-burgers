@@ -13,15 +13,16 @@ export const ADD_MAIN = 'ADD_MAIN';
 export const UPDATE_DRAGGABLE_INGRIDIENTS = 'UPDATE_DRAGGABLE_INGRIDIENTS';
 export const REMOVE_ALL_INGRIDIENTS = 'REMOVE_ALL_INGRIDIENTS';
 
-// миддлвара для thunk
+// Миддлвары для thunk:
+
 // запрос к серверу для получения списка доступных ингридиентов бургера
-export function getIngridientsData(url = 'https://norma.nomoreparties.space/api/ingredients') {
+export function getIngridientsData(url = '') {
     return function (dispatch) {
         fetch(url)
             .then((res) => {
                 /* https://github.com/ev-shamko/react-stellar-burgers/pull/2#discussion_r648116469 
                 отличный комментарий от ревьюера про то, как этот условный блок ловит ошибку и перенаправляет ее в .catch - - -  плюс ссылки на доку от developer.mozilla.org */
-                if (res.ok) {                    
+                if (res.ok) {
                     return res.json();
                 }
                 return Promise.reject(res.status);
@@ -48,4 +49,47 @@ export function getIngridientsData(url = 'https://norma.nomoreparties.space/api/
                 })
             });
     };
+};
+
+// отправляет API массив с инфой о заказе, затем меняет стейт редакса в зависимости от ответа
+export function postBurgerOrder(url = '', createPostBody) {
+    return function (dispatch) {
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(createPostBody())
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                return Promise.reject(res.status);
+            })
+            .then((res) => {
+                console.log('after fetch: Получен номер заказа', res.order.number);
+                // сохраняем объект ответа от сервера с инфой о заказе в редакс-хранилище
+                dispatch({
+                    type: SET_ORDER_STATE,
+                    value: res,
+                });
+            })
+            .then(() => {
+                dispatch({
+                    type: OPEN_MODAL,
+                });
+                dispatch({
+                    type: SET_MODAL_TYPE,
+                    value: 'OrderDetails',
+                });
+                dispatch({
+                    type: REMOVE_ALL_INGRIDIENTS,
+                });
+            })
+            .catch((err) => {
+                console.log(`Error: some error ocured during posting order`);
+                console.log(`response from server is: `, err);
+            });
+    }
 };

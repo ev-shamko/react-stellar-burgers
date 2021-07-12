@@ -4,10 +4,7 @@ import DraggableItems from "../draggable-items/draggable-items";
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    SET_ORDER_STATE,
-    OPEN_MODAL,
-    SET_MODAL_TYPE,
-    REMOVE_ALL_INGRIDIENTS,
+    postBurgerOrder,
 } from '../../services/actions/burgerVendor';
 
 import {
@@ -21,9 +18,12 @@ import { urlApiPostOrder } from '../../utils/api-url';
 // @ts-ignore
 function BurgerConstructor() {
     const dispatch = useDispatch();
-    // стейты с данными о булке и остальных ингридиентах бургера
-    const chosenBun = useSelector(store => store.burgerVendor.bun);
-    const chosenDraggableIngr = useSelector(store => store.burgerVendor.draggableIngridients);
+
+    // стейты с данными об ингридиентах бургера
+    const { chosenBun, chosenDraggableIngr } = useSelector( store => ({
+        chosenBun: store.burgerVendor.bun,
+        chosenDraggableIngr: store.burgerVendor.draggableIngridients,
+    }));
 
     // подсчитываем стоимость всех ингридиентов, инфу берём из стейта редакса
     function getTotalPrice() {
@@ -56,50 +56,8 @@ function BurgerConstructor() {
         return { "ingredients": arrWithOrderData };
     }
 
-    const postBurgerOrder = (event) => {
-
-        fetch(urlApiPostOrder, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(createPostBody())
-        })
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                }
-                return Promise.reject(res.status);
-            })
-            .then((res) => {
-                console.log('in fetch: Получен номер заказа', res.order.number);
-                // сохраняем объект ответа от сервера с инфой о заказе в редакс-хранилище
-                dispatch({
-                    type: SET_ORDER_STATE,
-                    value: res,
-                });
-            })
-            .then(() => {
-                dispatch({
-                    type: OPEN_MODAL,
-                });
-                dispatch({
-                    type: SET_MODAL_TYPE,
-                    value: 'OrderDetails',
-                });
-
-                dispatch({
-                    type: REMOVE_ALL_INGRIDIENTS,
-                });
-            })
-            .catch((err) => {
-                console.log(`Error: some error ocured during posting order`);
-                console.log(`response from server is: `, err);
-            });
-    }
-
-    const sendOrderToApi = (event) => {        
-        return postBurgerOrder(event);
+    const sendOrderToApi = (event) => {
+        return dispatch(postBurgerOrder(urlApiPostOrder, createPostBody));
     };
 
     return (

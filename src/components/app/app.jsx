@@ -11,8 +11,6 @@ import IngridientDetais from '../ingridient-details/ingridient-details';
 
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  INGRIDIENT_FETCH_SUCCESS,
-  INGRIDIENT_FETCH_ERROR,
   getIngridientsData,
 } from '../../services/actions/burgerVendor';
 
@@ -38,59 +36,12 @@ function App() {
   }));
 
   /******************************************************** */
-  /******      Получение данных от API           ********* */
+  /******    Получение массива данных данных от API     ********* */
   /****************************************************** */
 
-  // функция для получения массива данных от API
-  // const getIngridientsDataOld = (url = '') => {
-  //   // console.log('Отправляю запрос к API c ингридиентами');
-
-  //   fetch(url)
-  //     .then((res) => {
-  //       /* https://github.com/ev-shamko/react-stellar-burgers/pull/2#discussion_r648116469 
-  //       отличный комментарий от ревьюера про то, как этот условный блок ловит ошибку и перенаправляет ее в .catch - - -  плюс ссылки на доку от developer.mozilla.org */
-  //       if (res.ok) {
-  //         return res.json();
-  //       }
-  //       return Promise.reject(res.status);
-  //     })
-  //     .then((res) => {
-
-  //       if (!(Array.isArray(res.data))) {
-  //         console.log('Promise.reject(This response is not valid)');
-  //         console.log(`Didn't find array in res.data  :-(   Probably got wrong response from ${url}`);
-  //         return Promise.reject(res);
-  //       }
-
-  //       dispatch({
-  //         type: INGRIDIENT_FETCH_SUCCESS,
-  //         value: res.data,
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log(`Error: can't fetch ingridiets data from ${url}`);
-  //       console.log(`response from server is: `, err);
-  //       console.log(`err.message is: `, err.message);
-
-  //       dispatch({
-  //         type: INGRIDIENT_FETCH_ERROR,
-  //       })
-  //     });
-  // };
-
-  // фетч к API за массивом данных (произойдёт после первичного рендера App)
-  // useEffect(() => getIngridientsDataOld(urlApiGetIngridients), []);
+  // фетч произойдёт после первичного рендера App
   // в dispatch передана функция, что возможно благодаря thunk
-  useEffect(() => dispatch(getIngridientsData()), []);
-
-
-  // ТЕСТИРУЕМ ОБРАБОТКУ fetch:
-  // ApiIngridients - правильный аргумент для getIngridientsData() который вызываем выше
-  // для тестирования обработки неудачных fetch спользуй badFetch. 
-  // Эти открытые API вернут res.ok и json. Но не будет res.data c массивом объектов, как от правильного API
-  // const badFetchFood = "https://world.openfoodfacts.org/api/v0/product/737628064502.json";
-  // const badFetchPokemon = "https://pokeapi.co/api/v2/pokemon/ditto";
-
+  useEffect(() => dispatch(getIngridientsData(urlApiGetIngridients)), []);
 
   /******************************************************** */
   /************      Рендер      ************************* */
@@ -113,7 +64,7 @@ function App() {
         <section className={indexStyles.constructorContainer}>
 
           {/* Здесь стоит условие: отрисовка компонентов только после успешного получения данных правильного формата
-          * Это очень важно для компонента  BurgerConstructor, который роняет приложение при первичном рендере без fetch или без правильных пропсов после fetch
+          * Это очень важно для компонента  BurgerConstructor, который роняет приложение при первичном рендере без fetch или без правильного массива данных с ингридиентами
 
           ***Про условия отрисовки:
           Условие (!!arrOfIngridients.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch. Предотвращает падение приложения, если в arrOfIngridients запишутся данные неподходящего формата */}
