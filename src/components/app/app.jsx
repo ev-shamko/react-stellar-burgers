@@ -9,6 +9,9 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import IngridientDetais from '../ingridient-details/ingridient-details';
 
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+
 import { useSelector, useDispatch } from 'react-redux';
 import {
   getIngridientsData,
@@ -61,6 +64,7 @@ function App() {
           <h1 className="text text_type_main-large">Соберите бургер</h1>
         </section>
 
+
         <section className={indexStyles.constructorContainer}>
 
           {/* Здесь стоит условие: отрисовка компонентов только после успешного получения данных правильного формата
@@ -70,20 +74,19 @@ function App() {
           Условие (!!arrOfIngridients.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch. Предотвращает падение приложения, если в arrOfIngridients запишутся данные неподходящего формата */}
           {!dataIsLoading && !dataHasError && !!arrOfIngridients.length && (
             <>
-              {/* попап  - ingrInModalData */}
-              <BurgerIngredients />
+              <DndProvider backend={HTML5Backend}>
+                <BurgerIngredients />{/* попап  - ingrInModalData */}
+                <BurgerConstructor />{/* попап  - orderData */}
+              </DndProvider>
 
-              {/* попап  - orderData */}
-              <BurgerConstructor />
-
-              {/* рендеринг попапа с инфой об ингридиенте бургера - ingrInModalData*/}
+              {/* рендер попапа с инфой об ингридиенте бургера - ingrInModalData*/}
               {modalIsVisible && (currentModalType === 'IngridientDetails') &&
                 <Modal>
                   <IngridientDetais ingrInModalData={ingrInModalData} />
                 </Modal>
               }
 
-              {/* рендеринг попапа с деталями заказа - orderData */}
+              {/* рендер попапа с деталями заказа - orderData */}
               {modalIsVisible && (currentModalType === 'OrderDetails') &&
                 <Modal>
                   <OrderDetails />
@@ -92,6 +95,7 @@ function App() {
             </>
           )}
         </section>
+
       </main>
     </>
   );

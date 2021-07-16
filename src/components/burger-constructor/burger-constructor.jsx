@@ -1,10 +1,13 @@
 import React from "react";
 import crStyles from "./burger-constructor.module.css";
 import DraggableItems from "../draggable-items/draggable-items";
-
+import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from 'react-redux';
 import {
     postBurgerOrder,
+    ADD_BUN,
+    ADD_SAUCE,
+    ADD_MAIN,
 } from '../../services/actions/burgerVendor';
 
 import {
@@ -19,8 +22,57 @@ import { urlApiPostOrder } from '../../utils/api-url';
 function BurgerConstructor() {
     const dispatch = useDispatch();
 
+
+    /******************************************************** */
+    /******        DragAndDrop логика              ********* */
+    /****************************************************** */
+
+    // при метком броске карточки ингридиента добавляет ингридиент в конструктор
+    function onDropHandler(objIngridient) {
+        addIngridientInConstructor(objIngridient);
+    };
+
+    // функция возвращает нужный экшн в зависимости от типа ингридиента
+    // это нужно для добавления ингридиета в стейт
+    const getAction = (typeOfIngridient) => {
+        if (typeOfIngridient === 'bun') {
+            return ADD_BUN;
+        }
+
+        if (typeOfIngridient === 'sauce') {
+            return ADD_SAUCE;
+        }
+
+        if (typeOfIngridient === 'main') {
+            return ADD_MAIN;
+        }
+    };
+
+    const addIngridientInConstructor = (objIngridient) => {
+        dispatch({
+            type: getAction(objIngridient.type), // в зависимости от типа добавляемого ингридиента сюда подставится нужный экшн
+            value: objIngridient,
+        })
+    };
+
+    // используем хук из DND
+    const [{ background }, dropTarget] = useDrop({
+        accept: "ingridient",
+        drop(objIngridient) {
+            onDropHandler(objIngridient);
+        },
+        // когда доносим ингридиент до окна конструктора, окно подсветится градиентом
+        collect: monitor => ({
+            background: monitor.isOver() ? 'radial-gradient(circle, rgba(63,94,251,0.6110819327731092) 0%, rgba(252,70,107,0) 44%)' : '',
+        }),
+    });
+
+    /************************************************************************************** */
+    /******   Остальная логика: стейты, подсчёты цены, отправка заказа, рендер   ********* */
+    /************************************************************************************ */
+
     // стейты с данными об ингридиентах бургера
-    const { chosenBun, chosenDraggableIngr } = useSelector( store => ({
+    const { chosenBun, chosenDraggableIngr } = useSelector(store => ({
         chosenBun: store.burgerVendor.bun,
         chosenDraggableIngr: store.burgerVendor.draggableIngridients,
     }));
@@ -61,7 +113,7 @@ function BurgerConstructor() {
     };
 
     return (
-        <section className={crStyles.container}>
+        <section className={crStyles.container} ref={dropTarget} style={{ background }}>
             {/* {console.log('Рендерю >>BurgerConstructor<<')} */}
 
             <ul className={crStyles.chosenIngridients + ' mb-6'}>

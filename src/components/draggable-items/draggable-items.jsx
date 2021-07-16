@@ -28,7 +28,7 @@ function DraggableItemsList() {
                         // записываем в стейт новый массив ингридиентов
                         dispatch({
                             type: UPDATE_DRAGGABLE_INGRIDIENTS,
-                            value: reduxArrOfDraggableIngridient,// здесь нужен новый массив
+                            value: reduxArrOfDraggableIngridient,// сюда передаём новый массив
                         });
                     }
 
