@@ -1,3 +1,5 @@
+import update from "immutability-helper";
+
 import {
     TOGGLE_MODAL_VISIBILITY,
     SET_CURRENT_MODAL_TYPE,
@@ -13,6 +15,7 @@ import {
     ADD_MAIN,
     UPDATE_DRAGGABLE_INGRIDIENTS,
     REMOVE_ALL_INGRIDIENTS,
+    RESORT_DRAGGABLE_INGRIDIENTS,
 } from '../actions/burgerVendor';
 
 
@@ -111,16 +114,16 @@ export const burgerVendorReducer = (state = initialState, action) => {
             }
         }
         case ADD_SAUCE: {
-            const sortingOrderId = state.draggableIngridients.length + 1;
-            const objIngridientWithId = { ...action.value, sortingOrderId: sortingOrderId }; // добавляем к объекту ингридиента порядковый номер, он нужен для сортировки DND в конструкторе бургера
+            const sequenceId = state.draggableIngridients.length + 1;
+            const objIngridientWithId = { ...action.value, sequenceId }; // добавляем к объекту ингридиента порядковый номер, он нужен для сортировки DND в конструкторе бургера
             return {
                 ...state,
                 draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
             }
         }
         case ADD_MAIN: {
-            const sortingOrderId = state.draggableIngridients.length + 1;
-            const objIngridientWithId = { ...action.value, sortingOrderId: sortingOrderId };
+            const sequenceId = state.draggableIngridients.length + 1;
+            const objIngridientWithId = { ...action.value, sequenceId };
             return {
                 ...state,
                 draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
@@ -131,6 +134,18 @@ export const burgerVendorReducer = (state = initialState, action) => {
                 ...state,
                 draggableIngridients: action.value // в action.value должен быть корректный массив с объектами ингридиентов. Если мы удаляем из draggableIngridients какой-то ингридиент, то сюда должен прийти массив, из которого объект ингридиента уже удалён
             };
+        }
+        case RESORT_DRAGGABLE_INGRIDIENTS: {
+            const resortedArrOfIngridients = update(state.draggableIngridients, {
+                $splice: [
+                    [action.indexOfDroppedIngr, 1],
+                    [action.originalIndexInStore, 0, state.draggableIngridients[action.indexOfDroppedIngr]],
+                ],
+            });
+            return {
+                ...state,
+                draggableIngridients: resortedArrOfIngridients,
+            }
         }
         case REMOVE_ALL_INGRIDIENTS: {
             return {

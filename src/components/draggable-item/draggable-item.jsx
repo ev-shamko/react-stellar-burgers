@@ -12,13 +12,10 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 
-function DraggableItem({sortingOrderId, ingrData, indexInStateArr}) {
+function DraggableItem({ sequenceId, ingrData, indexInStateArr, resortIngr, findIngridient }) {
     const dispatch = useDispatch();
 
     const stateDraggableIngridients = useSelector(store => store.burgerVendor.draggableIngridients); // массив объектов  
-
-    // setListOfIngridients(stateDraggableIngridients); // будет содержать массив объектов. Нам важно свойство ingr.sortingOrderId
-
 
     const deleteThisIngridient = () => {
         // копируем данные из стейта родительского компонента в эту переменную
@@ -34,78 +31,54 @@ function DraggableItem({sortingOrderId, ingrData, indexInStateArr}) {
         });
     }
 
+
+    /******* DND-ресортировка *******/
+
+    const [{ isDragging }, dragItem, preview] = useDrag(
+        () => ({
+            type: "draggableIngridient",
+            item: { sequenceId, indexInStateArr }, // в доке indexInStateArr находят через findIngridient(), но можно и из пропсов брать
+            collect: (monitor) => ({
+                isDragging: monitor.isDragging(),
+            }),
+            end: (item, monitor) => {
+                const { sequenceId: droppedId, originalIndex } = item;
+                const didDrop = monitor.didDrop();
+                if (!didDrop) {
+                    resortIngr(droppedId, originalIndex);
+                }
+            },
+        }),
+        [sequenceId, indexInStateArr, resortIngr]
+    );
+
+    // помечаем ингридиенты: нужно, что перетаскиваемый ингридиент дропался на другой ингридиент
+    const [, dropItem] = useDrop(
+        () => ({
+            accept: "draggableIngridient",
+            canDrop: () => false,
+            hover({ sequenceId: draggedId }) {
+                if (draggedId !== sequenceId) {
+                    const { indexInStore: indexOfDraggedItem } = findIngridient(sequenceId);
+                    resortIngr(draggedId, indexOfDraggedItem);
+                }
+            },
+        }),
+        [findIngridient, resortIngr]
+    );
+
+    const opacity = isDragging ? 0 : 1;
+
+    //ref={(node) => dropItem(preview(node))} - напоминаю себе, что такой записью мы передаём в реф 2 функции: dropItem, preview, и обе получают необходимый им аргумент node. Соответственно, один и тот же элемент используется и как превью в процессе перетаскивания и как цель для дропа.
+
     return (
-        <div className={diStyles.draggableItime} >
-            <button className={diStyles.draggableButton}><DragIcon /></button>
+        <div className={diStyles.draggableItime} ref={(node) => dropItem(preview(node))} style={{ opacity }}>
+            <button ref={dragItem} className={diStyles.draggableButton}>
+                <DragIcon />
+            </button>
             <ConstructorElement text={ingrData.name} thumbnail={ingrData.image} price={ingrData.price} handleClose={deleteThisIngridient} />
         </div>
     )
 }
 
 export default DraggableItem;
-
-/***** Логика ресортировки ингридиентов с помощью DND  ******* */
-
-    // объекты draggableIngridient содержат уникальный для элементов списка sortingOrderId
-    // 
-
-
-
-    // const [{ isDragging }, dragRef] = useDrag(
-    //     () => ({
-    //         type: 'draggableIngridient',
-    //         item: { sortingOrderId, originalIndex },
-    //         collect: (monitor) => ({
-    //             isDragging: monitor.isDragging(),
-    //         }),
-    //         end: (item, monitor) => {
-    //             const { sortingOrderId: droppedId, originalIndex } = item;
-    //             const didDrop = monitor.didDrop();
-    //             if (!didDrop) {
-    //                 moveIngridient(droppedId, originalIndex);
-    //             }
-    //         },
-    //     }),
-    //     [sortingOrderId, originalIndex, moveIngridient]
-    // );
-
-    // const findIngridient = useCallback((ingrId) => {
-    //     const card = listOfIngridients.filter((ingr) => `${ingr.sortingOrderId}` === ingrId)[0]; // ? ingr._id ???
-    //     return {
-    //         card,
-    //         index: listOfIngridients.indexOf(card),
-    //     };
-    // }, [listOfIngridients]);
-
-    // const originalIndex = () => {
-    //     return findIngridient(sortingOrderId).index;
-    // };
-
-    // const moveIngridient = useCallback(
-    //     (sortingOrderId, atIndex) => {
-    //         const { index } = findIngridient(sortingOrderId);
-    //         dispatch({
-    //             type: REARRANGE_DRAGGABLE_INGRIDIENTS, // заменить
-    //             index: index,
-    //             atIndex: atIndex,
-    //         });
-    //     },
-    //     [findIngridient, dispatch]
-    // );
-
-    // // это вроде для дропа перетаскиваемого ингридиента на любой другой ингридиент
-    // const [, drop] = useDrop(
-    //     () => ({
-    //         accept: "draggableIngridient",
-    //         canDrop: () => false,
-    //         hover({ id: draggedId }) {  // не понимаю, тут заменять id на sortingOrderId?
-    //             if (draggedId !== id) {
-    //                 const { index: overIndex } = findIngridient(sortingOrderId);
-    //                 moveIngridient(draggedId, overIndex);
-    //             }
-    //         },
-    //     }),
-    //     [findIngridient, moveIngridient]
-    // );
-
-    // const opacity = isDragging ? 0 : 1;

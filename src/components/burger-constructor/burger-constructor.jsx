@@ -1,4 +1,5 @@
 import React from "react";
+import { memo, useCallback, useState } from "react";
 import crStyles from "./burger-constructor.module.css";
 import DraggableItem from "../draggable-item/draggable-item";
 import { useDrop } from "react-dnd";
@@ -8,6 +9,7 @@ import {
     ADD_BUN,
     ADD_SAUCE,
     ADD_MAIN,
+    RESORT_DRAGGABLE_INGRIDIENTS,
 } from '../../services/actions/burgerVendor';
 
 import {
@@ -22,6 +24,11 @@ import { urlApiPostOrder } from '../../utils/api-url';
 function BurgerConstructor() {
     const dispatch = useDispatch();
 
+    // стейты с данными об ингридиентах бургера
+    const { chosenBun, chosenDraggableIngr } = useSelector(store => ({
+        chosenBun: store.burgerVendor.bun,
+        chosenDraggableIngr: store.burgerVendor.draggableIngridients,
+    }));
 
     /******************************************************** */
     /******        DragAndDrop логика              ********* */
@@ -67,15 +74,44 @@ function BurgerConstructor() {
         }),
     });
 
+
+    /******** Логика для DND-ресортировки выбранных ингридиентов ********/
+    /***************************************************************** */
+
+    // Реализована как в примере из доки: 
+    // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_js/04-sortable/cancel-on-drop-outside?from-embed=&file=/src/Container.jsx:121-162
+
+    // функция возвращает объект с данными ингридиента и с его индексом массиве хранилища
+    const findIngridientInStore = useCallback(
+        (sequenceId) => { // sequenceId - уникальный id объекта из массива chosenDraggableIngr: отражает порядок добавления объекта в массив, используется для ресортировки
+            const objIngrData = chosenDraggableIngr.filter((objIngr) => objIngr.sequenceId === sequenceId)[0]; // получаем их хранилища объект ингридиента с данным objIngr.sequenceId
+            return {
+                objIngrData: objIngrData, // объект ингридиента из редакс-хранилища вместе с его текущим sequenceId
+                indexInStore: chosenDraggableIngr.indexOf(objIngrData), // сюда запишется индекс, по которому данный объект ингридиента находится в массиве chosenDraggableIngr
+            };
+        },
+        [chosenDraggableIngr]
+    );
+
+    // Ставит перетаскиваемый ингридиент перед тем ингридиентом, на который его дропнули
+    const resortIngrList =
+        //droppedSequenceId - укикальный ID элемента, на который дропнули перетаскиваемый ингридиент
+        // originalIndexInStore - индекс (в массиве хранилища) ПЕРЕТАСКИВАЕМОГО ингридиента - хранится в компоненте карточки ингридиента
+        (droppedSequenceId, originalIndexInStore) => {
+            const { indexInStore: indexOfDroppedIngr } = findIngridientInStore(droppedSequenceId);
+
+            dispatch({
+                type: RESORT_DRAGGABLE_INGRIDIENTS,
+                indexOfDroppedIngr: indexOfDroppedIngr,
+                originalIndexInStore: originalIndexInStore,
+            });
+        };
+
+        const [, dropResort] = useDrop(() => ({ accept: "draggableIngridient" }));
+
     /************************************************************************************** */
     /******   Остальная логика: стейты, подсчёты цены, отправка заказа, рендер   ********* */
     /************************************************************************************ */
-
-    // стейты с данными об ингридиентах бургера
-    const { chosenBun, chosenDraggableIngr } = useSelector(store => ({
-        chosenBun: store.burgerVendor.bun,
-        chosenDraggableIngr: store.burgerVendor.draggableIngridients,
-    }));
 
     // подсчитываем стоимость всех ингридиентов, инфу берём из стейта редакса
     function getTotalPrice() {
@@ -91,6 +127,8 @@ function BurgerConstructor() {
 
         return priceOfBun + priceOfDraggableIngr;
     };
+
+
 
     // функция создаёт объект тела POST-запроса к API 
     /* Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  Первый id в формате строки - это булка, полседующие - остальные ингридиенты*/
@@ -130,18 +168,18 @@ function BurgerConstructor() {
                 {/* Контейнер с настраиваемыми ингридиентами: отрисуется, если что-то уже выбрано */}
                 {(chosenDraggableIngr.length > 0) &&
                     (
-                        <li className={crStyles.draggableIngridinetContainer}>
+                        <li className={crStyles.draggableIngridinetContainer} ref={dropResort}>
                             {/* Переименовать! Отрицание-гнев-торг-принятие-депрессия*/}
                             {chosenDraggableIngr.map((ingr, index) => {
                                 console.log(ingr)
-                                return (                                
+                                return (
                                     <DraggableItem
-                                        key={ingr.sortingOrderId}
-                                        sortingOrderId={ingr.sortingOrderId}
+                                        key={ingr.sequenceId}
+                                        sequenceId={ingr.sequenceId}
                                         ingrData={ingr}
                                         indexInStateArr={index}
-                                    // moveCard={moveCard}
-                                    // findCard={findCard}
+                                        resortIngr={resortIngrList}
+                                        findIngridient={findIngridientInStore}
                                     />
                                 )
                             })
