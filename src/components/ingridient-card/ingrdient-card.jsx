@@ -1,17 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from 'prop-types';
 import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, DragPreviewImage } from "react-dnd";
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     OPEN_MODAL,
     SET_MODAL_TYPE,
     SET_INGRIDIENT_IN_MODAL,
-    // ADD_BUN,
-    // ADD_SAUCE,
-    // ADD_MAIN,
 } from '../../services/actions/burgerVendor';
 
 /* <IngridientCard
@@ -25,11 +22,11 @@ const IngridientCard = ({ objIngridient }) => {
     const dispatch = useDispatch();
 
     const [{ outline }, dragRef, dragPreviewImg] = useDrag({
-        type: 'ingridient', // тут мб в будущем захочу только два типа: "bun"/"draggableIngridient"
+        type: 'ingridient',
         item: objIngridient,
 
         //добавляет элементу рамку, если элемент является перетаскиваемым
-        // если перепесать, может иначе влиять на стили элемента, или вообще стать условием, при котором элемент отображается/пропадает (return (!isDrag && <div><div>)
+        // если переписать, может иначе влиять на стили элемента, или вообще стать условием, при котором элемент отображается/пропадает (return (!isDrag && <div><div>)
         collect: (monitor) => ({
             outline: monitor.isDragging() ? '1px solid #4C4CFF' : '',
         }),
@@ -49,33 +46,92 @@ const IngridientCard = ({ objIngridient }) => {
         });
     };
 
-    // функция возвращает нужный экшн в зависимости от типа ингридиента
-    // это нужно для добавления ингридиета в стейт
-    // const getAction = (typeOfIngridient) => {
-    //     if (typeOfIngridient === 'bun') {
-    //         return ADD_BUN;
-    //     }
-
-    //     if (typeOfIngridient === 'sauce') {
-    //         return ADD_SAUCE;
-    //     }
-
-    //     if (typeOfIngridient === 'main') {
-    //         return ADD_MAIN;
-    //     }
-    // };
-
-    // const addIngridientInConstructor = () => {
-    //     dispatch({
-    //         type: getAction(objIngridient.type), // в зависимости от типа добавляемого ингридиента сюда подставится нужный экшн
-    //         value: objIngridient,
-    //     })
-    // };
-
     const handleClick = (event) => {
         openIngridientDetails(event);
-        // addIngridientInConstructor();
     };
+
+
+    /******************************************************************** */
+    /******      Логика счётчика выбранных ингридиентов        ********* */
+    /****************************************************************** */
+
+    // стейт для хранения состояния счетчика на карточке ингридиента
+    const [ingrCounter, setIngrCounter] = React.useState();
+
+    // TODO попробовать объявлять 1 стейт
+    // счетчику нужны данные о том, сколько экземпляров ингридиента лежит в констукторе
+    // if (true) {
+    const { stateBun, stateDraggableIngridients } = useSelector(state => ({
+        stateBun: state.burgerVendor.bun,
+        stateDraggableIngridients: state.burgerVendor.draggableIngridients,
+    }));
+    // }
+
+    // записываем в переменую стейт из редакса, из которого можно понять, сколько штук текущего ингридиента положено в конструктор бургера
+    const { ingrInConstructor } = useSelector(state => {
+        // тут в переменную запишется 1 объект: либо пустой, либо с 1 булкой
+        if (objIngridient.type === 'bun') {
+            return ({ ingrInConstructor: state.burgerVendor.bun });
+        }
+        // тут в переменную запишется массив с объектами ингридиентов
+        // ??? это точно массив, но почему он не итерируется через forEach ?
+        if (objIngridient.type === 'sauce' || 'main') {
+            return ({ ingrInConstructor: state.burgerVendor.draggableIngridients });
+        }
+    })
+
+    // console.log(`Type of ingridietn ${objIngridient.type}. The ingrInConstructor is ${ingrInConstructor}`);
+    // console.log(ingrInConstructor);
+
+    // в зависимости от типа текущего ингридиента функция проверит, сколько таких ингридиентов лежит в соответствующем стейте в редаксе
+    function getNumOfIngridients() {
+        let counterValue = 0;
+
+        // если в стейте лежит именно эта булка, счётчик выставляем на 1, иначе на 0
+        // ingrInConstructor будет объектом
+        if (objIngridient.type === 'bun') {
+            if (ingrInConstructor._id === objIngridient._id) {
+                return ++counterValue;
+            }
+        }
+
+        // если текущий для данного инстанса ингридиент - это соус или начинка, считаем, сколько таких ингридиентов в конструкторе
+        // ingrInConstructor будет массивом объектов
+        if (objIngridient.type === 'sauce' || 'main') {
+            // если находим в массиве такой же _id, как в этом экземпляре карточки, то увеличиваем счётчик на 1
+            ingrInConstructor.forEach((item) => {
+                console.log('got sauce or main');
+                console.log('ingrInConstructor', ingrInConstructor)
+                console.log('array ia array results', Array.isArray(ingrInConstructor))
+
+                if (item._id === objIngridient._id) {
+                    counterValue++;
+                }
+            });
+        }
+
+        return counterValue;
+    }
+
+    // передаёт в useEffect только один стейт, чтобы не абсолютно все карточки ингридиентов ререндерились при изменении стейта
+    // function getCondition() {
+    //     if (objIngridient.type === 'bun') {
+    //         return [stateBun];
+    //     }
+
+    //     if (objIngridient.type === 'sauce' || 'main') {
+    //         return [stateDraggableIngridients];
+    //     }
+    // }
+
+    // при каждом изменении стейта в редаксе будет обновляться стейт счетчика ингридиента ingrCounter
+    useEffect(() => {
+        console.log('useEffect in ingridient card');
+        setIngrCounter(getNumOfIngridients());
+    }, [ingrInConstructor]);
+    // getCondition()
+
+    /**************************************************** */
 
     return (
         <>
@@ -83,7 +139,8 @@ const IngridientCard = ({ objIngridient }) => {
             <div className={cardStyles.ingrCard + ' mb-8'} onClick={handleClick} ref={dragRef} style={{ outline }}>
                 <img src={objIngridient.image} alt={objIngridient.name} className={cardStyles.itemPic} />
                 <div className={cardStyles.price}>
-                    <Counter count={1} size="default" />
+                    {/* Если данный ингридиент ни разу не был перетащен в конструктор, счетчик не будет отображаться. Так красивее и не противоречит тз */}
+                    {!!ingrCounter && <Counter count={ingrCounter} size="default" />}
                     <span className="m-2 text_type_digits-default">{objIngridient.price}</span>
                     <CurrencyIcon type="primary" />
                 </div>
