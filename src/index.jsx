@@ -14,10 +14,10 @@ const composeEnhancers =
     ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
     : compose;
 
-// const enhancer = composeEnhancers(applyMiddleware(thunk));
+const enhancer = composeEnhancers(applyMiddleware(thunk));
 
-// const store = createStore(rootReducer, enhancer); 
-const store = createStore(rootReducer, applyMiddleware(thunk));  // или так? 
+const store = createStore(rootReducer, enhancer); 
+// const store = createStore(rootReducer, applyMiddleware(thunk));  // если так, то не работает Redux DevTools
 console.log(store); // этот объект содежит все импользуемые нами методы, в т.ч. dispatch
 
 ReactDOM.render(
