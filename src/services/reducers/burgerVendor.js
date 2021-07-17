@@ -111,15 +111,19 @@ export const burgerVendorReducer = (state = initialState, action) => {
             }
         }
         case ADD_SAUCE: {
+            const sortingOrderId = state.draggableIngridients.length + 1;
+            const objIngridientWithId = { ...action.value, sortingOrderId: sortingOrderId }; // добавляем к объекту ингридиента порядковый номер, он нужен для сортировки DND в конструкторе бургера
             return {
                 ...state,
-                draggableIngridients: state.draggableIngridients.concat(action.value)  // добавляем в исходный массив объектов новый объект
+                draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
             }
         }
         case ADD_MAIN: {
+            const sortingOrderId = state.draggableIngridients.length + 1;
+            const objIngridientWithId = { ...action.value, sortingOrderId: sortingOrderId };
             return {
                 ...state,
-                draggableIngridients: state.draggableIngridients.concat(action.value)  // добавляем в исходный массив объектов новый объект
+                draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
             };
         }
         case UPDATE_DRAGGABLE_INGRIDIENTS: {

@@ -61,7 +61,7 @@ const IngridientCard = ({ objIngridient }) => {
     // TODO попробовать объявлять 1 стейт
     // счетчику нужны данные о том, сколько экземпляров ингридиента лежит в констукторе
     // if (true) {
-    const { stateBun, stateDraggableIngridients } = useSelector(state => ({
+    const { /*stateBun, */stateDraggableIngridients } = useSelector(state => ({
         stateBun: state.burgerVendor.bun,
         stateDraggableIngridients: state.burgerVendor.draggableIngridients,
     }));
@@ -99,10 +99,10 @@ const IngridientCard = ({ objIngridient }) => {
         // ingrInConstructor будет массивом объектов
         if (objIngridient.type === 'sauce' || 'main') {
             // если находим в массиве такой же _id, как в этом экземпляре карточки, то увеличиваем счётчик на 1
-            ingrInConstructor.forEach((item) => {
-                console.log('got sauce or main');
-                console.log('ingrInConstructor', ingrInConstructor)
-                console.log('array ia array results', Array.isArray(ingrInConstructor))
+            stateDraggableIngridients.forEach((item) => {
+                // console.log('got sauce or main');
+                // console.log('ingrInConstructor', ingrInConstructor)
+                // console.log('array ia array results', Array.isArray(ingrInConstructor))
 
                 if (item._id === objIngridient._id) {
                     counterValue++;
@@ -126,7 +126,7 @@ const IngridientCard = ({ objIngridient }) => {
 
     // при каждом изменении стейта в редаксе будет обновляться стейт счетчика ингридиента ingrCounter
     useEffect(() => {
-        console.log('useEffect in ingridient card');
+        // console.log('useEffect in ingridient card');
         setIngrCounter(getNumOfIngridients());
     }, [ingrInConstructor]);
     // getCondition()

@@ -1,6 +1,6 @@
 import React from "react";
 import crStyles from "./burger-constructor.module.css";
-import DraggableItems from "../draggable-items/draggable-items";
+import DraggableItem from "../draggable-item/draggable-item";
 import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -131,7 +131,21 @@ function BurgerConstructor() {
                 {(chosenDraggableIngr.length > 0) &&
                     (
                         <li className={crStyles.draggableIngridinetContainer}>
-                            <DraggableItems />
+                            {/* Переименовать! Отрицание-гнев-торг-принятие-депрессия*/}
+                            {chosenDraggableIngr.map((ingr, index) => {
+                                console.log(ingr)
+                                return (                                
+                                    <DraggableItem
+                                        key={ingr.sortingOrderId}
+                                        sortingOrderId={ingr.sortingOrderId}
+                                        ingrData={ingr}
+                                        indexInStateArr={index}
+                                    // moveCard={moveCard}
+                                    // findCard={findCard}
+                                    />
+                                )
+                            })
+                            }
                         </li>
                     )
                 }
@@ -149,6 +163,7 @@ function BurgerConstructor() {
 
             <div className={crStyles.totalBar}>
                 {/* Блок со стоимостью и кнопкой заказа: Если пользователь не выбрал бургерную булку, то этот блок не будет отрисовываться */}
+                {/* Если не выбран ни один ингридиент, отобразится подсказка про перетаскивание. Если не выбрана булка, появится подсказка про булку */}
                 {(chosenBun.name) &&
                     (
                         <>
@@ -158,7 +173,21 @@ function BurgerConstructor() {
                     )
                     ||
                     (
-                        <span className={'text text_type_main-medium mr-10'}>Выберите булку для бургера</span>
+                        <div style={{ margin: '0 auto' }}>
+                            {(!chosenBun.name) && (chosenDraggableIngr.length < 1) &&
+                                (
+                                    <span className={'text text_type_main-medium mr-10'} style={{ textAlign: 'center', justifyContent: 'center', display: 'table-cell', paddingRight: '40px' }}>{/* TODO: вынести стили в module.css */}
+                                        Перетащите сюда ингридиенты, <br></br>которые хотите добавить в бургер
+                                    </span>
+                                )
+                                ||
+                                (
+                                    <span className={'text text_type_main-medium mr-10'} style={{}}>
+                                        Выберите булку для бургера
+                                    </span>
+                                )
+                            }
+                        </div>
                     )
                 }
             </div>
