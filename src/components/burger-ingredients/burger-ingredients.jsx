@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import PropTypes from 'prop-types';
 import ingrStyles from "./burger-ingredients.module.css";
 import CardList from "../ingridients-cardlist/ingridients-cardlist";
 
@@ -12,7 +11,7 @@ function BurgerIngredients() {
 
     // этот стейт нужен для переключения активного таба в компоненте <Tab />
     // компонент <Tab /> "под капотом" передаёт этому методу в качестве аргумента значение пропса value
-    const [currentTab, setCurrentTab] = React.useState('one');
+    const [currentTab, setCurrentTab] = React.useState("bun");
 
     // рефы и scrollIntoRef используются для автопрокрутки блока с ингридиентами при клике на табы с названиями типов ингридиентов
     const bunRef = useRef(null);
@@ -31,7 +30,7 @@ function BurgerIngredients() {
         objRefKeys[stringArg].current.scrollIntoView({ block: "start", behavior: "smooth" });
     }
 
-    const handleClick = (value) => {
+    const handleTabClick = (value) => {
         setCurrentTab(value);
         scrollIntoRef(value);
     };
@@ -41,16 +40,16 @@ function BurgerIngredients() {
             {/* {console.log('Рендерю компонент BurgerIngridients')} */}
             <div className={ingrStyles.tabs}>
                 {/* Компонент <Tab /> в функцию из onClick={} в качестве аргумента передаёт не event, а значение пропса value={} */}
-                <Tab value="bun" active={currentTab === 'bun'} onClick={handleClick}>Булки</Tab>
-                <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleClick}>Соусы</Tab>
-                <Tab value="main" active={currentTab === 'main'} onClick={handleClick}>Начинки</Tab>
+                <Tab value="bun" active={currentTab === 'bun'} onClick={handleTabClick}>Булки</Tab>
+                <Tab value="sauce" active={currentTab === 'sauce'} onClick={handleTabClick}>Соусы</Tab>
+                <Tab value="main" active={currentTab === 'main'} onClick={handleTabClick}>Начинки</Tab>
             </div>
 
             <div className={ingrStyles.ingrDisplay + ' mt-10'}>
 
                 {/* Булки */}
                 <div className={ingrStyles.ingrShowcase} ref={bunRef}>
-                    <h3 className="text text_type_main-medium">Булки</h3>
+                <h3 className="text text_type_main-medium">Булки</h3>
                     <div className={ingrStyles.ingrList}>
                         <CardList type={"bun"} />
                     </div>
@@ -58,7 +57,7 @@ function BurgerIngredients() {
 
                 {/* Соусы */}
                 <div className={ingrStyles.ingrShowcase} ref={sauceRef}>
-                    <h3 className="text text_type_main-medium">Соусы</h3>
+                <h3 className="text text_type_main-medium">Соусы</h3>
                     <div className={ingrStyles.ingrList}>
                         <CardList type={"sauce"} />
                     </div>
@@ -66,7 +65,7 @@ function BurgerIngredients() {
 
                 {/* Начинки */}
                 <div className={ingrStyles.ingrShowcase} ref={mainRef}>
-                    <h3 className="text text_type_main-medium">Начинки</h3>
+                <h3 className="text text_type_main-medium">Начинки</h3>
                     <div className={ingrStyles.ingrList}>
                         <CardList type={"main"} />
                     </div>
@@ -76,9 +75,5 @@ function BurgerIngredients() {
         </section>
     );
 }
-
-// BurgerIngredients.propTypes = {
-//     openModal: PropTypes.func.isRequired
-// }
 
 export default BurgerIngredients;

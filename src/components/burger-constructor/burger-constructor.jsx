@@ -62,7 +62,6 @@ function BurgerConstructor() {
         })
     };
 
-    // используем хук из DND
     const [{ background }, dropTarget] = useDrop({
         accept: "ingridient",
         drop(objIngridient) {
@@ -107,6 +106,7 @@ function BurgerConstructor() {
             });
         };
 
+        // помечаем контейнер, внутри которого может происходить ресортировка списка начинок бургера
         const [, dropResort] = useDrop(() => ({ accept: "draggableIngridient" }));
 
     /************************************************************************************** */

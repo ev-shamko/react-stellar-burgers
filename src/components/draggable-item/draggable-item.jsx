@@ -33,8 +33,10 @@ function DraggableItem({ sequenceId, ingrData, indexInStateArr, resortIngr, find
 
 
     /******* DND-ресортировка *******/
+    // остальная логика в компоненте burger-constructor, т.к. там рендерится контейнер, внутри которого совершаем перетаскивание
 
-    const [{ isDragging }, dragItem, preview] = useDrag(
+    // помечаем элементы ингридиентов как цель драга
+    const [{ isDragging }, dragItem, draggedPreview] = useDrag(
         () => ({
             type: "draggableIngridient",
             item: { sequenceId, indexInStateArr }, // в доке indexInStateArr находят через findIngridient(), но можно и из пропсов брать
@@ -42,18 +44,18 @@ function DraggableItem({ sequenceId, ingrData, indexInStateArr, resortIngr, find
                 isDragging: monitor.isDragging(),
             }),
             end: (item, monitor) => {
-                const { sequenceId: droppedId, originalIndex } = item;
+                const { sequenceId: droppedOnId, originalIndex } = item;
                 const didDrop = monitor.didDrop();
                 if (!didDrop) {
-                    resortIngr(droppedId, originalIndex);
+                    resortIngr(droppedOnId, originalIndex);
                 }
             },
         }),
         [sequenceId, indexInStateArr, resortIngr]
     );
 
-    // помечаем ингридиенты: нужно, что перетаскиваемый ингридиент дропался на другой ингридиент
-    const [, dropItem] = useDrop(
+    // дополнительно помечаем все перетаскиваемые ингридиенты ещё и как цель дропа
+    const [, targetOfDrop] = useDrop(
         () => ({
             accept: "draggableIngridient",
             canDrop: () => false,
@@ -72,7 +74,7 @@ function DraggableItem({ sequenceId, ingrData, indexInStateArr, resortIngr, find
     //ref={(node) => dropItem(preview(node))} - напоминаю себе, что такой записью мы передаём в реф 2 функции: dropItem, preview, и обе получают необходимый им аргумент node. Соответственно, один и тот же элемент используется и как превью в процессе перетаскивания и как цель для дропа.
 
     return (
-        <div className={diStyles.draggableItime} ref={(node) => dropItem(preview(node))} style={{ opacity }}>
+        <div className={diStyles.draggableItime} ref={(node) => targetOfDrop(draggedPreview(node))} style={{ opacity }}>
             <button ref={dragItem} className={diStyles.draggableButton}>
                 <DragIcon />
             </button>

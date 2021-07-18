@@ -25,8 +25,7 @@ const IngridientCard = ({ objIngridient }) => {
         type: 'ingridient',
         item: objIngridient,
 
-        //добавляет элементу рамку, если элемент является перетаскиваемым
-        // если переписать, может иначе влиять на стили элемента, или вообще стать условием, при котором элемент отображается/пропадает (return (!isDrag && <div><div>)
+        //добавляет элементу рамку, если элемент в данный момент перетаскивается куда-то
         collect: (monitor) => ({
             outline: monitor.isDragging() ? '1px solid #4C4CFF' : '',
         }),
@@ -58,30 +57,18 @@ const IngridientCard = ({ objIngridient }) => {
     // стейт для хранения состояния счетчика на карточке ингридиента
     const [ingrCounter, setIngrCounter] = React.useState();
 
-    // TODO попробовать объявлять 1 стейт
-    // счетчику нужны данные о том, сколько экземпляров ингридиента лежит в констукторе
-    // if (true) {
-    const { /*stateBun, */stateDraggableIngridients } = useSelector(state => ({
-        stateBun: state.burgerVendor.bun,
-        stateDraggableIngridients: state.burgerVendor.draggableIngridients,
-    }));
-    // }
 
-    // записываем в переменую стейт из редакса, из которого можно понять, сколько штук текущего ингридиента положено в конструктор бургера
+    // получаем стейт из редакса, из которого можно понять, сколько штук текущего ингридиента положено в конструктор бургера. Какой конкретно стейт нам нужен зависит от ингридиента в пропсах инстанса текущего компонента
     const { ingrInConstructor } = useSelector(state => {
-        // тут в переменную запишется 1 объект: либо пустой, либо с 1 булкой
+        // если у нас тут карточка булки, то в переменную запишется 1 объект: либо пустой, либо с 1 булкой
         if (objIngridient.type === 'bun') {
             return ({ ingrInConstructor: state.burgerVendor.bun });
         }
-        // тут в переменную запишется массив с объектами ингридиентов
-        // ??? это точно массив, но почему он не итерируется через forEach ?
-        if (objIngridient.type === 'sauce' || 'main') {
+        // если создаём карточку соуса или начинки, то в переменную запишется массив с объектами ингридиентов, перетащенных в конструктор бургера
+        if (objIngridient.type === 'sauce' || objIngridient.type === 'main') {
             return ({ ingrInConstructor: state.burgerVendor.draggableIngridients });
         }
     })
-
-    // console.log(`Type of ingridietn ${objIngridient.type}. The ingrInConstructor is ${ingrInConstructor}`);
-    // console.log(ingrInConstructor);
 
     // в зависимости от типа текущего ингридиента функция проверит, сколько таких ингридиентов лежит в соответствующем стейте в редаксе
     function getNumOfIngridients() {
@@ -96,14 +83,9 @@ const IngridientCard = ({ objIngridient }) => {
         }
 
         // если текущий для данного инстанса ингридиент - это соус или начинка, считаем, сколько таких ингридиентов в конструкторе
-        // ingrInConstructor будет массивом объектов
-        if (objIngridient.type === 'sauce' || 'main') {
+        if (objIngridient.type === 'sauce' || objIngridient.type === 'main') {
             // если находим в массиве такой же _id, как в этом экземпляре карточки, то увеличиваем счётчик на 1
-            stateDraggableIngridients.forEach((item) => {
-                // console.log('got sauce or main');
-                // console.log('ingrInConstructor', ingrInConstructor)
-                // console.log('array ia array results', Array.isArray(ingrInConstructor))
-
+            ingrInConstructor.forEach((item) => {
                 if (item._id === objIngridient._id) {
                     counterValue++;
                 }
@@ -113,23 +95,11 @@ const IngridientCard = ({ objIngridient }) => {
         return counterValue;
     }
 
-    // передаёт в useEffect только один стейт, чтобы не абсолютно все карточки ингридиентов ререндерились при изменении стейта
-    // function getCondition() {
-    //     if (objIngridient.type === 'bun') {
-    //         return [stateBun];
-    //     }
-
-    //     if (objIngridient.type === 'sauce' || 'main') {
-    //         return [stateDraggableIngridients];
-    //     }
-    // }
-
     // при каждом изменении стейта в редаксе будет обновляться стейт счетчика ингридиента ingrCounter
     useEffect(() => {
-        // console.log('useEffect in ingridient card');
+        console.log('useEffect in ingridient card');
         setIngrCounter(getNumOfIngridients());
-    }, [ingrInConstructor]);
-    // getCondition()
+    }, [ingrInConstructor, objIngridient]);
 
     /**************************************************** */
 
