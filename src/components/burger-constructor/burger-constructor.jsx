@@ -172,7 +172,6 @@ function BurgerConstructor() {
                     (
                         <li className={crStyles.draggableIngridinetContainer} ref={dropResort}>
                             {chosenDraggableIngr.map((ingr, index) => {
-                                console.log(ingr)
                                 return (
                                     <DraggableItem
                                         key={ingr.instanceID}

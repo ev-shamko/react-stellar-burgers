@@ -97,7 +97,6 @@ const IngridientCard = ({ objIngridient }) => {
 
     // при каждом изменении стейта в редаксе будет обновляться стейт счетчика ингридиента ingrCounter
     useEffect(() => {
-        console.log('useEffect in ingridient card');
         setIngrCounter(getNumOfIngridients());
     }, [ingrInConstructor, objIngridient]);
 
