@@ -74,35 +74,36 @@ function BurgerConstructor() {
     });
 
 
-    /******** Логика для DND-ресортировки выбранных ингридиентов ********/
+    /******** DND-ресортировка выбранных ингридиентов ********/
     /***************************************************************** */
 
-    // Реализована как в примере из доки: 
+    // Реализовано по аналогии с примером из доки: 
     // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_js/04-sortable/cancel-on-drop-outside?from-embed=&file=/src/Container.jsx:121-162
 
-    // функция возвращает объект с данными ингридиента и с его индексом массиве хранилища
+    // Функция возвращает объект с данными ингридиента и с его индексом в массиве из store. Применяется для получения данных о drop-элементе и drag-элементе
     const findIngridientInStore = useCallback(
-        (sequenceId) => { // sequenceId - уникальный id объекта из массива chosenDraggableIngr: отражает порядок добавления объекта в массив, используется для ресортировки
-            const objIngrData = chosenDraggableIngr.filter((objIngr) => objIngr.sequenceId === sequenceId)[0]; // получаем их хранилища объект ингридиента с данным objIngr.sequenceId
+        (targetIngrID) => { 
+            // получаем из хранилища объект ингридиента, у которого objIngr.instanceID равен ID объекта, переданному в функцию в качестве аргумента
+            const objIngrData = chosenDraggableIngr.filter((objIngr) => objIngr.instanceID === targetIngrID)[0];
             return {
-                objIngrData: objIngrData, // объект ингридиента из редакс-хранилища вместе с его текущим sequenceId
-                indexInStore: chosenDraggableIngr.indexOf(objIngrData), // сюда запишется индекс, по которому данный объект ингридиента находится в массиве chosenDraggableIngr
+                objIngrData, // в это свойство кладём объект ингридиента из редакс-хранилища
+                ingrIndexInStore: chosenDraggableIngr.indexOf(objIngrData), // сюда запишется индекс, по которому данный объект ингридиента находится в массиве chosenDraggableIngr
             };
         },
         [chosenDraggableIngr]
     );
 
-    // Ставит перетаскиваемый ингридиент перед тем ингридиентом, на который его дропнули
+    // Ставит драг-ингридиент перед тем ингридиентом, на который его перетащили
     const resortIngrList =
-        //droppedSequenceId - укикальный ID элемента, на который дропнули перетаскиваемый ингридиент
-        // originalIndexInStore - индекс (в массиве хранилища) ПЕРЕТАСКИВАЕМОГО ингридиента - хранится в компоненте карточки ингридиента
-        (droppedSequenceId, originalIndexInStore) => {
-            const { indexInStore: indexOfDroppedIngr } = findIngridientInStore(droppedSequenceId);
+        // draggedInstanceId - укикальный ID ингридиента, который мы перетаскиваем. Является свойством объекта ингридиента.
+        // droppedIndexInStore - индекс (в массиве хранилища) дроп-элемента, на который перетащили драг-элемент
+        (draggedInstanceId, droppedIndexInStore) => {
+            const { ingrIndexInStore } = findIngridientInStore(draggedInstanceId); // получаем порядковый id ингридиента, на который дропнули перетаскиваемый ингридиент
 
             dispatch({
                 type: RESORT_DRAGGABLE_INGRIDIENTS,
-                indexOfDroppedIngr: indexOfDroppedIngr,
-                originalIndexInStore: originalIndexInStore,
+                indexOfDraggedIngr: ingrIndexInStore,
+                indexOfDroppedIngr: droppedIndexInStore,
             });
         };
 
@@ -131,7 +132,8 @@ function BurgerConstructor() {
 
 
     // функция создаёт объект тела POST-запроса к API 
-    /* Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  Первый id в формате строки - это булка, полседующие - остальные ингридиенты*/
+    // Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  
+    // Первый id в формате строки - это булка, полседующие - остальные ингридиенты*/
     function createPostBody() {
         const arrWithOrderData = [];
 
@@ -169,16 +171,15 @@ function BurgerConstructor() {
                 {(chosenDraggableIngr.length > 0) &&
                     (
                         <li className={crStyles.draggableIngridinetContainer} ref={dropResort}>
-                            {/* Переименовать! Отрицание-гнев-торг-принятие-депрессия*/}
                             {chosenDraggableIngr.map((ingr, index) => {
                                 console.log(ingr)
                                 return (
                                     <DraggableItem
-                                        key={ingr.sequenceId}
-                                        sequenceId={ingr.sequenceId}
+                                        key={ingr.instanceID}
+                                        ingrInstanceID={ingr.instanceID}
                                         ingrData={ingr}
-                                        indexInStateArr={index}
-                                        resortIngr={resortIngrList}
+                                        ingrIndexInStoreArr={index}
+                                        resortIngrList={resortIngrList}
                                         findIngridient={findIngridientInStore}
                                     />
                                 )

@@ -114,19 +114,19 @@ export const burgerVendorReducer = (state = initialState, action) => {
             }
         }
         case ADD_SAUCE: {
-            const sequenceId = state.draggableIngridients.length + 1;
-            const objIngridientWithId = { ...action.value, sequenceId }; // добавляем к объекту ингридиента порядковый номер, он нужен для сортировки DND в конструкторе бургера
+            const instanceID = state.draggableIngridients.length + 1;
+            const objIngridientWithId = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID, он нужен для DND-ресортировки в конструкторе бургера
             return {
                 ...state,
                 draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
             }
         }
         case ADD_MAIN: {
-            const sequenceId = state.draggableIngridients.length + 1;
-            const objIngridientWithId = { ...action.value, sequenceId };
+            const instanceID = state.draggableIngridients.length + 1;
+            const objInstance = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID, он нужен для DND-ресортировки в конструкторе бургера
             return {
                 ...state,
-                draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
+                draggableIngridients: state.draggableIngridients.concat(objInstance)  // добавляем в исходный массив объектов новый объект
             };
         }
         case UPDATE_DRAGGABLE_INGRIDIENTS: {
@@ -138,8 +138,8 @@ export const burgerVendorReducer = (state = initialState, action) => {
         case RESORT_DRAGGABLE_INGRIDIENTS: {
             const resortedArrOfIngridients = update(state.draggableIngridients, {
                 $splice: [
-                    [action.indexOfDroppedIngr, 1],
-                    [action.originalIndexInStore, 0, state.draggableIngridients[action.indexOfDroppedIngr]],
+                    [action.indexOfDraggedIngr, 1],
+                    [action.indexOfDroppedIngr, 0, state.draggableIngridients[action.indexOfDraggedIngr]],
                 ],
             });
             return {

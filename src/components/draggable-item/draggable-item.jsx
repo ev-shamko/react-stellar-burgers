@@ -12,7 +12,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 
-function DraggableItem({ sequenceId, ingrData, indexInStateArr, resortIngr, findIngridient }) {
+function DraggableItem({ ingrInstanceID, ingrData, ingrIndexInStoreArr, resortIngrList, findIngridient }) {
     const dispatch = useDispatch();
 
     const stateDraggableIngridients = useSelector(store => store.burgerVendor.draggableIngridients); // массив объектов  
@@ -22,7 +22,7 @@ function DraggableItem({ sequenceId, ingrData, indexInStateArr, resortIngr, find
         const arrOfIngrObjects = stateDraggableIngridients.slice(0);
 
         // удаляем из массива ингридиент с текущим индексом
-        arrOfIngrObjects.splice(indexInStateArr, 1);
+        arrOfIngrObjects.splice(ingrIndexInStoreArr, 1);
 
         // записываем в стейт новый массив ингридиентов
         dispatch({
@@ -33,25 +33,25 @@ function DraggableItem({ sequenceId, ingrData, indexInStateArr, resortIngr, find
 
 
     /******* DND-ресортировка *******/
-    // остальная логика в компоненте burger-constructor, т.к. там рендерится контейнер, внутри которого совершаем перетаскивание
+    // остальная логика этой ресортировки в компоненте burger-constructor, т.к. там рендерится контейнер, внутри которого совершаем перетаскивание
 
-    // помечаем элементы ингридиентов как цель драга
+    // для перетаскиваемых элементов:
     const [{ isDragging }, dragItem, draggedPreview] = useDrag(
         () => ({
             type: "draggableIngridient",
-            item: { sequenceId, indexInStateArr }, // в доке indexInStateArr находят через findIngridient(), но можно и из пропсов брать
+            item: { ingrInstanceID, ingrIndexInStoreArr },
             collect: (monitor) => ({
                 isDragging: monitor.isDragging(),
             }),
             end: (item, monitor) => {
-                const { sequenceId: droppedOnId, originalIndex } = item;
                 const didDrop = monitor.didDrop();
+                // если не дропнули элемент где положено, то отменяем ресортировку и возвращаем как было. Для этого передаём в resortIngrList() не droppedIndexInStore, а как бы draggedIndexInStore
                 if (!didDrop) {
-                    resortIngr(droppedOnId, originalIndex);
+                    resortIngrList(item.ingrInstanceID, item.ingrIndexInStoreArr); // используем данные из объекта item не смотря на то, что в принципе можно взять эти же переменные из замыкания. Не будем извращаться над логикой библиотеки
                 }
             },
         }),
-        [sequenceId, indexInStateArr, resortIngr]
+        [ingrInstanceID, ingrIndexInStoreArr, resortIngrList]
     );
 
     // дополнительно помечаем все перетаскиваемые ингридиенты ещё и как цель дропа
@@ -59,14 +59,14 @@ function DraggableItem({ sequenceId, ingrData, indexInStateArr, resortIngr, find
         () => ({
             accept: "draggableIngridient",
             canDrop: () => false,
-            hover({ sequenceId: draggedId }) {
-                if (draggedId !== sequenceId) {
-                    const { indexInStore: indexOfDraggedItem } = findIngridient(sequenceId);
-                    resortIngr(draggedId, indexOfDraggedItem);
+            hover({ ingrInstanceID: draggedInstanceId }) {
+                if (draggedInstanceId !== ingrInstanceID) {
+                    const { ingrIndexInStore: droppedIndexInStore } = findIngridient(ingrInstanceID); // получаем индекс драг-элемента, на который перетащили дроп-элемент
+                    resortIngrList(draggedInstanceId, droppedIndexInStore);
                 }
             },
         }),
-        [findIngridient, resortIngr]
+        [findIngridient, resortIngrList]
     );
 
     const opacity = isDragging ? 0 : 1;
