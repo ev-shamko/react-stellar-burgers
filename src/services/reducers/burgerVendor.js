@@ -26,15 +26,14 @@ const initialState = {
         ingrDataHasError: false,
     },
 
-    // constructorInitialState
-    // В предыдущую итерацию тут был Стейт, хранящий информацию для BurgerConstructor, позволяет добавлять в него данные из BurgerIngridients
+    // два свойства с содержимым ингридиентов в BurgerConcstructor
     bun: {},
     draggableIngridients: [],
 
     // модальное окно
     modalIsVisible: false,
     currentModalType: 'none',
-    ingrInModalData: {},
+    ingrInModalData: {}, // TODO: переименовать в ingrDataInModal
 
     orderData: {},
 };
@@ -115,7 +114,7 @@ export const burgerVendorReducer = (state = initialState, action) => {
         }
         case ADD_SAUCE: {
             const instanceID = state.draggableIngridients.length + 1;
-            const objIngridientWithId = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID, он нужен для DND-ресортировки в конструкторе бургера
+            const objIngridientWithId = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID (instanceID), он нужен для DND-ресортировки в конструкторе бургера. Почему называется obj.instanceID, а не просто obj.id? Потому что внутри таких объектов уже есть свойство obj._id, и оно не уникально для массива draggableInghidients, т.к. в массив можно добавить несколько одинаковых ингридиентов с одним и тем же obj._id. И ещё лично мне легко перепутать obj._id и ob.id - слишком похожее написание.
             return {
                 ...state,
                 draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
@@ -123,7 +122,7 @@ export const burgerVendorReducer = (state = initialState, action) => {
         }
         case ADD_MAIN: {
             const instanceID = state.draggableIngridients.length + 1;
-            const objInstance = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID, он нужен для DND-ресортировки в конструкторе бургера
+            const objInstance = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный instanceID, он нужен для DND-ресортировки в конструкторе бургера
             return {
                 ...state,
                 draggableIngridients: state.draggableIngridients.concat(objInstance)  // добавляем в исходный массив объектов новый объект
@@ -137,6 +136,9 @@ export const burgerVendorReducer = (state = initialState, action) => {
         }
         case RESORT_DRAGGABLE_INGRIDIENTS: {
             const resortedArrOfIngridients = update(state.draggableIngridients, {
+                // Что здесь происходит: мы ресортируем массив объектов ингридиентов в конструкторе бургера
+                // пакет immutability-helper для этого нужндается в indexOfDraggedIngr и indexOfDroppedIngr - исходных индексах в массиве draggableIngridients
+                // Выбранный ингридиент (indexOfDraggedIngr) ставится на индекс другого ингридиента (indexOfDroppedIngr).
                 $splice: [
                     [action.indexOfDraggedIngr, 1],
                     [action.indexOfDroppedIngr, 0, state.draggableIngridients[action.indexOfDraggedIngr]],
@@ -159,5 +161,3 @@ export const burgerVendorReducer = (state = initialState, action) => {
         }
     }
 }
-
-// экспорт редьюсера
