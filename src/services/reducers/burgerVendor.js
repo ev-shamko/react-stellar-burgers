@@ -113,7 +113,7 @@ export const burgerVendorReducer = (state = initialState, action) => {
             }
         }
         case ADD_SAUCE: {
-            const instanceID = state.draggableIngridients.length + 1;
+            const instanceID = (new Date()).getTime(); // лучше сделать гарантированно уникальный id, иначе забагует DND
             const objIngridientWithId = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID (instanceID), он нужен для DND-ресортировки в конструкторе бургера. Почему называется obj.instanceID, а не просто obj.id? Потому что внутри таких объектов уже есть свойство obj._id, и оно не уникально для массива draggableInghidients, т.к. в массив можно добавить несколько одинаковых ингридиентов с одним и тем же obj._id. И ещё лично мне легко перепутать obj._id и ob.id - слишком похожее написание.
             return {
                 ...state,
@@ -121,7 +121,7 @@ export const burgerVendorReducer = (state = initialState, action) => {
             }
         }
         case ADD_MAIN: {
-            const instanceID = state.draggableIngridients.length + 1;
+            const instanceID = (new Date()).getTime();
             const objInstance = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный instanceID, он нужен для DND-ресортировки в конструкторе бургера
             return {
                 ...state,

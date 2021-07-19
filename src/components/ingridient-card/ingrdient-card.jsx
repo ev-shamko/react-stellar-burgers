@@ -78,7 +78,7 @@ const IngridientCard = ({ objIngridient }) => {
         // ingrInConstructor будет объектом
         if (objIngridient.type === 'bun') {
             if (ingrInConstructor._id === objIngridient._id) {
-                return ++counterValue;
+                return 2;
             }
         }
 

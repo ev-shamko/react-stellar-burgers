@@ -74,6 +74,7 @@ function DraggableItem({ ingrInstanceID, ingrData, ingrIndexInStoreArr, resortIn
     //ref={(node) => dropItem(preview(node))} - напоминаю себе, что такой записью мы передаём в реф 2 функции: dropItem, preview, и обе получают необходимый им аргумент node. Соответственно, один и тот же элемент используется и как превью в процессе перетаскивания и как цель для дропа.
 
     return (
+
         <div className={diStyles.draggableItime} ref={(node) => targetOfDrop(draggedPreview(node))} style={{ opacity }}>
             <button ref={dragItem} className={diStyles.draggableButton}>
                 <DragIcon />
