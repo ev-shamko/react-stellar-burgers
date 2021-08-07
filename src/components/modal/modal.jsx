@@ -6,7 +6,14 @@ import modalStyles from './modal.module.css';
 import ModalOverlay from './modal-overlay/modal-overlay';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-function Modal({ closeModal, children }) {
+import { useDispatch } from 'react-redux';
+import { 
+    CLOSE_MODAL, 
+    SET_MODAL_TYPE, 
+} from '../../services/actions/burgerVendor';
+
+function Modal({ children }) {
+    const dispatch = useDispatch();
     const modalRoot = document.getElementById("react-modals");
 
     // Функция передаётся в onClick <article>. Предотвращает всплытие события клика с модального окна до ModalOverlay. Иначе клик по любому месту модального окна закроет модальное окно. А надо, чтобы так делал только клик по крестику и клик по ModalOverlay.
@@ -14,13 +21,24 @@ function Modal({ closeModal, children }) {
         event.stopPropagation();
     }
 
+    const handleClose = () => {
+        dispatch({
+            type: CLOSE_MODAL,
+        });
+
+        dispatch({
+            type: SET_MODAL_TYPE,
+            value: 'none',
+        });
+    }
+
     return ReactDOM.createPortal(
         (
-            <ModalOverlay handleClick={closeModal} >
+            <ModalOverlay handleClick={handleClose} >
                 {/* {console.log('Отладка: рендерю модальное окно')} */}
 
                 <article className={modalStyles.modal} onClick={stopPropagation}>
-                    <button onClick={closeModal} className={modalStyles.closeButton}>
+                    <button onClick={handleClose} className={modalStyles.closeButton}>
                         <CloseIcon />
                     </button>
                     {children}
@@ -31,7 +49,6 @@ function Modal({ closeModal, children }) {
 }
 
 Modal.propTypes = {
-    closeModal: PropTypes.func.isRequired,
     children: PropTypes.element.isRequired
 };
 

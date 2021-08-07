@@ -1,48 +1,121 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from 'prop-types';
-import {
-    ConstructorContext
-} from '../../services/burgerConstructorContext';
-
 import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
+import { useDrag, DragPreviewImage } from "react-dnd";
+
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    OPEN_MODAL,
+    SET_MODAL_TYPE,
+    SET_INGRIDIENT_IN_MODAL,
+} from '../../services/actions/burgerVendor';
 
 /* <IngridientCard
         objIngridient={obj}
         key={obj._id}
-        openModal={this.props.openModal}
     />
 */
 
 // @ts-ignore
-const IngridientCard = ({ objIngridient, openModal }) => {
+const IngridientCard = ({ objIngridient }) => {
+    const dispatch = useDispatch();
 
-    const { setConstructorState } = React.useContext(ConstructorContext);
+    const [{ outline }, dragRef, dragPreviewImg] = useDrag({
+        type: 'ingridient',
+        item: objIngridient,
+
+        //добавляет элементу рамку, если элемент в данный момент перетаскивается куда-то
+        collect: (monitor) => ({
+            outline: monitor.isDragging() ? '1px solid #4C4CFF' : '',
+        }),
+    });
 
     const openIngridientDetails = (event) => {
-        return openModal(event, 'IngridientDetails', objIngridient);
+        dispatch({
+            type: OPEN_MODAL,
+        });
+        dispatch({
+            type: SET_MODAL_TYPE,
+            value: 'IngridientDetails',
+        });
+        dispatch({
+            type: SET_INGRIDIENT_IN_MODAL,
+            value: objIngridient,
+        });
     };
 
-    // с action.type получилось изящно, я молодец
-    const addIngridientInConstructor = () => {
-        setConstructorState({type: `ADD_${objIngridient.type.toUpperCase()}`, content: objIngridient});
-    }
-    
     const handleClick = (event) => {
         openIngridientDetails(event);
-        addIngridientInConstructor();
+    };
+
+
+    /******************************************************************** */
+    /******      Логика счётчика выбранных ингридиентов        ********* */
+    /****************************************************************** */
+
+    // стейт для хранения состояния счетчика на карточке ингридиента
+    const [ingrCounter, setIngrCounter] = React.useState();
+
+
+    // получаем стейт из редакса, из которого можно понять, сколько штук текущего ингридиента положено в конструктор бургера. Какой конкретно стейт нам нужен зависит от ингридиента в пропсах инстанса текущего компонента
+    const { ingrInConstructor } = useSelector(state => {
+        // если у нас тут карточка булки, то в переменную запишется 1 объект: либо пустой, либо с 1 булкой
+        if (objIngridient.type === 'bun') {
+            return ({ ingrInConstructor: state.burgerVendor.bun });
+        }
+        // если создаём карточку соуса или начинки, то в переменную запишется массив с объектами ингридиентов, перетащенных в конструктор бургера
+        if (objIngridient.type === 'sauce' || objIngridient.type === 'main') {
+            return ({ ingrInConstructor: state.burgerVendor.draggableIngridients });
+        }
+    })
+
+    // в зависимости от типа текущего ингридиента функция проверит, сколько таких ингридиентов лежит в соответствующем стейте в редаксе
+    function getNumOfIngridients() {
+        let counterValue = 0;
+
+        // если в стейте лежит именно эта булка, счётчик выставляем на 1, иначе на 0
+        // ingrInConstructor будет объектом
+        if (objIngridient.type === 'bun') {
+            if (ingrInConstructor._id === objIngridient._id) {
+                return 2;
+            }
+        }
+
+        // если текущий для данного инстанса ингридиент - это соус или начинка, считаем, сколько таких ингридиентов в конструкторе
+        if (objIngridient.type === 'sauce' || objIngridient.type === 'main') {
+            // если находим в массиве такой же _id, как в этом экземпляре карточки, то увеличиваем счётчик на 1
+            ingrInConstructor.forEach((item) => {
+                if (item._id === objIngridient._id) {
+                    counterValue++;
+                }
+            });
+        }
+
+        return counterValue;
     }
 
-        return (
-        <div className={cardStyles.ingrCard + ' mb-8'} onClick={handleClick}>
+    // при каждом изменении стейта в редаксе будет обновляться стейт счетчика ингридиента ingrCounter
+    useEffect(() => {
+        setIngrCounter(getNumOfIngridients());
+    }, [ingrInConstructor, objIngridient]);
+
+    /**************************************************** */
+
+    return (
+        <>
+            <DragPreviewImage connect={dragPreviewImg} src={objIngridient.image} /> {/* При перетаскивании будет показываться только картинка, а не вся карточка ингридиента */}
+            <div className={cardStyles.ingrCard + ' mb-8'} onClick={handleClick} ref={dragRef} style={{ outline }}>
                 <img src={objIngridient.image} alt={objIngridient.name} className={cardStyles.itemPic} />
                 <div className={cardStyles.price}>
-                    <Counter count={1} size="default" />
+                    {/* Если данный ингридиент ни разу не был перетащен в конструктор, счетчик не будет отображаться. Так красивее и не противоречит тз */}
+                    {!!ingrCounter && <Counter count={ingrCounter} size="default" />}
                     <span className="m-2 text_type_digits-default">{objIngridient.price}</span>
                     <CurrencyIcon type="primary" />
                 </div>
                 <h3 className="m-1 text_type_main-default">{objIngridient.name}</h3>
-        </div>
+            </div>
+        </>
     );
 }
 
@@ -62,8 +135,7 @@ const ingridientsInnerObjStructure = PropTypes.shape({
 });
 
 IngridientCard.propTypes = {
-    objIngridient: PropTypes.shape(ingridientsInnerObjStructure.isRequired), // arrayOf - массив, состоящий из типа данных, указанного в скобках: объект определённой структуры, плюс ещё и isRequired
-    openModal: PropTypes.func.isRequired
+    objIngridient: PropTypes.shape(ingridientsInnerObjStructure.isRequired),
 }
 
 export default IngridientCard;

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import { IngridientsListContext } from '../../services/ingridientsContext';
+//import { IngridientsListContext } from '../../services/ingridientsContext';
+import { useSelector } from 'react-redux';
 
 import IngridientCard from "../ingridient-card/ingrdient-card"
 
@@ -9,23 +10,24 @@ import IngridientCard from "../ingridient-card/ingrdient-card"
 // на его основании рендерим новый массив по типу ингридиента, полученного в пропсе
 
 // <CardList type={"bun"} openModal={this.props.openModal} />
-const CardList = ({ type, openModal }) => {
+const CardList = ({ type }) => {
 
-    const { ingridientsState } = React.useContext(IngridientsListContext);
-
-    const arrSomeIngridients = ingridientsState.ingridientsData.filter(function (obj) {
+    //const { ingridientsState } = React.useContext(IngridientsListContext);
+    const arrOfIngridients = useSelector(store => store.burgerVendor.ingridientsData.arrOfIngridients);
+    
+    // из массива всех ингридиентов выбираем ингридиенты определённого типа (например, только булки: obj.type === 'bun')
+    const arrTargetedIngridients = arrOfIngridients.filter(function (obj) {
         return obj.type === type;
     });
 
     return (
         <>
             {
-                arrSomeIngridients.map((obj, index) => {
+                arrTargetedIngridients.map((obj, index) => {
                     return (
                         <IngridientCard
                             objIngridient={obj}
-                            key={obj._id}
-                            openModal={openModal}
+                            key={obj._id}                            
                         />
                     )
                 })
@@ -36,7 +38,7 @@ const CardList = ({ type, openModal }) => {
 
 CardList.propTypes = {
     type: PropTypes.oneOf(["bun", "sauce", "main"]),
-    openModal: PropTypes.func.isRequired,
+    //openModal: PropTypes.func.isRequired,
 };
 
 export default CardList;

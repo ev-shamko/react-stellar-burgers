@@ -1,11 +1,16 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import { memo, useCallback, useState } from "react";
 import crStyles from "./burger-constructor.module.css";
-import DraggableItems from "../draggable-items/draggable-items";
-import actionTypes from '../../utils/actionTypes';
-
-import { OrderStateContext } from '../../services/orderStateContext';
-import { ConstructorContext } from '../../services/burgerConstructorContext';
+import DraggableItem from "../draggable-item/draggable-item";
+import { useDrop } from "react-dnd";
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    postBurgerOrder,
+    ADD_BUN,
+    ADD_SAUCE,
+    ADD_MAIN,
+    RESORT_DRAGGABLE_INGRIDIENTS,
+} from '../../services/actions/burgerVendor';
 
 import {
     ConstructorElement,
@@ -13,37 +18,111 @@ import {
     CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-//<BurgerConstructor openModal={openModal} />
+import { urlApiPostOrder } from '../../utils/api-url';
+
 // @ts-ignore
-function BurgerConstructor({ openModal }) {
+function BurgerConstructor() {
+    const dispatch = useDispatch();
 
-    const { constructorState, setConstructorState } = React.useContext(ConstructorContext);
-    const { setOrderState } = React.useContext(OrderStateContext);
+    // стейты с данными об ингридиентах бургера
+    const { chosenBun, chosenDraggableIngr } = useSelector(store => ({
+        chosenBun: store.burgerVendor.bun,
+        chosenDraggableIngr: store.burgerVendor.draggableIngridients,
+    }));
 
-    /*{
-    bun: {},
-    draggableIngridients: [{}, {}]
-  };
-  */
+    /******************************************************** */
+    /******        DragAndDrop логика              ********* */
+    /****************************************************** */
 
-    // ******** Можно включить захардкодены дефолтные компоненты в конструкторе бургеров
+    // при метком броске карточки ингридиента добавляет ингридиент в конструктор
+    function onDropHandler(objIngridient) {
+        addIngridientInConstructor(objIngridient);
+    };
 
-    // useEffect(() => {
-    // для отладки проставляем дефолтные ингридиенты в конструкторе
-    // setConstructorState({ type: 'add sauce', content: ingridientsState.ingridientsData[3] });
-    // setConstructorState({ type: 'add bun', content: ingridientsState.ingridientsData[0] });
-    // }, []);
+    // функция возвращает нужный экшн в зависимости от типа ингридиента
+    // это нужно для добавления ингридиета в стейт
+    const getAction = (typeOfIngridient) => {
+        if (typeOfIngridient === 'bun') {
+            return ADD_BUN;
+        }
 
-    // ******************************
+        if (typeOfIngridient === 'sauce') {
+            return ADD_SAUCE;
+        }
 
+        if (typeOfIngridient === 'main') {
+            return ADD_MAIN;
+        }
+    };
+
+    const addIngridientInConstructor = (objIngridient) => {
+        dispatch({
+            type: getAction(objIngridient.type), // в зависимости от типа добавляемого ингридиента сюда подставится нужный экшн
+            value: objIngridient,
+        })
+    };
+
+    const [{ background }, dropTarget] = useDrop({
+        accept: "ingridient",
+        drop(objIngridient) {
+            onDropHandler(objIngridient);
+        },
+        // когда доносим ингридиент до окна конструктора, окно подсветится градиентом
+        collect: monitor => ({
+            background: monitor.isOver() ? 'radial-gradient(circle, rgba(63,94,251,0.6110819327731092) 0%, rgba(252,70,107,0) 44%)' : '',
+        }),
+    });
+
+
+    /******** DND-ресортировка выбранных ингридиентов ********/
+    /***************************************************************** */
+
+    // Реализовано по аналогии с примером из доки: 
+    // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_js/04-sortable/cancel-on-drop-outside?from-embed=&file=/src/Container.jsx:121-162
+
+    // Функция возвращает объект с данными ингридиента и с его индексом в массиве из store. Применяется для получения данных о drop-элементе и drag-элементе
+    const findIngridientInStore = useCallback(
+        (targetIngrID) => { 
+            // получаем из хранилища объект ингридиента, у которого objIngr.instanceID равен ID объекта, переданному в функцию в качестве аргумента
+            const objIngrData = chosenDraggableIngr.filter((objIngr) => objIngr.instanceID === targetIngrID)[0];
+            return {
+                objIngrData, // в это свойство кладём объект ингридиента из редакс-хранилища
+                ingrIndexInStore: chosenDraggableIngr.indexOf(objIngrData), // сюда запишется индекс, по которому данный объект ингридиента находится в массиве chosenDraggableIngr
+            };
+        },
+        [chosenDraggableIngr]
+    );
+
+    // Ставит драг-ингридиент перед тем ингридиентом, на который его перетащили
+    const resortIngrList =
+        // draggedInstanceId - укикальный ID ингридиента, который мы перетаскиваем. Является свойством объекта ингридиента.
+        // droppedIndexInStore - индекс (в массиве хранилища) дроп-элемента, на который перетащили драг-элемент
+        (draggedInstanceId, droppedIndexInStore) => {
+            const { ingrIndexInStore } = findIngridientInStore(draggedInstanceId); // получаем порядковый id ингридиента, на который дропнули перетаскиваемый ингридиент
+
+            dispatch({
+                type: RESORT_DRAGGABLE_INGRIDIENTS,
+                indexOfDraggedIngr: ingrIndexInStore,
+                indexOfDroppedIngr: droppedIndexInStore,
+            });
+        };
+
+        // помечаем контейнер, внутри которого может происходить ресортировка списка начинок бургера
+        const [, dropResort] = useDrop(() => ({ accept: "draggableIngridient" }));
+
+    /************************************************************************************** */
+    /******   Остальная логика: стейты, подсчёты цены, отправка заказа, рендер   ********* */
+    /************************************************************************************ */
+
+    // подсчитываем стоимость всех ингридиентов, инфу берём из стейта редакса
     function getTotalPrice() {
-        const priceOfBun = constructorState.bun.price * 2; // цена верхней и нижней булки
+        const priceOfBun = chosenBun.price * 2; // цена верхней и нижней булки
         let priceOfDraggableIngr = 0;
 
         // если есть ингридиенты между булками, то считаем их стоимость
-        if (constructorState.draggableIngridients.length > 0) {
-            priceOfDraggableIngr = constructorState.draggableIngridients.reduce(function (accumulator, currentValue) {
-                return accumulator + Number(currentValue.price);
+        if (chosenDraggableIngr.length > 0) {
+            priceOfDraggableIngr = chosenDraggableIngr.reduce(function (summ, ingridient) {
+                return summ + Number(ingridient.price);
             }, 0);
         }
 
@@ -53,88 +132,67 @@ function BurgerConstructor({ openModal }) {
 
 
     // функция создаёт объект тела POST-запроса к API 
-    /* Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  */
+    // Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  
+    // Первый id в формате строки - это булка, полседующие - остальные ингридиенты*/
     function createPostBody() {
-        const arrForOrder = [];
+        const arrWithOrderData = [];
 
         // добавляем id булки
-        arrForOrder.push(constructorState.bun["_id"]);
+        arrWithOrderData.push(chosenBun["_id"]);
 
-        // добавляем id остальных ингридиентов
-        constructorState.draggableIngridients.map((obj) => {
-            arrForOrder.push(obj["_id"]);
-            return true;
+        // пушим id остальных ингридиентов в массив с данными о заказе
+        chosenDraggableIngr.forEach((obj) => {
+            arrWithOrderData.push(obj["_id"]);
         });
 
-        const bodyOfPost = { "ingredients": arrForOrder };
-        return bodyOfPost;
-    }
-
-    const postBurgerOrder = (event) => {
-
-        const POST_URL = 'https://norma.nomoreparties.space/api/orders'
-
-        fetch(POST_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: JSON.stringify(createPostBody())
-        })
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                }
-                return Promise.reject(res.status);
-            })
-            .then((res) => {
-                console.log('in fetch: Получен номер заказа', res.order.number);
-                setOrderState(res); // записываем в стейт объект ответа от сервера
-            })
-            .then(() => {
-                openModal(event, 'OrderDetails'); 
-                setConstructorState({ type: actionTypes.REMOVE_ALL_INGRIDIENTS });
-            })
-            .catch((err) => {
-                console.log(`Error: some error ocured during posting order`);
-                console.log(`response from server is: `, err);
-            });
+        return { "ingredients": arrWithOrderData };
     }
 
     const sendOrderToApi = (event) => {
-        postBurgerOrder(event)
-        return true;
+        return dispatch(postBurgerOrder(urlApiPostOrder, createPostBody));
     };
 
     return (
-        <section className={crStyles.container}>
+        <section className={crStyles.container} ref={dropTarget} style={{ background }}>
             {/* {console.log('Рендерю >>BurgerConstructor<<')} */}
 
             <ul className={crStyles.chosenIngridients + ' mb-6'}>
 
                 {/* Верхняя булка: отрисуется, если пользователь уже выбрал булку  */}
-                {(constructorState.bun.name) &&
+                {(chosenBun.name) &&
                     (
                         <li className={crStyles.topIngridinet}>
-                            <ConstructorElement type="top" isLocked="true" text={constructorState.bun.name + " (верх)"} thumbnail={constructorState.bun.image} price={constructorState.bun.price} />
+                            <ConstructorElement type="top" isLocked="true" text={chosenBun.name + " (верх)"} thumbnail={chosenBun.image} price={chosenBun.price} />
                         </li>
                     )
                 }
 
                 {/* Контейнер с настраиваемыми ингридиентами: отрисуется, если что-то уже выбрано */}
-                {(constructorState.draggableIngridients.length > 0) &&
+                {(chosenDraggableIngr.length > 0) &&
                     (
-                        <li className={crStyles.draggableIngridinetContainer}>
-                            <DraggableItems />
+                        <li className={crStyles.draggableIngridinetContainer} ref={dropResort}>
+                            {chosenDraggableIngr.map((ingr, index) => {
+                                return (
+                                    <DraggableItem
+                                        key={ingr.instanceID}
+                                        ingrInstanceID={ingr.instanceID}
+                                        ingrData={ingr}
+                                        ingrIndexInStoreArr={index}
+                                        resortIngrList={resortIngrList}
+                                        findIngridient={findIngridientInStore}
+                                    />
+                                )
+                            })
+                            }
                         </li>
                     )
                 }
 
                 {/* Нижняя булка: отрисуется, если пользователь уже выбрал булку  */}
-                {(constructorState.bun.name) &&
+                {(chosenBun.name) &&
                     (
                         <li className={crStyles.bottomIngridinet}>
-                            <ConstructorElement type="bottom" isLocked="true" text={constructorState.bun.name + " (низ)"} thumbnail={constructorState.bun.image} price={constructorState.bun.price} />
+                            <ConstructorElement type="bottom" isLocked="true" text={chosenBun.name + " (низ)"} thumbnail={chosenBun.image} price={chosenBun.price} />
                         </li>
                     )
                 }
@@ -142,8 +200,9 @@ function BurgerConstructor({ openModal }) {
             </ul>
 
             <div className={crStyles.totalBar}>
-                {/* Если пользователь не выбрал бургерную булку, то не будет отрисовываться поле с общей стоимостью и кнопка заказа */}
-                {(constructorState.bun.name) &&
+                {/* Блок со стоимостью и кнопкой заказа: Если пользователь не выбрал бургерную булку, то этот блок не будет отрисовываться */}
+                {/* Если не выбран ни один ингридиент, отобразится подсказка про перетаскивание. Если не выбрана булка, появится подсказка про булку */}
+                {(chosenBun.name) &&
                     (
                         <>
                             <span className={'text text_type_digits-medium mr-10'}>{getTotalPrice()}<CurrencyIcon type={'primary'} /></span>
@@ -152,7 +211,21 @@ function BurgerConstructor({ openModal }) {
                     )
                     ||
                     (
-                        <span className={'text text_type_main-medium mr-10'}>Выберите булку для бургера</span>
+                        <div style={{ margin: '0 auto' }}>
+                            {(!chosenBun.name) && (chosenDraggableIngr.length < 1) &&
+                                (
+                                    <span className={'text text_type_main-medium mr-10'} style={{ textAlign: 'center', justifyContent: 'center', display: 'table-cell', paddingRight: '40px' }}>{/* TODO: вынести стили в module.css */}
+                                        Перетащите сюда ингридиенты, <br></br>которые хотите добавить в бургер
+                                    </span>
+                                )
+                                ||
+                                (
+                                    <span className={'text text_type_main-medium mr-10'} style={{}}>
+                                        Выберите булку для бургера
+                                    </span>
+                                )
+                            }
+                        </div>
                     )
                 }
             </div>
@@ -160,10 +233,6 @@ function BurgerConstructor({ openModal }) {
         </section>
     );
     // }
-}
-
-BurgerConstructor.propTypes = {
-    openModal: PropTypes.func.isRequired
 }
 
 export default BurgerConstructor;
