@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
-import { LoginPage, RegistrationPage, ForgotPage, ResetPassword } from '../../pages';
+import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage } from '../../pages';
 
 
 function App() {
@@ -33,6 +33,10 @@ function App() {
 
           <Route path="/reset-password">
             <ResetPassword />
+          </Route>
+
+          <Route path="/profile">
+            <ProfilePage />
           </Route>
 
           <Route path="/">{/* exact={true}>; */}

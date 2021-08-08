@@ -2,5 +2,6 @@ import { LoginPage } from './login';
 import { RegistrationPage } from './registration';
 import { ForgotPage } from './forgot-password';
 import { ResetPassword } from './reset-password';
+import { ProfilePage } from './profile';
 
-export { LoginPage, RegistrationPage, ForgotPage, ResetPassword };
+export { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage };
