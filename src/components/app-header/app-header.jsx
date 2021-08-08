@@ -28,7 +28,7 @@ class AppHeader extends React.Component {
                             </li>
                         </ul>
                     </nav>
-                    <a href="#">
+                    <a href="/">
                         <Logo />
                     </a>
 
