@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, useHistory } from 'react-router-dom';
-import { fetchLogIn, logInApp } from '../services/actions/userActions';
+import { logInApp } from '../services/actions/userActions';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -19,6 +19,7 @@ import {
 
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
+  const isLoggedIn = useSelector(store => store.user.isLoggedIn);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -26,28 +27,30 @@ export function LoginPage() {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 
+  // УДАЛИТЬ НА ПРОДЕ
   // автоподстановка корректного логина и пароля для авторизации
   useEffect(() => {
     setFormValues(
       { email: 'shamko.e.v@yandex.ru', password: '123123' }
     )
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      history.replace({ pathname: '/profile' }); //  лучше сделать через компонент <Redirect/> , а не через history
+    }
+  }, [isLoggedIn]);
 
   // после успешной авторизации нужен редирект на главную страницу (? или в профиль)
   const handleSubmit = useCallback(
-    e => {
+    e => { // в итоге не нужна тут псевдосинхронность
       e.preventDefault();
       console.log('Sending login request');
       console.log(form);
-      console.log(logInApp)
 
-      dispatch(logInApp(form));      
-
-      if (false) {
-        history.replace({ pathname: '/' }); //  лучше сделать через компонент <Redirect/> , а не через history
-      }
+      dispatch(logInApp(form));
     },
-    [history, form]
+    [form, dispatch]
   );
 
   return (

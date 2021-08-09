@@ -1,6 +1,7 @@
 import {
   LOGIN_SUCCESSFUL,
   LOGIN_FAILED,
+  LOGOUT_SUCCESSFUL,
 } from '../actions/userActions';
 
 const initialState = {
@@ -8,8 +9,8 @@ const initialState = {
   userName: '',
   userEmail: '',
 
-  accessToken: null,
-  refreshToken: null,
+  // accessToken: null,
+  // refreshToken: null,
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -20,8 +21,8 @@ export const userReducer = (state = initialState, action) => {
         isLoggedIn: true,
         userName: action.name,
         userEmail: action.email,
-        accessToken: action.accessToken,
-        refreshToken: action.refreshToken,
+        // accessToken: action.accessToken,
+        // refreshToken: action.refreshToken,
       }
     }
     case LOGIN_FAILED: {
@@ -30,8 +31,16 @@ export const userReducer = (state = initialState, action) => {
         isLoggedIn: false,
         userName: '',
         userEmail: '',
-        accessToken: null,
-        refreshToken: null,
+        // accessToken: null,
+        // refreshToken: null,
+      }
+    }
+    case LOGOUT_SUCCESSFUL: {
+      return {
+        ...state,
+        isLoggedIn: false,
+        userName: '',
+        userEmail: '',
       }
     }
     default: {

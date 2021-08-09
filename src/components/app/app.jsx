@@ -2,6 +2,7 @@ import React from 'react';
 //import logo from '../../images/logo.svg';
 import indexStyles from './app.module.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { ProtectedRoute } from '../protected-route/protected-route';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
