@@ -1,5 +1,6 @@
 import React from "react";
 import headerStyles from "./app-header.module.css";
+import { Link } from 'react-router-dom';
 import {
     Logo,
     BurgerIcon,
@@ -15,31 +16,36 @@ class AppHeader extends React.Component {
                     <nav className='text text_type_main-default'>
                         <ul className={headerStyles.navBurgerBuilder}>
                             <li className={headerStyles.headerButton}>
-                                <div className={headerStyles.navButton}>
-                                    <BurgerIcon type="primary" />
-                                    <span className={headerStyles.buttonCaption}>Конструктор</span>
-                                </div>
+                                <Link to='/' className={headerStyles.navlink}>
+                                    <div className={headerStyles.navButton}>
+                                        <BurgerIcon type="primary" />
+                                        <span className={headerStyles.buttonCaption}>Конструктор</span>
+                                    </div>
+                                </Link>
                             </li>
                             <li className={headerStyles.headerButton}>
-                                <div className={headerStyles.navButton + '  text_color_inactive'}>{/* вот здесь через state будем менять цвет текста */}
-                                    <ListIcon type="secondary" />
-                                    <span className={headerStyles.buttonCaption}>Лента заказов</span>
-                                </div>
+                                <Link to='/login' className={headerStyles.navlink}> {/* Временно здесь будет ссылка на авторизацию для удобства работы */}
+                                    <div className={headerStyles.navButton + '  text_color_inactive'}>{/* вот здесь через state будем менять цвет текста */}
+                                        <ListIcon type="secondary" />
+                                        <span className={headerStyles.buttonCaption}>Лента заказов</span>
+                                    </div>
+                                </Link>
+
                             </li>
                         </ul>
                     </nav>
-                    <a href="/">
+                    <Link to="/">
                         <Logo />
-                    </a>
+                    </Link>
 
                     {/* На будущее:
 Логотип в шапке центруктся через space-between, поэтому левая и правая <nav> должны быть примерно одинаковой ширины, но кнопка авторизации чуть уже.
 Можно высчитывать ширину кнопки авторизации через js, но пока захардкодено в css. */}
                     <nav className={headerStyles.userPanel + ' text text_type_main-default'}>
-                        <a className={headerStyles.authButton + '  text_color_inactive'} href="/profile"> 
+                        <Link className={headerStyles.authButton + ' ' +  headerStyles.navlink + '  text_color_inactive'} to="/profile">
                             <ProfileIcon type="secondary" />
                             <span className={headerStyles.buttonCaption}>Личный кабинет</span>
-                        </a>
+                        </Link>
                     </nav>
                 </div>
             </header>

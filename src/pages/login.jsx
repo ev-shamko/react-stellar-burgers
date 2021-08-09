@@ -1,6 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, useHistory } from 'react-router-dom';
+import { fetchLogIn, logInApp } from '../services/actions/userActions';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
   Input,
@@ -8,26 +10,44 @@ import {
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
+/*
+- На странице login следим, залогинен ли уже юзер (берем данные авторизации из стора через useSelector)
+- Если не залогинен, показываем ему форму
+- Если залогинен, то рендерим компонент <Redirect to={…} />, чтобы пользователя перекинуло в предыдущую локацию, откуда он пришел в логин
+Получается, при заполнении формы данные положатся в стор, компонент страницы логина пойдет перерендериваться, и там сработает редирект
+*/
+
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
-
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 
+  // автоподстановка корректного логина и пароля для авторизации
+  useEffect(() => {
+    setFormValues(
+      { email: 'shamko.e.v@yandex.ru', password: '123123' }
+    )
+  }, [])
+
   // после успешной авторизации нужен редирект на главную страницу (? или в профиль)
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
       console.log('Sending login request');
+      console.log(form);
+      console.log(logInApp)
 
-      if (true) {
-        history.replace({ pathname: '/' });
+      dispatch(logInApp(form));      
+
+      if (false) {
+        history.replace({ pathname: '/' }); //  лучше сделать через компонент <Redirect/> , а не через history
       }
     },
-    [history]
+    [history, form]
   );
 
   return (

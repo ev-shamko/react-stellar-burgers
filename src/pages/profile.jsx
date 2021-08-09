@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styles from './profile.module.css';
 import { Link, useHistory } from 'react-router-dom';
 import { ProfileMenu } from '../components/profile-menu/profile-menu'
@@ -11,6 +12,14 @@ import {
 
 export function ProfilePage() {
   const [form, setFormValues] = useState({ name: '', email: '', password: '' });
+  const { userName, userEmail } = useSelector(state => state.user);
+
+  // при загрузке компонента в поля поставятся имя и почта из стейта
+  useEffect(() => {
+    if (userName) {
+      setFormValues({ ...form, name: userName, email: userEmail })
+    }
+  }, []);
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
@@ -40,12 +49,15 @@ export function ProfilePage() {
           error={false}
         />
 
-        <PasswordInput
-          value={form.password}
+        <Input
+          type={"text"}
           name={'password'}
-          size={'default'}
-          type={"password"}
+          placeholder={"Пароль"}
+          value={form.password}
           onChange={handleChange}
+          size={'default'}
+          icon={"EditIcon"}
+          error={false}
         />
       </form>
     </section>

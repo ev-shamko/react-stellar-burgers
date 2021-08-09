@@ -1,4 +1,4 @@
-import update from "immutability-helper";
+import update from "immutability-helper"; // этот пакет для ресортировки массива, хранящегося в стейте
 
 import {
     TOGGLE_MODAL_VISIBILITY,

@@ -13,39 +13,40 @@ function App() {
   return (
     <>
       {/* {console.log('РЕНДЕРЮ app.jsx')} */}
-      <AppHeader />
+      <Router>
+        <AppHeader />
 
-      <main className={indexStyles.main}>
-        <Router>
-          {/* <Switch> */}
+        <main className={indexStyles.main}>
+          <Switch>
 
-          <Route path="/login">
-            <LoginPage />
-          </Route>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
 
-          <Route path="/registration">
-            <RegistrationPage />
-          </Route>
+            <Route path="/registration">
+              <RegistrationPage />
+            </Route>
 
-          <Route path="/forgot-password">
-            <ForgotPage />
-          </Route>
+            <Route path="/forgot-password">
+              <ForgotPage />
+            </Route>
 
-          <Route path="/reset-password">
-            <ResetPassword />
-          </Route>
+            <Route path="/reset-password">
+              <ResetPassword />
+            </Route>
 
-          <Route path="/profile">
-            <ProfilePage />
-          </Route>
+            <Route path="/profile">
+              <ProfilePage />
+            </Route>
 
-          <Route path="/">{/* exact={true}>; */}
-            <BurgerVendor />
-          </Route>
+            <Route path="/">{/* exact={true}>; */}
+              <BurgerVendor />
+            </Route>
 
-          {/* </Switch> */}
-        </Router>
-      </main>
+          </Switch>
+
+        </main>
+      </Router>
     </>
   );
 }
