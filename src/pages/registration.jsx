@@ -31,7 +31,7 @@ export function RegistrationPage () {
 
     return (
       <div className={styles.wrap}>
-        <form className={'auth-form ' + styles.form}>
+        <form className={'auth-form ' + styles.form}  onSubmit={handleSubmit}>
           <h1 className='text text_type_main-medium mb-6'>Регистрация</h1>
   
           <Input
@@ -64,7 +64,7 @@ export function RegistrationPage () {
             onChange={handleChange}
           />
   
-          <Button onClick={handleSubmit} type="primary" size="medium">
+          <Button type="primary" size="medium">
             Зарегистрироваться
           </Button>
   

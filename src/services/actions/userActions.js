@@ -21,8 +21,7 @@ export function logInApp(data) {
           // refreshToken,
         });
         setCookie("accessToken", accessToken, { expires: 20 * 60 });
-        setCookie("refreshToken", refreshToken, { expires: 60 * 60 * 24 * 365 }); // допустим, строк годности истекает через год
-        // ещё добавить токены в куки
+        localStorage.setItem('refreshToken', refreshToken); // по рекомендации наставника этот токен кладём в localStorage
       })
       .catch(err => {
         console.log('Ошибка при авторизации по логину и паролю');
@@ -47,7 +46,7 @@ export function logOut(data) {
         })
 
         deleteCookie("accessToken");
-        deleteCookie("refreshToken");
+        localStorage.removeItem('refreshToken');
         console.log('logged out succsessfully');
       })
       .catch(err => {

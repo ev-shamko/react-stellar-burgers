@@ -28,9 +28,11 @@ export function ResetPassword() {
     }
   ); //  [auth, form] будущие зависимости
 
+  // можно реализовать доступ с проверкой стейта в сторе
+
   return (
     <div className={styles.wrap}>
-      <form className={'auth-form ' + styles.form}>
+      <form className={'auth-form ' + styles.form} onSubmit={handleSubmit}>
         <h1 className='text text_type_main-medium mb-6'>Восстановление пароля</h1>
 
         <PasswordInput
@@ -52,7 +54,7 @@ export function ResetPassword() {
           errorText={''}
         />
 
-        <Button onClick={handleSubmit} type="primary" size="medium">
+        <Button type="primary" size="medium">
           Восстановить
         </Button>
 
