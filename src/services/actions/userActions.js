@@ -1,9 +1,10 @@
-import { fetchLogIn, fetchLogOut } from '../../utils/api-fetch';
+import { fetchLogIn, fetchLogOut, fetchUserData, } from '../../utils/api-fetch';
 import { setCookie, deleteCookie } from '../../utils/cookie';
 
 export const LOGIN_SUCCESSFUL = 'LOGIN_SUCCESSFUL';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT_SUCCESSFUL = 'LOGOUT_SUCCESSFUL';
+export const STOP_AUTO_LOGIN = 'STOP_AUTO_LOGIN';
 
 export function logInApp(data) {
   return function (dispatch) {
@@ -11,14 +12,10 @@ export function logInApp(data) {
 
     fetchLogIn(data)
       .then(({ user, accessToken, refreshToken }) => {
-        // console.log('In dispatch');
-        // console.log({ user, accessToken, refreshToken});
         dispatch({
           type: LOGIN_SUCCESSFUL,
           name: user.name,
           email: user.email,
-          // accessToken,
-          // refreshToken,
         });
         setCookie("accessToken", accessToken, { expires: 20 * 60 });
         localStorage.setItem('refreshToken', refreshToken); // по рекомендации наставника этот токен кладём в localStorage
@@ -41,12 +38,14 @@ export function logOut(data) {
 
     fetchLogOut(data)
       .then((res) => {
+
+        deleteCookie('accessToken');
+        localStorage.removeItem('refreshToken');
+
         dispatch({
           type: LOGOUT_SUCCESSFUL
         })
 
-        deleteCookie("accessToken");
-        localStorage.removeItem('refreshToken');
         console.log('logged out succsessfully');
       })
       .catch(err => {
@@ -54,4 +53,33 @@ export function logOut(data) {
         console.log(err);
       });;
   };
+}
+
+export function getUser() {
+  console.log('Starting getUser with accsessToken')
+  return function (dispatch) {
+    fetchUserData()
+      .then(res => {
+        console.log('getUser got data', res);
+        return res;
+      })
+      .then(({ user }) => {
+        dispatch({
+          type: LOGIN_SUCCESSFUL,
+          name: user.name,
+          email: user.email,
+        });
+
+        // 1 запроса к серверу достаточно
+        dispatch({
+          type: STOP_AUTO_LOGIN,
+        });
+      })
+      .catch(() => {
+        // если не получилось по токену получить юзердату, тем более нужно прекращать стучаться к серверу за данными
+        dispatch({
+          type: STOP_AUTO_LOGIN,
+        });
+      });
+  }
 }

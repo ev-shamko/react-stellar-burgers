@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, useHistory, Redirect } from 'react-router-dom';
-import { logInApp } from '../services/actions/userActions';
+import { logInApp, getUser } from '../services/actions/userActions';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -19,7 +19,7 @@ import {
 
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
-  const isLoggedIn = useSelector(store => store.user.isLoggedIn);
+  const { isLoggedIn, mayAutoLogIn } = useSelector(store => store.user);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -35,17 +35,7 @@ export function LoginPage() {
     )
   }, []);
 
-  /*
-  // строго после авторизации и изменении isLoggedIn редиректнет в профиль
-  useEffect(() => {
-    if (isLoggedIn) {
-      // <Redirect to={{ pathname: '/' }} />
-      history.replace({ pathname: '/profile' }); //  лучше сделать через компонент <Redirect/> , а не через history
-    }
-  }, [isLoggedIn]);
-*/
-
-  // после успешной авторизации нужен редирект на главную страницу (? или в профиль)
+  // после успешной авторизации нужен редирект на главную страницу 
   const handleSubmit = useCallback(
     async e => { // в итоге не нужна тут псевдосинхронность
       e.preventDefault();
@@ -53,15 +43,19 @@ export function LoginPage() {
       console.log(form);
 
       await dispatch(logInApp(form));
-      // history.replace({ pathname: '/profile' });
-      // history.replace({ pathname: '/profile' });
     },
     [form, dispatch]
   );
 
+  // если прийти на страницу /login по прямой ссылке, то произойдёт авторизация при налии корректного accsessToken в куках, затем редиректнет на главную страницу
+  if (!isLoggedIn && mayAutoLogIn) {
+    dispatch(getUser());
+    // а если адекватного accsessToken не было, можно будет ввести логин и пароль и залогиниться
+  }
+
   // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
   if (isLoggedIn) {
-    return ( <Redirect to={{ pathname: '/' }} /> );
+    return (<Redirect to={{ pathname: '/' }} />);
   }
 
   return (

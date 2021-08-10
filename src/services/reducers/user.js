@@ -2,12 +2,15 @@ import {
   LOGIN_SUCCESSFUL,
   LOGIN_FAILED,
   LOGOUT_SUCCESSFUL,
+  STOP_AUTO_LOGIN,
 } from '../actions/userActions';
 
 const initialState = {
   isLoggedIn: false,
   userName: '',
   userEmail: '',
+
+  mayAutoLogIn: true,
 };
 
 export const userReducer = (state = initialState, action) => {
@@ -34,6 +37,12 @@ export const userReducer = (state = initialState, action) => {
         isLoggedIn: false,
         userName: '',
         userEmail: '',
+      }
+    }
+    case STOP_AUTO_LOGIN: {
+      return {
+        ...state,
+        mayAutoLogIn: false,
       }
     }
     default: {

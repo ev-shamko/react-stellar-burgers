@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import styles from './auth-form.module.css';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, Redirect } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getUser } from '../services/actions/userActions';
 
 import {
   Input,
@@ -9,9 +11,13 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 export function ResetPassword() {
-  const [form, setFormValues] = useState({ password: '',  resetCode: '' });
+  const [form, setFormValues] = useState({ password: '', resetCode: '' });
+  const { isLoggedIn, mayAutoLogIn } = useSelector(store => store.user);
+
 
   const history = useHistory();
+  const dispatch = useDispatch();
+
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
@@ -25,10 +31,20 @@ export function ResetPassword() {
       if (true) {
         history.replace({ pathname: '/login' });
       }
-    }
+    }, [history]
   ); //  [auth, form] будущие зависимости
 
-  // можно реализовать доступ с проверкой стейта в сторе
+  // если прийти на страницу по прямой ссылке, то произойдёт авторизация при налии корректного accsessToken в куках, затем редиректнет на главную страницу
+  if (!isLoggedIn && mayAutoLogIn) {
+    dispatch(getUser());
+    // а если адекватного accsessToken не было, можно будет ввести логин и пароль и залогиниться
+  }
+
+  // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
+  if (isLoggedIn) {
+    return (<Redirect to={{ pathname: '/' }} />);
+  }
+
 
   return (
     <div className={styles.wrap}>

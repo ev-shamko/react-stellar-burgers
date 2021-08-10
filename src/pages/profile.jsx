@@ -1,13 +1,10 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './profile.module.css';
-import { Link, useHistory } from 'react-router-dom';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
 
 import {
   Input,
-  PasswordInput,
-  Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 export function ProfilePage() {

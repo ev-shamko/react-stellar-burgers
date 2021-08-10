@@ -7,6 +7,8 @@ import Modal from '../modal/modal';
 import IngridientDetais from '../ingridient-details/ingridient-details';
 import OrderDetails from '../order-details/order-details';
 
+import { getUser } from '../../services/actions/userActions';
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -22,6 +24,18 @@ import { urlApiGetIngridients } from '../../utils/api-url';
 function BurgerVendor() {
 
   const dispatch = useDispatch();
+
+
+  /******************************************************** */
+  /****  Попытка авторизоваться, если есть accsessToken в куки  ******/
+  /****************************************************** */
+
+  const { isLoggedIn, mayAutoLogIn } = useSelector(store => store.user);
+
+  if (!isLoggedIn && mayAutoLogIn) {
+    dispatch(getUser());  
+    // если сервер не ответит адекватно, то mayAutoLogIn станет false, и приложение больше не будет пытаться получить данные о пользователе  
+  }
 
   /******************************************************** */
   /******      Импорт стейтов из редакса        ********* */

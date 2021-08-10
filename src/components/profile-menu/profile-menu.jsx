@@ -1,9 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './profile-menu.module.css';
 import { ProfileTab } from '../profile-tab/profile-tab';
 import { useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { getCookie } from '../../utils/cookie';
+import { useDispatch } from 'react-redux';
 import { logOut } from '../../services/actions/userActions';
 
 import PropTypes from 'prop-types';
@@ -31,6 +30,7 @@ export function ProfileMenu({ activeTab }) {
     const refreshToken = localStorage.getItem('refreshToken'); // string
     
     dispatch(logOut({ token: refreshToken }));
+
 
     // этот компонент отрисовывается в защищённом роуте, 
     // поэтому после логаута юзера автоматом редиректнет на /login
