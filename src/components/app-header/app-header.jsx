@@ -24,7 +24,7 @@ class AppHeader extends React.Component {
                                 </Link>
                             </li>
                             <li className={headerStyles.headerButton}>
-                                <Link to='/login' className={headerStyles.navlink}> {/* Временно здесь будет ссылка на авторизацию для удобства работы */}
+                                <Link to='/' className={headerStyles.navlink}>
                                     <div className={headerStyles.navButton + '  text_color_inactive'}>{/* вот здесь через state будем менять цвет текста */}
                                         <ListIcon type="secondary" />
                                         <span className={headerStyles.buttonCaption}>Лента заказов</span>

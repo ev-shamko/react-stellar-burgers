@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, Redirect } from 'react-router-dom';
 import { logInApp } from '../services/actions/userActions';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -35,27 +35,38 @@ export function LoginPage() {
     )
   }, []);
 
+  /*
+  // строго после авторизации и изменении isLoggedIn редиректнет в профиль
   useEffect(() => {
     if (isLoggedIn) {
+      // <Redirect to={{ pathname: '/' }} />
       history.replace({ pathname: '/profile' }); //  лучше сделать через компонент <Redirect/> , а не через history
     }
   }, [isLoggedIn]);
+*/
 
   // после успешной авторизации нужен редирект на главную страницу (? или в профиль)
   const handleSubmit = useCallback(
-    e => { // в итоге не нужна тут псевдосинхронность
+    async e => { // в итоге не нужна тут псевдосинхронность
       e.preventDefault();
       console.log('Sending login request');
       console.log(form);
 
-      dispatch(logInApp(form));
+      await dispatch(logInApp(form));
+      // history.replace({ pathname: '/profile' });
+      // history.replace({ pathname: '/profile' });
     },
     [form, dispatch]
   );
 
+  // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
+  if (isLoggedIn) {
+    return ( <Redirect to={{ pathname: '/' }} /> );
+  }
+
   return (
     <div className={styles.wrap}>
-      <form className={'auth-form ' + styles.form}>
+      <form className={'auth-form ' + styles.form} onSubmit={handleSubmit}>
         <h1 className='text text_type_main-medium mb-6'>Вход</h1>
 
         <Input

@@ -25,11 +25,6 @@ export function ProfileMenu({ activeTab }) {
       // открыть /profile/orders
       history.replace({ pathname: '/profile/orders' });
     }
-
-    if (value === "logOut") {
-      // отправить запрос с refreshToken
-      history.replace({ pathname: '/login' });
-    }
   }
 
   const handleLogOut = async () => {
@@ -37,8 +32,9 @@ export function ProfileMenu({ activeTab }) {
     
     await dispatch(logOut({ token: refreshToken }));
 
-
-    history.replace({ pathname: '/login' }); // пока что с /login автоматом редиректит на главную. 
+    // этот компонент отрисовывается в защищённом роуте, 
+    // поэтому после логаута юзера автоматом редиректнет на /login
+    // больше здесь не нужна history.replace 
   };
 
   return (

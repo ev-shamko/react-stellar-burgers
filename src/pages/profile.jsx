@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import styles from './profile.module.css';
 import { Link, useHistory } from 'react-router-dom';
-import { ProfileMenu } from '../components/profile-menu/profile-menu'
+import { ProfileMenu } from '../components/profile-menu/profile-menu';
 
 import {
   Input,

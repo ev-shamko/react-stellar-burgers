@@ -6,8 +6,7 @@ import { ProtectedRoute } from '../protected-route/protected-route';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
-import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage } from '../../pages';
-
+import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, ProfileOrdersPage } from '../../pages';
 
 function App() {
 
@@ -36,9 +35,13 @@ function App() {
               <ResetPassword />
             </Route>
 
-            <Route path="/profile">
+            <ProtectedRoute path="/profile" exact={true}>
               <ProfilePage />
-            </Route>
+            </ProtectedRoute>
+
+            <ProtectedRoute path="/profile/orders">
+              <ProfileOrdersPage />
+            </ProtectedRoute>
 
             <Route path="/">{/* exact={true}>; */}
               <BurgerVendor />
