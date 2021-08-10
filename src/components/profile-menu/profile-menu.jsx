@@ -27,10 +27,10 @@ export function ProfileMenu({ activeTab }) {
     }
   }
 
-  const handleLogOut = async () => {
-    const refreshToken = getCookie('refreshToken'); // string
+  const handleLogOut = () => {
+    const refreshToken = localStorage.getItem('refreshToken'); // string
     
-    await dispatch(logOut({ token: refreshToken }));
+    dispatch(logOut({ token: refreshToken }));
 
     // этот компонент отрисовывается в защищённом роуте, 
     // поэтому после логаута юзера автоматом редиректнет на /login
