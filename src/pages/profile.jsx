@@ -13,9 +13,8 @@ export function ProfilePage() {
 
   // при загрузке компонента в поля поставятся имя и почта из стейта
   useEffect(() => {
-    if (userName) {
-      setFormValues({ ...form, name: userName, email: userEmail })
-    }
+    setFormValues({ ...form, name: userName, email: userEmail })
+    //eslint-disable-next-line
   }, []);
 
   const handleChange = e => {

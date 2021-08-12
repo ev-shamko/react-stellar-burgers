@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
-import { Link, useHistory, Redirect } from 'react-router-dom';
-import { logInApp, getUser } from '../services/actions/userActions';
+import { Link, Redirect } from 'react-router-dom';
+import { logInApp } from '../services/actions/userActions';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -19,9 +19,8 @@ import {
 
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
-  const { isLoggedIn, mayAutoLogIn } = useSelector(store => store.user);
+  const { isLoggedIn } = useSelector(store => store.user);
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
@@ -46,12 +45,6 @@ export function LoginPage() {
     },
     [form, dispatch]
   );
-
-  // если прийти на страницу /login по прямой ссылке, то произойдёт авторизация при налии корректного accsessToken в куках, затем редиректнет на главную страницу
-  if (!isLoggedIn && mayAutoLogIn) {
-    dispatch(getUser());
-    // а если адекватного accsessToken не было, можно будет ввести логин и пароль и залогиниться
-  }
 
   // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
   if (isLoggedIn) {

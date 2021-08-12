@@ -3,6 +3,7 @@ import {
   urlLoginRout,
   urlLogoutRout,
   urlAuthUser,
+  urlApiToken,
 } from './api-url';
 
 // logIN авторизация по email, password
@@ -28,8 +29,12 @@ export function fetchLogIn(data) {
     })
 };
 
+/****************************************************************************** */
+/****************************************************************************** */
+
 // получение данных о пользователе с помощью accessToken (который живёт 20 мин)
 export function fetchUserData() {
+  console.log('accessToken', getCookie('accessToken'));
   return fetch(urlAuthUser, {
     headers: {
       method: 'GET',
@@ -41,12 +46,13 @@ export function fetchUserData() {
       if (res.ok) {
         return res.json();
       }
-      console.log('Ошибка при попытке получить данные пользователя через accsessToken. Возможно, так и должно быть, если токен просрочен.');
+      console.log('Ошибка при попытке получить данные пользователя через accessToken. Возможно, так и должно быть, если токен просрочен.');
       return Promise.reject(res); // если нет адекватного токена (например, пользователь вылогинился), консоль засирается красными ошибками. 
     })
     .then((res) => {
       if (res["success"] === false) {
         console.error('getUser with accessToken failed:', res);
+        //return false;
       }
       console.log('getUser with accessToken successfull')
       console.log(res);
@@ -64,6 +70,48 @@ export function fetchUserData() {
 */
 
 
+/****************************************************************************** */
+/****************************************************************************** */
+
+// Обновления токенов через refreshToken, если accessToken протух
+export function fetchRefreshTokens() {
+  console.log('начало фетча за рефрешем токенов')
+  // console.log('текущий refreshToken', localStorage.getItem('refreshToken'));
+  return fetch(urlApiToken, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      console.log('Ошибка при попытке обновить токены через refreshToken. Возможно, так и должно быть, если токены уже были обновлены в параллельной сессии.');
+      return Promise.reject(res);
+    })
+    .then((res) => {
+      if (res["success"] === false) {
+        console.error('Couldn`t refresh tokens: ', res);
+        return false;
+      }
+      console.log('Got fresh tokens: ', res);
+      return res;
+    });
+}
+
+/* Тело ответа сервера при успешном обновлении токена:
+{
+  "success": true,
+  "accessToken": "Bearer ...",
+  "refreshToken": ""
+}  */
+
+
+/****************************************************************************** */
+/****************************************************************************** */
+
 // logOUT с помощью refreshToken
 export function fetchLogOut(refreshToken) {
   return fetch(urlLogoutRout, {
@@ -71,7 +119,7 @@ export function fetchLogOut(refreshToken) {
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
     },
-    body: JSON.stringify(refreshToken),
+    body: JSON.stringify({ token: localStorage.getItem('refreshToken'), }),
   })
     .then((res) => {
       if (res.ok) {

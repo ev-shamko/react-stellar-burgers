@@ -9,7 +9,7 @@ export const ProfileTab = ({ children, value, isActive, onClick: handleClick}) =
     if (typeof handleClick === 'function' && !isActive ) {
       handleClick(value);
     }
-  }, [handleClick, value]);
+  }, [handleClick, value, isActive]);
 
   return (
     <div className={`${className} pt-4 pr-10 pb-4 noselect`} onClick={onClick}>

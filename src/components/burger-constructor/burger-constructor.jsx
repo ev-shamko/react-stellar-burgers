@@ -1,5 +1,6 @@
+/* eslint-disable */
 import React from "react";
-import { memo, useCallback, useState } from "react";
+import { useCallback } from "react";
 import crStyles from "./burger-constructor.module.css";
 import DraggableItem from "../draggable-item/draggable-item";
 import { useDrop } from "react-dnd";
