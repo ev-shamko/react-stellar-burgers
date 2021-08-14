@@ -3,6 +3,9 @@ import {
   LOGIN_FAILED,
   LOGOUT_SUCCESSFUL,
   STOP_AUTO_LOGIN,
+  SET_USER_DATA,
+  ALLOW_RESET_PASSWORD,
+  FORBID_RESET_PASSWORD,
 } from '../actions/userActions';
 
 const initialState = {
@@ -10,12 +13,23 @@ const initialState = {
   userName: '',
   userEmail: '',
 
-  mayAutoLogIn: true,
+  mayAutoLogIn: true, // пока отключено, но будет прикольно вернуть обратно
+  canResetPassword: false,
+
 };
 
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_SUCCESSFUL: {
+      return {
+        ...state,
+        isLoggedIn: true,
+        userName: action.name,
+        userEmail: action.email,
+      }
+    }
+    // дублирует LOGIN_SUCCESSFUL для удобства чтения экшенов
+    case SET_USER_DATA: {
       return {
         ...state,
         isLoggedIn: true,
@@ -43,6 +57,18 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         mayAutoLogIn: false,
+      }
+    }
+    case ALLOW_RESET_PASSWORD: {
+      return {
+        ...state,
+        canResetPassword: true,
+      }
+    }
+    case FORBID_RESET_PASSWORD: {
+      return {
+        ...state,
+        canResetPassword: false,
       }
     }
     default: {

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
-import { Link, Redirect } from 'react-router-dom';
-import { logInApp } from '../services/actions/userActions';
+import { Link, Redirect, useLocation } from 'react-router-dom';
+import { logInApp, confirmAuth } from '../services/actions/userActions';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -21,6 +21,12 @@ export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
   const { isLoggedIn } = useSelector(store => store.user);
   const dispatch = useDispatch();
+  const currentLocation = useLocation();
+
+  useEffect(() => {
+    dispatch(confirmAuth());
+  }, [dispatch]);
+
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
@@ -28,10 +34,21 @@ export function LoginPage() {
 
   // УДАЛИТЬ НА ПРОДЕ
   // автоподстановка корректного логина и пароля для авторизации
+
   useEffect(() => {
     setFormValues(
       { email: 'shamko.e.v@yandex.ru', password: '123123' }
-    )
+    );
+  }, [isLoggedIn]);
+
+
+  useEffect(() => {
+    setFormValues(
+      { email: 'shamko.e.v@yandex.ru', password: '123123' }
+    );
+
+    console.log('useLocation: ', currentLocation);
+    console.log('currentLocation.state.from ', currentLocation.state.from);
   }, []);
 
   // после успешной авторизации нужен редирект на главную страницу 

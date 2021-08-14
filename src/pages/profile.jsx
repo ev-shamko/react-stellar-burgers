@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { confirmAuth } from '../services/actions/userActions';
 import styles from './profile.module.css';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
 
@@ -10,6 +12,12 @@ import {
 export function ProfilePage() {
   const [form, setFormValues] = useState({ name: '', email: '', password: '' });
   const { userName, userEmail } = useSelector(state => state.user);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(confirmAuth());
+  }, [dispatch]);
 
   // при загрузке компонента в поля поставятся имя и почта из стейта
   useEffect(() => {

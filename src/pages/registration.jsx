@@ -1,7 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import styles from './auth-form.module.css';
 import { Link, useHistory, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { confirmAuth } from '../services/actions/userActions';
 
 import {
   Input,
@@ -14,6 +16,11 @@ export function RegistrationPage() {
   const { isLoggedIn } = useSelector(store => store.user);
 
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(confirmAuth());
+  }, [dispatch]);
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });

@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, useHistory, Redirect } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { deleteCookie, getCookie } from '../utils/cookie';
+import { FORBID_RESET_PASSWORD } from '../services/actions/userActions';
 
 import {
   Input,
@@ -11,9 +13,11 @@ import {
 
 export function ResetPassword() {
   const [form, setFormValues] = useState({ password: '', resetCode: '' });
-  const { isLoggedIn } = useSelector(store => store.user);
+  const { isLoggedIn, canResetPassword } = useSelector(store => store.user);
 
   const history = useHistory();
+  const dispatch = useDispatch();
+
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
@@ -25,15 +29,32 @@ export function ResetPassword() {
       console.log('Sending request for password reset');
 
       if (true) {
+        dispatch({
+          type: FORBID_RESET_PASSWORD,
+        });
+        deleteCookie('canResetPassword');
         history.replace({ pathname: '/login' });
       }
-    }, [history]
+    }, [history, dispatch]
   ); //  [auth, form] будущие зависимости
 
-  // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
+
+  /*******************************************************/
+  /* ***** Логика редиректа прочь с этой страницы ***** */
+  /*****************************************************/
+
+  // авторизованный пользователь не может сменить пароль
   if (isLoggedIn) {
     return (<Redirect to={{ pathname: '/' }} />);
   }
+
+  // пользователя редиректнет на страницу /forgot-password если он не запрашивал код для восстановления пароля в течение послдених суток
+  // поскольку стейт canResetPassword обнуляется при перезагрузке страницы, дополнительно информация о том, что был запрошен резет пароля, хранится в куки в течение суток. 
+  if (!canResetPassword && (getCookie('canResetPassword') !== 'yes')) {
+    return (<Redirect to={{ pathname: '/forgot-password' }} />);
+  }
+
+  /*******************************************************/
 
   return (
     <div className={styles.wrap}>

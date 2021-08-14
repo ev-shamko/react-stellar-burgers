@@ -1,8 +1,9 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import styles from './auth-form.module.css';
 import { Link, useHistory, Redirect } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { ALLOW_RESET_PASSWORD, confirmAuth } from '../services/actions/userActions';
+import { setCookie } from '../utils/cookie';
 import {
   Input,
   Button,
@@ -14,6 +15,11 @@ export function ForgotPage() {
   const { isLoggedIn } = useSelector(store => store.user);
 
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(confirmAuth());
+  }, [dispatch]);
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
@@ -24,12 +30,18 @@ export function ForgotPage() {
       e.preventDefault();
       console.log('Requesting redirection to password reset page');
 
-      // TODO: написать логику переходов на /reset-password с учётом стетов
-      // сюда добавить запись в стейт, что пользователь пытается восстановить пароль
-      if (true) {
+      // включаем возможность зайти на страницу ввода нового пароля
+      dispatch({
+        type: ALLOW_RESET_PASSWORD,
+      });
+
+      // и ещё в куки запишем, что в течение 1 суток можно зайти на страницу ресета пароля
+      setCookie('canResetPassword', 'yes', { expires: 60 * 60 * 24});
+
+      if (true) { // после ушедшего запроса на сервер
         history.replace({ pathname: '/reset-password' });
       }
-    }, [history]
+    }, [history, dispatch]
   ); //  [auth, form] будущие зависимости
 
   // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
