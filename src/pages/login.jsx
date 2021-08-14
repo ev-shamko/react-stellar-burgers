@@ -3,69 +3,55 @@ import styles from './auth-form.module.css';
 import { Link, Redirect, useLocation } from 'react-router-dom';
 import { logInApp, confirmAuth } from '../services/actions/userActions';
 import { useSelector, useDispatch } from 'react-redux';
-
 import {
   Input,
   PasswordInput,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
-/*
-- На странице login следим, залогинен ли уже юзер (берем данные авторизации из стора через useSelector)
-- Если не залогинен, показываем ему форму
-- Если залогинен, то рендерим компонент <Redirect to={…} />, чтобы пользователя перекинуло в предыдущую локацию, откуда он пришел в логин
-Получается, при заполнении формы данные положатся в стор, компонент страницы логина пойдет перерендериваться, и там сработает редирект
-*/
-
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
   const { isLoggedIn } = useSelector(store => store.user);
   const dispatch = useDispatch();
-  const currentLocation = useLocation();
 
+  // https://reactrouter.com/web/api/Hooks/uselocation
+  // https://reactrouter.com/web/api/location 
+  const location = useLocation(); // создаст объект, в котором будут и текущий адрес, и адрес, откуда пришли, если пришли из ProtectedRoute (location.state.from.pathname)
+
+  // автологин
   useEffect(() => {
     dispatch(confirmAuth());
   }, [dispatch]);
+
+  // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
+  useEffect(() => {
+    setFormValues(
+      { email: 'shamko.e.v@yandex.ru', password: '123123' }
+    );
+
+    console.log('location object: ', location);
+    console.log('location.state?.from ', location.state?.from); // вот здесь может лежать объект location страницы, с которой пользователь сюда попал. Только если попал с <ProtectedRout>. Ну а если был прямой переход на /login, то вернётся undefined благодаря conditional chaining https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining 
+  }, [isLoggedIn, location]);
 
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 
-  // УДАЛИТЬ НА ПРОДЕ
-  // автоподстановка корректного логина и пароля для авторизации
-
-  useEffect(() => {
-    setFormValues(
-      { email: 'shamko.e.v@yandex.ru', password: '123123' }
-    );
-  }, [isLoggedIn]);
-
-
-  useEffect(() => {
-    setFormValues(
-      { email: 'shamko.e.v@yandex.ru', password: '123123' }
-    );
-
-    console.log('useLocation: ', currentLocation);
-    console.log('currentLocation.state.from ', currentLocation.state.from);
-  }, []);
-
-  // после успешной авторизации нужен редирект на главную страницу 
   const handleSubmit = useCallback(
-    async e => { // в итоге не нужна тут псевдосинхронность
+    e => { 
       e.preventDefault();
       console.log('Sending login request');
       console.log(form);
 
-      await dispatch(logInApp(form));
+      dispatch(logInApp(form));
     },
     [form, dispatch]
   );
 
   // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
   if (isLoggedIn) {
-    return (<Redirect to={{ pathname: '/' }} />);
+    return (<Redirect to={ location.state?.from || '/'} />); // пропс to={} примет либо объект location от предыдущей страницы (он м.б. передан в пропсах), и вытащит оттуда роут предыдущей страницы, на которую нужно вернуть пользователя. Либо примет путь '/'
   }
 
   return (
