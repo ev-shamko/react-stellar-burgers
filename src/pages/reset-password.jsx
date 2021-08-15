@@ -3,7 +3,7 @@ import styles from './auth-form.module.css';
 import { Link, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteCookie, getCookie } from '../utils/cookie';
-import { FORBID_RESET_PASSWORD } from '../services/actions/userActions';
+import { FORBID_RESET_PASSWORD, setNewPassword } from '../services/actions/userActions';
 
 import {
   Input,
@@ -13,7 +13,7 @@ import {
 
 export function ResetPassword() {
   const [form, setFormValues] = useState({ password: '', resetCode: '' });
-  const { isLoggedIn, canResetPassword } = useSelector(store => store.user);
+  const { isLoggedIn, canResetPassword, hasResetPassword } = useSelector(store => store.user);
 
   const history = useHistory();
   const dispatch = useDispatch();
@@ -23,19 +23,32 @@ export function ResetPassword() {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = useCallback(
+    const handleSubmit = useCallback(
     e => {
       e.preventDefault();
       console.log('Sending request for password reset');
+      // console.log('form data', form.password, form['resetCode']);
+      console.log('form', form);
 
-      if (true) {
-        dispatch({
-          type: FORBID_RESET_PASSWORD,
-        });
-        deleteCookie('canResetPassword');
-        history.replace({ pathname: '/login' });
-      }
-    }, [history, dispatch]
+      const newPassword = form.password;
+      const resetCode = form['resetCode'];
+
+      console.log('newPassword', newPassword);
+      console.log('resetCode', resetCode);
+
+
+      dispatch(setNewPassword(newPassword, resetCode));
+
+      // if (true) {
+      //   dispatch({
+      //     type: FORBID_RESET_PASSWORD,
+      //   });
+      //   deleteCookie('canResetPassword');
+      // history.replace({ pathname: '/login' });
+      // }
+
+      setFormValues({ ...form, password: '' });
+    }, [dispatch, form]
   ); //  [auth, form] будущие зависимости
 
 
@@ -48,8 +61,14 @@ export function ResetPassword() {
     return (<Redirect to={{ pathname: '/' }} />);
   }
 
-  // пользователя редиректнет на страницу /forgot-password если он не запрашивал код для восстановления пароля в течение послдених суток
-  // поскольку стейт canResetPassword обнуляется при перезагрузке страницы, дополнительно информация о том, что был запрошен резет пароля, хранится в куки в течение суток. 
+  // после успешной смены пароля редиректнет на страницу логина
+  if (hasResetPassword) {
+    console.log('has reset password');
+    return (<Redirect to={{ pathname: '/login' }} />);
+  }
+
+  // пользователя редиректнет на страницу /forgot-password если он не запрашивал код для восстановления пароля в течение последениего часа
+  // поскольку стейт canResetPassword обнуляется при перезагрузке страницы, дополнительно информация о том, что был запрошен резет пароля, хранится в куки в течение последениего часа
   if (!canResetPassword && (getCookie('canResetPassword') !== 'yes')) {
     return (<Redirect to={{ pathname: '/forgot-password' }} />);
   }

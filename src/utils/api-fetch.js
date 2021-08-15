@@ -5,6 +5,8 @@ import {
   urlAuthUser,
   urlApiToken,
   urlUserRegistration,
+  urlResetPassword,
+  urlSetNewPasswort,
 } from './api-url';
 
 // Регистрация нового пользователя
@@ -16,19 +18,19 @@ export function fetchUserRegistration(data) {
     },
     body: JSON.stringify(data), // email, password, name
   })
-  .then(async (res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    console.log('Возникли проблемы при регистрации нового пользователя:')
-    const response = await res.json();
-    return Promise.reject(response);
-  })
-  .then((res) => {
-    console.log('Результаты успешного запроса о регистрации:')
-    console.log(res);
-    return res;
-  })
+    .then(async (res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      console.log('Возникли проблемы при регистрации нового пользователя:')
+      const response = await res.json();
+      return Promise.reject(response);
+    })
+    .then((res) => {
+      console.log('Результаты успешного запроса о регистрации:')
+      console.log(res);
+      return res;
+    })
 }
 
 /* Нужно отправить такое body 
@@ -73,6 +75,59 @@ export function fetchLogIn(data) {
       return res;
     })
 };
+
+// запрашивает у сервера код для смены пароля. Код придёт на почту
+/* Тело запроса
+  {
+      "email": ""
+  }
+  */
+export function fetchRequestResetCode(userEmail) {
+  console.log('body', JSON.stringify({ email: userEmail }))
+  return fetch(urlResetPassword, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({ email: userEmail }), // email
+  })
+    .then(async (res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(await res.json());
+    })
+    .then((res) => {
+      console.log('Результаты запроса о коде восстановления пароля:')
+      console.log(res);
+      return res;
+    })
+}
+
+// запрос об установке нового пароля
+export function fetchResetPassword(newPassword, resetCode) {
+  return fetch(urlSetNewPasswort, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify({
+      "password": newPassword,
+      "token": resetCode
+    }),
+  })
+    .then(async (res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(await res.json());
+    })
+    .then((res) => {
+      console.log('Результаты запроса об установке нового пароля:')
+      console.log(res);
+      return res;
+    })
+}
 
 /****************************************************************************** */
 /****************************************************************************** */

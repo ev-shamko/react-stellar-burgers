@@ -4,6 +4,8 @@ import {
   fetchUserData,
   fetchRefreshTokens,
   fetchUserRegistration,
+  fetchRequestResetCode,
+  fetchResetPassword,
 } from '../../utils/api-fetch';
 import { setCookie, deleteCookie, getCookie } from '../../utils/cookie';
 
@@ -13,6 +15,7 @@ export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT_SUCCESSFUL = 'LOGOUT_SUCCESSFUL';
 export const ALLOW_RESET_PASSWORD = 'ALLOW_RESET_PASSWORD';
 export const FORBID_RESET_PASSWORD = 'FORBID_RESET_PASSWORD';
+export const HAS_RESET_PASSWORD = 'HAS_RESET_PASSWORD';
 
 export function registerNewUser(data) {
   console.log('Начинаем регистрацию нового пользователя');
@@ -86,6 +89,53 @@ export function logOut() {
         return console.log(err);
       });
   };
+}
+
+export function requestResetCode(email) {
+  return function (dispatch) {
+    console.log(`Запрашиваем код для смены пароля для email: ${email}`);
+
+    fetchRequestResetCode(email)
+      .then(res => {
+        console.log('res in fn requestResetCode: ', res);
+
+        if (res.success === true) {
+          // отмечаем в хранилище, что можно пустить пользователя на страницу ввода нового пароля
+          dispatch({
+            type: ALLOW_RESET_PASSWORD,
+          });
+
+          // и ещё в куки запишем, что в течение 1 суток можно зайти на страницу ресета пароля
+          setCookie('canResetPassword', 'yes', { expires: 60 * 60 * 1 });
+        }
+      })
+      .catch(err => {
+        console.log('Smth went wrong while requesting for reset code');
+        console.log(err);
+      })
+  }
+}
+
+export function setNewPassword(newPassword, resetCode) {
+  return function (dispatch) {
+    console.log('newPassword', newPassword);
+    console.log('resetCode', resetCode);
+
+    fetchResetPassword(newPassword, resetCode)
+      .then(res => {
+        if (res.success === true) {
+          dispatch({
+            type: HAS_RESET_PASSWORD,
+          });
+
+          setCookie('canResetPassword', 'no', { expires: -1 });
+        }
+      })
+      .catch(err => {
+        console.log('Smth went wrong while requesting for password change');
+        console.log(err);
+      })
+  }
 }
 
 export function getUser(safetyCounter) {

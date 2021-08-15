@@ -7,3 +7,5 @@ export const urlLogoutRout = 'https://norma.nomoreparties.space/api/auth/logout'
 export const urlAuthUser = 'https://norma.nomoreparties.space/api/auth/user'; // - эндпоинт получения данных о пользователе
 export const urlApiToken = 'https://norma.nomoreparties.space/api/auth/token'; // для обновления токенов
 export const urlUserRegistration = 'https://norma.nomoreparties.space/api/auth/register';
+export const urlResetPassword =' https://norma.nomoreparties.space/api/password-reset';
+export const urlSetNewPasswort = 'https://norma.nomoreparties.space/api/password-reset/reset'

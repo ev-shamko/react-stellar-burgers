@@ -5,6 +5,7 @@ import {
   SET_USER_DATA,
   ALLOW_RESET_PASSWORD,
   FORBID_RESET_PASSWORD,
+  HAS_RESET_PASSWORD,
 } from '../actions/userActions';
 
 const initialState = {
@@ -14,6 +15,7 @@ const initialState = {
 
 
   canResetPassword: false,
+  hasResetPassword: false,
 
 };
 
@@ -56,12 +58,20 @@ export const userReducer = (state = initialState, action) => {
       return {
         ...state,
         canResetPassword: true,
+        hasResetPassword: false,
       }
     }
-    case FORBID_RESET_PASSWORD: {
+    case FORBID_RESET_PASSWORD: { // мб уже не нужен?
       return {
         ...state,
         canResetPassword: false,
+      }
+    }
+    case HAS_RESET_PASSWORD: {
+      return {
+        ...state,
+        canResetPassword: false,
+        hasResetPassword: true,
       }
     }
     default: {

@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import styles from './auth-form.module.css';
 import { Link, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { ALLOW_RESET_PASSWORD, confirmAuth } from '../services/actions/userActions';
+import { ALLOW_RESET_PASSWORD, confirmAuth, requestResetCode, } from '../services/actions/userActions';
 import { setCookie } from '../utils/cookie';
 import {
   Input,
@@ -12,10 +12,17 @@ import {
 
 export function ForgotPage() {
   const [form, setFormValues] = useState({ email: '' });
-  const { isLoggedIn } = useSelector(store => store.user);
+  const { isLoggedIn, canResetPassword } = useSelector(store => store.user);
 
-  const history = useHistory();
+  // const history = useHistory();
   const dispatch = useDispatch();
+
+  // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
+  useEffect(() => {
+    setFormValues(
+      { email: 'shamko.e.v@yandex.ru' }
+    );
+  }, []);
 
   useEffect(() => {
     console.log('Auth in /forgot-password');
@@ -29,25 +36,28 @@ export function ForgotPage() {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log('Requesting redirection to password reset page');
+      console.log('Requesting redirection to password reset page', form['email']);
 
       // включаем возможность зайти на страницу ввода нового пароля
-      dispatch({
-        type: ALLOW_RESET_PASSWORD,
-      });
+      // dispatch({
+      //   type: ALLOW_RESET_PASSWORD,
+      // });
 
-      // и ещё в куки запишем, что в течение 1 суток можно зайти на страницу ресета пароля
-      setCookie('canResetPassword', 'yes', { expires: 60 * 60 * 24});
+      dispatch(requestResetCode(form.email));
 
-      if (true) { // после ушедшего запроса на сервер
-        history.replace({ pathname: '/reset-password' });
-      }
-    }, [history, dispatch]
+      // if (true) { // после ушедшего запроса на сервер
+      //   history.replace({ pathname: '/reset-password' });
+      // }
+    }, [dispatch, form]
   ); //  [auth, form] будущие зависимости
 
   // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
   if (isLoggedIn) {
     return (<Redirect to={{ pathname: '/' }} />);
+  }
+
+  if (!isLoggedIn && canResetPassword) {
+    return (<Redirect to={{ pathname: '/reset-password' }} />);
   }
 
   return (
