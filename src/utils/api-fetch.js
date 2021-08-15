@@ -4,7 +4,52 @@ import {
   urlLogoutRout,
   urlAuthUser,
   urlApiToken,
+  urlUserRegistration,
 } from './api-url';
+
+// Регистрация нового пользователя
+export function fetchUserRegistration(data) {
+  return fetch(urlUserRegistration, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8'
+    },
+    body: JSON.stringify(data), // email, password, name
+  })
+  .then(async (res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    console.log('Возникли проблемы при регистрации нового пользователя:')
+    const response = await res.json();
+    return Promise.reject(response);
+  })
+  .then((res) => {
+    console.log('Результаты успешного запроса о регистрации:')
+    console.log(res);
+    return res;
+  })
+}
+
+/* Нужно отправить такое body 
+{
+    "email": "", 
+    "password": "", 
+    "name": "" 
+} 
+
+Тело ответа при успешной регистрации:
+{
+  "success": true,
+  "user": {
+      "email": "",
+      "name": ""
+  },
+  "accessToken": "Bearer ...",
+  "refreshToken": ""
+} 
+*/
+
 
 // logIN авторизация по email, password
 // в аргумент data нужно передать объект ответа от сервера с email, password успешно залогинившегося пользователя
@@ -16,11 +61,11 @@ export function fetchLogIn(data) {
     },
     body: JSON.stringify(data), // email, password
   })
-    .then((res) => {
+    .then(async (res) => {
       if (res.ok) {
         return res.json();
       }
-      return Promise.reject(res.status);
+      return Promise.reject(await res.json());
     })
     .then((res) => {
       console.log('Результаты успешного запроса об авторизации:')
@@ -47,8 +92,8 @@ export function fetchUserData() {
         return res.json();
       }
       console.log('Ошибка при попытке получить данные пользователя через accessToken. Возможно, так и должно быть, если токен просрочен.');
-      const response = await res.json();
-      return Promise.reject(response); // если нет адекватного токена (например, пользователь вылогинился), консоль засирается красными ошибками. 
+      return Promise.reject(await res.json());
+      // если нет адекватного токена (например, пользователь вылогинился), консоль засирается красными ошибками. 
     })
     .then((res) => {
       if (res["success"] === false) {
@@ -85,12 +130,12 @@ export function fetchRefreshTokens() {
     },
     body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
   })
-    .then((res) => {
+    .then(async (res) => {
       if (res.ok) {
         return res.json();
       }
       console.log('Ошибка при попытке обновить токены через refreshToken. Возможно, так и должно быть, если токены уже были обновлены в параллельной сессии.');
-      return Promise.reject(res);
+      return Promise.reject(await res.json());
     })
     .then((res) => {
       if (res["success"] === false) {
@@ -114,7 +159,7 @@ export function fetchRefreshTokens() {
 /****************************************************************************** */
 
 // logOUT с помощью refreshToken
-export function fetchLogOut(refreshToken) {
+export function fetchLogOut() {
   return fetch(urlLogoutRout, {
     method: 'POST',
     headers: {
@@ -122,17 +167,17 @@ export function fetchLogOut(refreshToken) {
     },
     body: JSON.stringify({ token: localStorage.getItem('refreshToken'), }),
   })
-    .then((res) => {
+    .then(async (res) => {
       if (res.ok) {
         return res.json();
       }
-      return Promise.reject(res.status);
+      return Promise.reject(await res.json());
     })
     .then((res) => {
       if (res["success"] === false) {
         console.error('Didn`t logout properly', res);
       }
-      console.log('Logout successfull')
+      console.log('Got response from server: ')
       console.log(res);
       return res;
     })

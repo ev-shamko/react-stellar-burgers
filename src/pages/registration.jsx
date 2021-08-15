@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import styles from './auth-form.module.css';
 import { Link, useHistory, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { confirmAuth } from '../services/actions/userActions';
+import { confirmAuth, registerNewUser } from '../services/actions/userActions';
 
 import {
   Input,
@@ -19,8 +19,16 @@ export function RegistrationPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log('Auth in /registration');
     dispatch(confirmAuth());
   }, [dispatch]);
+
+   // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
+   useEffect(() => {
+    setFormValues(
+      { email: 'shamko.e.v+1@yandex.ru', name: 'User1', password: '123123' }
+    );
+  }, [isLoggedIn]);
 
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
@@ -31,11 +39,12 @@ export function RegistrationPage() {
     e => {
       e.preventDefault();
       console.log('Sending registration request');
+      dispatch(registerNewUser(form));
 
-      if (true) {
-        history.replace({ pathname: '/login' });
-      }
-    }, [history]
+      // if (true) {
+      //   history.replace({ pathname: '/login' });
+      // }
+    }, [dispatch, form]
   );
 
   // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке

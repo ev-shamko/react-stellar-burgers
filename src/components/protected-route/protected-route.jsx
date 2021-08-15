@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { confirmAuth } from '../../services/actions/userActions';
 
 export function ProtectedRoute({ children, ...rest }) {
@@ -10,6 +9,7 @@ export function ProtectedRoute({ children, ...rest }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log('Auth in ProtectedRout');
     dispatch(confirmAuth());
   }, [dispatch]);
 

@@ -1,25 +1,55 @@
-import { fetchLogIn, fetchLogOut, fetchUserData, fetchRefreshTokens, } from '../../utils/api-fetch';
+import {
+  fetchLogIn,
+  fetchLogOut,
+  fetchUserData,
+  fetchRefreshTokens,
+  fetchUserRegistration,
+} from '../../utils/api-fetch';
 import { setCookie, deleteCookie, getCookie } from '../../utils/cookie';
 
 export const LOGIN_SUCCESSFUL = 'LOGIN_SUCCESSFUL';
 export const SET_USER_DATA = 'SET_USER_DATA';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT_SUCCESSFUL = 'LOGOUT_SUCCESSFUL';
-export const STOP_AUTO_LOGIN = 'STOP_AUTO_LOGIN'; //  так, я это пока отключила, но потом можно прикрутить обратно
 export const ALLOW_RESET_PASSWORD = 'ALLOW_RESET_PASSWORD';
 export const FORBID_RESET_PASSWORD = 'FORBID_RESET_PASSWORD';
 
-export function logInApp(data) {
+export function registerNewUser(data) {
+  console.log('Начинаем регистрацию нового пользователя');
+  console.log('data: ', data);
   return function (dispatch) {
-    fetchLogIn(data)
+    fetchUserRegistration(data)
       .then(({ user, accessToken, refreshToken }) => {
+        // поскольку после успешной регистрации сервер возвращает токены и юзернейм, есть смысл автоматом залогинить юзера
         dispatch({
           type: LOGIN_SUCCESSFUL,
           name: user.name,
           email: user.email,
         });
         setCookie("accessToken", accessToken, { expires: 20 * 60 });
-        localStorage.setItem('refreshToken', refreshToken); // по рекомендации наставника этот токен кладём в localStorage
+        localStorage.setItem('refreshToken', refreshToken);
+      })
+      .catch(err => {
+        console.log('Ошибка при попытке зарегистрироваться');
+        return console.log(err);
+      });
+  }
+}
+
+export function logInApp(data) {
+  return function (dispatch) {
+    fetchLogIn(data)
+      .then(({ user, accessToken, refreshToken, success }) => {
+        if (success === true) {
+          dispatch({
+            type: LOGIN_SUCCESSFUL,
+            name: user.name,
+            email: user.email,
+          });
+
+          setCookie("accessToken", accessToken, { expires: 20 * 60 });
+          localStorage.setItem('refreshToken', refreshToken); // по рекомендации наставника этот токен кладём в localStorage
+        }
       })
       .catch(err => {
         dispatch({
@@ -27,32 +57,31 @@ export function logInApp(data) {
         });
 
         console.log('Ошибка при авторизации по логину и паролю');
-        return Promise.reject(err);
+        return console.log(err);
       });
   };
 }
 
 // data это refreshToken
-export function logOut(data) {
-  console.log('data is ', data)
+export function logOut() {
   return function (dispatch) {
     console.log('Logging you out, Shepard'); // ;-)
 
-    fetchLogOut(data)
+    fetchLogOut()
       .then((res) => {
+        if (res.success === true) {
+          deleteCookie('accessToken');
+          localStorage.removeItem('refreshToken');
 
-        deleteCookie('accessToken');
-        localStorage.removeItem('refreshToken');
-
-        dispatch({
-          type: LOGOUT_SUCCESSFUL
-        });
-
-        console.log('logged out successfully');
+          dispatch({
+            type: LOGOUT_SUCCESSFUL
+          });
+          console.log('Logged out successfully');
+        }
       })
       .catch(err => {
         console.log('Ошибка при разлогинивании');
-        return Promise.reject(err);
+        return console.log(err);
       });
   };
 }
@@ -79,16 +108,16 @@ export function getUser(safetyCounter) {
 
   return function (dispatch) {
     fetchUserData()
-      .then(({ user }) => {
-        console.log('Access granted. Welcome aboard, Commander!');
+      .then(({ user, success }) => {
+        if (success === true) {
+          console.log('Access granted. Welcome aboard, Commander!');
 
-        dispatch({
-          type: SET_USER_DATA,
-          name: user.name,
-          email: user.email,
-        });
-
-
+          dispatch({
+            type: SET_USER_DATA,
+            name: user.name,
+            email: user.email,
+          });
+        }
       })
       .catch((err) => {
         // если accessToken есть в браузере, но для сервера он просрочен, получим сообщение 'jwt expired' и пойдём делать рефреш токенов и автологиниться
@@ -117,7 +146,7 @@ export function refreshAccessToken(safetyCounter) {
       })
       .catch((err) => {
         console.log('.catch case in fn refreshAccessToken: ');
-        return Promise.reject(err);
+        return console.log(err);
       })
   }
 }

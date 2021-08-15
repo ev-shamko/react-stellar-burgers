@@ -18,6 +18,7 @@ export function ForgotPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log('Auth in /forgot-password');
     dispatch(confirmAuth());
   }, [dispatch]);
 

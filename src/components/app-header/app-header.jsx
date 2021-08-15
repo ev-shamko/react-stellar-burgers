@@ -13,9 +13,9 @@ import {
 function AppHeader() {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(confirmAuth());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(confirmAuth());
+  // }, [dispatch]);
 
   return (
     <header className={headerStyles.header}>

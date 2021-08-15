@@ -11,6 +11,7 @@ export function ProfileOrdersPage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log('Auth in /order');
     dispatch(confirmAuth());
   }, [dispatch]);
 

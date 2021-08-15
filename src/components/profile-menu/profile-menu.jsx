@@ -40,5 +40,5 @@ export function ProfileMenu({ activeTab }) {
 };
 
 ProfileMenu.propTypes = {
-  activeTab: PropTypes.oneOf(['profile', 'orderHistory', 'logOut']),
+  activeTab: PropTypes.oneOf(['profile', 'orderHistory']),
 };

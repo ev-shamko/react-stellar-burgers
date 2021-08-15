@@ -15,9 +15,10 @@ export function ProfilePage() {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(confirmAuth());
-  }, [dispatch]);
+  // Не нужно. Проверка делается в ProtectedRout. Однако было бы неплохо проверить при отправке запроса на изменение данных о пользователе
+  // useEffect(() => {
+  //   dispatch(confirmAuth());
+  // }, [dispatch]);
 
   // при загрузке компонента в поля поставятся имя и почта из стейта
   useEffect(() => {

@@ -20,6 +20,7 @@ export function LoginPage() {
 
   // автологин
   useEffect(() => {
+    console.log('Auth in /login');
     dispatch(confirmAuth());
   }, [dispatch]);
 
@@ -29,8 +30,8 @@ export function LoginPage() {
       { email: 'shamko.e.v@yandex.ru', password: '123123' }
     );
 
-    console.log('location object: ', location);
-    console.log('location.state?.from ', location.state?.from); // вот здесь может лежать объект location страницы, с которой пользователь сюда попал. Только если попал с <ProtectedRout>. Ну а если был прямой переход на /login, то вернётся undefined благодаря conditional chaining https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining 
+    // console.log('location object: ', location);
+    // console.log('location.state?.from ', location.state?.from); // вот здесь может лежать объект location страницы, с которой пользователь сюда попал. Только если попал с <ProtectedRout>. Ну а если был прямой переход на /login, то вернётся undefined благодаря conditional chaining https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining 
   }, [isLoggedIn, location]);
 
 

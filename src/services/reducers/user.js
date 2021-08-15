@@ -2,7 +2,6 @@ import {
   LOGIN_SUCCESSFUL,
   LOGIN_FAILED,
   LOGOUT_SUCCESSFUL,
-  STOP_AUTO_LOGIN,
   SET_USER_DATA,
   ALLOW_RESET_PASSWORD,
   FORBID_RESET_PASSWORD,
@@ -13,7 +12,7 @@ const initialState = {
   userName: '',
   userEmail: '',
 
-  mayAutoLogIn: true, // пока отключено, но будет прикольно вернуть обратно
+
   canResetPassword: false,
 
 };
@@ -51,12 +50,6 @@ export const userReducer = (state = initialState, action) => {
         isLoggedIn: false,
         userName: '',
         userEmail: '',
-      }
-    }
-    case STOP_AUTO_LOGIN: {
-      return {
-        ...state,
-        mayAutoLogIn: false,
       }
     }
     case ALLOW_RESET_PASSWORD: {
