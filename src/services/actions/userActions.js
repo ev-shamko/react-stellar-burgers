@@ -62,14 +62,16 @@ export function logInApp(data) {
   };
 }
 
-// data это refreshToken
 export function logOut() {
   return function (dispatch) {
     console.log('Logging you out, Shepard'); // ;-)
 
     fetchLogOut()
       .then((res) => {
+        console.log('res in logOut: ', res)
+        console.log('res.success', res.success)
         if (res.success === true) {
+          console.log('Now deleting tokens');
           deleteCookie('accessToken');
           localStorage.removeItem('refreshToken');
 

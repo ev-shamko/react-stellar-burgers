@@ -160,6 +160,7 @@ export function fetchRefreshTokens() {
 
 // logOUT с помощью refreshToken
 export function fetchLogOut() {
+  // console.log('refreshToken',  localStorage.getItem('refreshToken'))
   return fetch(urlLogoutRout, {
     method: 'POST',
     headers: {
@@ -168,6 +169,7 @@ export function fetchLogOut() {
     body: JSON.stringify({ token: localStorage.getItem('refreshToken'), }),
   })
     .then(async (res) => {
+      console.log('response from server: ', res)
       if (res.ok) {
         return res.json();
       }
@@ -177,7 +179,7 @@ export function fetchLogOut() {
       if (res["success"] === false) {
         console.error('Didn`t logout properly', res);
       }
-      console.log('Got response from server: ')
+      console.log('Body of response: ')
       console.log(res);
       return res;
     })
