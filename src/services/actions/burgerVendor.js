@@ -1,3 +1,5 @@
+import { getCookie } from '../../utils/cookie';
+
 export const TOGGLE_MODAL_VISIBILITY = 'TOGGLE_MODAL_VISIBILITY';
 export const SET_CURRENT_MODAL_TYPE = 'SET_CURRENT_MODAL_TYPE';
 export const SET_INGRIDIENT_IN_MODAL = 'SET_INGRIDIENT_IN_MODAL';
@@ -58,7 +60,8 @@ export function postBurgerOrder(url = '', createPostBody) {
         fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json;charset=utf-8'
+                'Content-Type': 'application/json;charset=utf-8',
+                authorization: getCookie('accessToken'),
             },
             body: JSON.stringify(createPostBody())
         })

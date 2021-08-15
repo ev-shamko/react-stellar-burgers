@@ -14,7 +14,6 @@ export const SET_USER_DATA = 'SET_USER_DATA';
 export const LOGIN_FAILED = 'LOGIN_FAILED';
 export const LOGOUT_SUCCESSFUL = 'LOGOUT_SUCCESSFUL';
 export const ALLOW_RESET_PASSWORD = 'ALLOW_RESET_PASSWORD';
-export const FORBID_RESET_PASSWORD = 'FORBID_RESET_PASSWORD';
 export const HAS_RESET_PASSWORD = 'HAS_RESET_PASSWORD';
 
 export function registerNewUser(data) {
@@ -138,12 +137,37 @@ export function setNewPassword(newPassword, resetCode) {
   }
 }
 
+
+/************************************************************************** */
+/******   Авто-авторизация, рефреш токенов, получение юзердаты   ********* */
+/************************************************************************ */
+
+// авторизует пользователя, если есть accessToken. Или, если есть refreshToken, рефрешнет токены, а потом авторизует
+export function confirmAuth() {
+  return async function (dispatch) {
+    const hasAccessCookie = (getCookie('accessToken') != null); // когда куки удалятся, getCookie вернёт undefined. Проверку можно сделать нестрогой, т.к. в любом случае корректный токен - это строка с length > 0
+    const hasRefreshToken = (localStorage.getItem('refreshToken') != null);
+
+    if (hasAccessCookie) {
+      let safetyCounter = 0;
+      dispatch(getUser(safetyCounter));
+      return 'has logged in';
+    }
+
+    if (!hasAccessCookie && hasRefreshToken) {
+      let safetyCounter = 1;
+      dispatch(refreshAccessToken(safetyCounter));
+      return 'has refreshed tokens, than logged in';
+    }
+
+    return console.log('fn confirmAuth found no tokens. You may want to enter your login and password on a /login page');
+  }
+}
+
 export function getUser(safetyCounter) {
   console.log('Starting fn getUser with accessToken');
 
-  /*************************************************************************** */
   /**** safetyCounter - предохранитель, чтобы не было бесконечной рекурсии ****/
-  /************************************************************************* */
   safetyCounter++;
   console.log('safetyCounter in getUser: ', safetyCounter);
 
@@ -193,35 +217,12 @@ export function refreshAccessToken(safetyCounter) {
         setCookie("accessToken", accessToken, { expires: 20 * 60 });
         localStorage.setItem('refreshToken', refreshToken);
 
-        // safetyCounter на данном этапе равен 1. Эта переменная предотвращает бесконечную рекурсию, если на сервере что-то сбойнуло.
+        // safetyCounter на данном этапе равен 1. Эта переменная предотвращает бесконечную петл. getUser >> refreshAccessToken >> getUser, если на сервере что-то сбойнуло.
         dispatch(getUser(safetyCounter));
       })
       .catch((err) => {
         console.log('.catch case in fn refreshAccessToken: ');
         return console.log(err);
       })
-  }
-}
-
-// авторизует пользователя, если есть accessToken. Или рефрешнет токены, а потом авторизует, если есть refreshToken
-// можно вызывать confirmAuth() внутри if (!isLoggedIn)
-export function confirmAuth() {
-  return function (dispatch) {
-    const hasAccessCookie = (getCookie('accessToken') != null); // когда куки удалятся, getCookie вернёт undefined. Проверку можно сделать нестрогой, т.к. в любом случае корректный токен - это строка с length > 0
-    const hasRefreshToken = (localStorage.getItem('refreshToken') != null);
-
-    if (hasAccessCookie) {
-      let safetyCounter = 0;
-      dispatch(getUser(safetyCounter));
-      return true;
-    }
-
-    if (!hasAccessCookie && hasRefreshToken) {
-      let safetyCounter = 1;
-      dispatch(refreshAccessToken(safetyCounter));
-      return true;
-    }
-
-    return console.log('fn confirmAuth found no tokens. You may want to enter your login and password on a /login page');
   }
 }

@@ -4,7 +4,6 @@ import {
   LOGOUT_SUCCESSFUL,
   SET_USER_DATA,
   ALLOW_RESET_PASSWORD,
-  FORBID_RESET_PASSWORD,
   HAS_RESET_PASSWORD,
 } from '../actions/userActions';
 
@@ -59,12 +58,6 @@ export const userReducer = (state = initialState, action) => {
         ...state,
         canResetPassword: true,
         hasResetPassword: false,
-      }
-    }
-    case FORBID_RESET_PASSWORD: { // мб уже не нужен?
-      return {
-        ...state,
-        canResetPassword: false,
       }
     }
     case HAS_RESET_PASSWORD: {
