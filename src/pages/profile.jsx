@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { confirmAuth } from '../services/actions/userActions';
+import { confirmAuth, patchUserData } from '../services/actions/userActions';
 import styles from './profile.module.css';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
 
 import {
   Input,
+  Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 export function ProfilePage() {
@@ -28,6 +29,16 @@ export function ProfilePage() {
   const handleChange = e => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    dispatch(patchUserData(form, setFormValues));
+  }
+  
+  const handleCansel = e => {
+    e.preventDefault();
+    setFormValues({ name: userName, email: userEmail, password: '' });
+  }
 
   return (
     <section className={styles.wrap}>
@@ -63,6 +74,10 @@ export function ProfilePage() {
           icon={"EditIcon"}
           error={false}
         />
+        <div className={styles.buttonWrap}>
+          <Button onClick={handleSubmit}>Сохранить</Button>
+          <Button onClick={handleCansel} type="secondary">Отмена</Button>
+        </div>
       </form>
     </section>
   );

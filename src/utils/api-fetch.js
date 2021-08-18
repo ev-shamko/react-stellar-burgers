@@ -2,11 +2,11 @@ import { getCookie } from './cookie';
 import {
   urlLoginRout,
   urlLogoutRout,
-  urlAuthUser,
+  urlUserDataEndpoint,
   urlApiToken,
   urlUserRegistration,
   urlResetPassword,
-  urlSetNewPasswort,
+  urlSetNewPassword,
 } from './api-url';
 
 // Регистрация нового пользователя
@@ -106,7 +106,7 @@ export function fetchRequestResetCode(userEmail) {
 
 // запрос об установке нового пароля
 export function fetchResetPassword(newPassword, resetCode) {
-  return fetch(urlSetNewPasswort, {
+  return fetch(urlSetNewPassword, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8'
@@ -133,9 +133,9 @@ export function fetchResetPassword(newPassword, resetCode) {
 /****************************************************************************** */
 
 // получение данных о пользователе с помощью accessToken (который живёт 20 мин)
-export function fetchUserData() {
+export function fetchGetUserData() {
   // console.log('accessToken', getCookie('accessToken'));
-  return fetch(urlAuthUser, {
+  return fetch(urlUserDataEndpoint, {
     headers: {
       method: 'GET',
       'Content-Type': 'application/json;charset=utf-8',
@@ -169,6 +169,38 @@ export function fetchUserData() {
   }
 } 
 */
+
+//запрос на изменение данных о пользователе (имя, мыло, пароль)
+export function fetchChangeUserData(form) {
+  return fetch(urlUserDataEndpoint, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      authorization: getCookie('accessToken'),
+    },
+    body: JSON.stringify({
+      "name": form.username,
+      "email": form.email,
+      "password": form.password,
+    })
+  })
+    .then(async (res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      console.log('Ошибка при попытке обновить данные пользователя');
+      return Promise.reject(await res.json());
+    })
+    .then((res) => {
+      if (res["success"] === false) {
+        console.error('Updating user data failed:', res);
+        //return false;
+      }
+      console.log('Updating user data was successfull');
+      // console.log(res);
+      return res;
+    })
+}
 
 
 /****************************************************************************** */

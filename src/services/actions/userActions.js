@@ -1,11 +1,12 @@
 import {
   fetchLogIn,
   fetchLogOut,
-  fetchUserData,
+  fetchGetUserData,
   fetchRefreshTokens,
   fetchUserRegistration,
   fetchRequestResetCode,
   fetchResetPassword,
+  fetchChangeUserData,
 } from '../../utils/api-fetch';
 import { setCookie, deleteCookie, getCookie } from '../../utils/cookie';
 
@@ -137,6 +138,29 @@ export function setNewPassword(newPassword, resetCode) {
   }
 }
 
+// кажется, на свервере баг. Через PATCH-запрос меняется только мыло. Имя и пароль не меняются
+export function patchUserData(form, setFormValues) {
+   
+  return function (dispatch) {
+    console.log('new Name', form.name);
+    console.log('new Email', form.email);
+    console.log('new Password', form.password);
+
+    fetchChangeUserData(form)
+    .then(res => {
+      console.log(res);
+
+      dispatch({
+        type: SET_USER_DATA,
+        name: res.user.name,
+        email: res.user.email,
+      });
+
+      setFormValues({ name: res.user.name, email: res.user.email, password: 'Мыло можно поменять, а имя и пароль сервер не меняет' })
+    })
+  }
+}
+
 
 /************************************************************************** */
 /******   Авто-авторизация, рефреш токенов, получение юзердаты   ********* */
@@ -183,7 +207,7 @@ export function getUser(safetyCounter) {
   /*************************************************************************** */
 
   return function (dispatch) {
-    fetchUserData()
+    fetchGetUserData()
       .then(({ user, success }) => {
         if (success === true) {
           console.log('Access granted. Welcome aboard, Commander!');
