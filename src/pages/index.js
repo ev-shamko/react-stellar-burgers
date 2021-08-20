@@ -4,5 +4,6 @@ import { ForgotPage } from './forgot-password';
 import { ResetPassword } from './reset-password';
 import { ProfilePage } from './profile';
 import { ProfileOrdersPage } from './orders';
+import { IngridientPage } from './ingridient-page';
 
-export { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, ProfileOrdersPage };
+export { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, ProfileOrdersPage, IngridientPage };

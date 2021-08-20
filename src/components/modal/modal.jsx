@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import modalStyles from './modal.module.css';
 import ModalOverlay from './modal-overlay/modal-overlay';
@@ -14,6 +15,7 @@ import {
 
 function Modal({ children }) {
     const dispatch = useDispatch();
+    const history = useHistory();
     const modalRoot = document.getElementById("react-modals");
 
     // Функция передаётся в onClick <article>. Предотвращает всплытие события клика с модального окна до ModalOverlay. Иначе клик по любому месту модального окна закроет модальное окно. А надо, чтобы так делал только клик по крестику и клик по ModalOverlay.
@@ -30,6 +32,10 @@ function Modal({ children }) {
             type: SET_MODAL_TYPE,
             value: 'none',
         });
+
+        history.replace({
+            pathname: `/`,
+          });
     }
 
     return ReactDOM.createPortal(

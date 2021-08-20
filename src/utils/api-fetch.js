@@ -172,14 +172,24 @@ export function fetchGetUserData() {
 
 //запрос на изменение данных о пользователе (имя, мыло, пароль)
 export function fetchChangeUserData(form) {
+  // console.log('getCookie( accessToken )', getCookie('accessToken'));
+  // console.log('body is',
+  //   `
+  //     {
+  //       "name": ${form.name},
+  //       "email": ${form.email},
+  //       "password": ${form.password},
+  //     }`
+  // );
+
   return fetch(urlUserDataEndpoint, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      authorization: getCookie('accessToken'),
+      'Authorization': getCookie('accessToken'), // у меня записан вместе с 'Bearer '
     },
     body: JSON.stringify({
-      "name": form.username,
+      "name": form.name,
       "email": form.email,
       "password": form.password,
     })

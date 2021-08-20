@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/app/app';
 //import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from "react-router-dom";
 import { createStore, compose, applyMiddleware } from 'redux';
 import { rootReducer } from './services/reducers/index';
 import { Provider } from 'react-redux';
@@ -16,14 +17,17 @@ const composeEnhancers =
 
 const enhancer = composeEnhancers(applyMiddleware(thunk));
 
-const store = createStore(rootReducer, enhancer); 
+const store = createStore(rootReducer, enhancer);
 // const store = createStore(rootReducer, applyMiddleware(thunk));  // если так, то не работает Redux DevTools
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <BrowserRouter basename="/">
+
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );

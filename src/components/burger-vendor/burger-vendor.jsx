@@ -74,11 +74,11 @@ function BurgerVendor() {
             </DndProvider>
 
             {/* рендер попапа с инфой об ингридиенте бургера - ingrInModalData*/}
-            {modalIsVisible && (currentModalType === 'IngridientDetails') &&
+            {/* {modalIsVisible && (currentModalType === 'IngridientDetails') &&
               <Modal>
                 <IngridientDetais ingrInModalData={ingrInModalData} />
               </Modal>
-            }
+            } */}
 
             {/* рендер попапа с деталями заказа - orderData */}
             {modalIsVisible && (currentModalType === 'OrderDetails') &&

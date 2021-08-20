@@ -142,9 +142,9 @@ export function setNewPassword(newPassword, resetCode) {
 export function patchUserData(form, setFormValues) {
    
   return function (dispatch) {
-    console.log('new Name', form.name);
-    console.log('new Email', form.email);
-    console.log('new Password', form.password);
+    // console.log('new Name', form.name);
+    // console.log('new Email', form.email);
+    // console.log('new Password', form.password);
 
     fetchChangeUserData(form)
     .then(res => {
@@ -156,7 +156,7 @@ export function patchUserData(form, setFormValues) {
         email: res.user.email,
       });
 
-      setFormValues({ name: res.user.name, email: res.user.email, password: 'Мыло можно поменять, а имя и пароль сервер не меняет' })
+      setFormValues({ name: res.user.name, email: res.user.email, password: '' });
     })
   }
 }
