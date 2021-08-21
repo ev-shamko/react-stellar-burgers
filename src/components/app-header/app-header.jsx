@@ -18,10 +18,10 @@ import { urlApiGetIngridients } from '../../utils/api-url';
 function AppHeader() {
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(confirmAuth());
-  //   dispatch(getIngridientsData(urlApiGetIngridients));
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(confirmAuth());
+    dispatch(getIngridientsData(urlApiGetIngridients));
+  }, [dispatch]);
 
   return (
     <header className={headerStyles.header}>

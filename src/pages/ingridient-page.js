@@ -28,6 +28,8 @@ export function IngridientPage() {
 
   return (
     // <div>Йа ингридиент {`${ingridientProp}`}</div>
+    <div style={{paddingTop: 80,}}>
     <IngridientDetais ingredientData={ingridientProp} />
+    </div>
   );
 }

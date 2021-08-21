@@ -3,9 +3,10 @@ import stylesID from './ingridient-details.module.css';
 import PropTypes from 'prop-types';
 
 function IngridientDetais({ingredientData}) {
+
     return (
-        <>
-            <h2 className={stylesID.modalHeader + ' text  text_type_main-large mt-10 ml-10 mb-3'}>Детали ингредиента</h2>
+        <div className={stylesID.wrap}>
+            <h2 className={stylesID.modalHeader + ' text  text_type_main-large mt-10 ml-10 mb-3'} style={{}}>Детали ингредиента</h2>
             <img src={ingredientData['image_large']} alt={ingredientData['name']} className={stylesID.ingrImage + ' mb-4'} />
             <p className={'text  text_type_main-medium mb-4'}>{ingredientData['name']}</p>
 
@@ -27,9 +28,9 @@ function IngridientDetais({ingredientData}) {
                     <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'}>{ingredientData['carbohydrates']}</p>
                 </li>
             </ul>
-            <p></p>
-            <p></p>
-        </>
+            {/* <p></p>
+            <p></p> */}
+        </div>
     )
 }
 

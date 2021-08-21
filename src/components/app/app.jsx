@@ -14,14 +14,14 @@ import BurgerVendor from '../burger-vendor/burger-vendor';
 import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, ProfileOrdersPage, IngridientPage } from '../../pages';
 
 function App() {
-  let location = useLocation();
-  console.log('location: ', location);
 
-  // background станет не undefined, когда произойдёт клик по одному из ингридиентов в burgerIngridients
+
+  let location = useLocation();
+
+  // background станет не undefined, когда произойдёт клик по одному из ингридиентов в BurgerIngridients
   // background - это объект location, соответствующий адресу, на котором мы находились, когда произошёл клик по ингридиенту (т.е. '/' ))
   // если таки background !== undefined, он будет использован в качестве location для Switch, и тогда BurgerVendor будет показан в качестве фона под модальным окном с информацией об ингридиенте
   let background = location.state && location.state.background;
-  console.log('background: ', background);
 
   const { modalIsVisible, ingrInModalData } = useSelector(store => store.burgerVendor);
 
@@ -31,7 +31,6 @@ function App() {
 
       <main className={indexStyles.main}>
         <Switch location={background || location}>
-
           <Route path="/login">
             <LoginPage />
           </Route>
@@ -62,17 +61,10 @@ function App() {
 
           <Route path="/" exact={true}>{/* exact={true}>; */}
             <BurgerVendor />
-
-            {/* рендер попапа с инфой об ингридиенте бургера - ingrInModalData*/}
-            {/* {modalIsVisible && (currentModalType === 'IngridientDetails') &&
-              <Modal>
-                <IngridientDetais ingrInModalData={ingrInModalData} />
-              </Modal>
-            } */}
           </Route>
-
         </Switch>
 
+        {/* Вот это модалка с ингридиентом поверх конструктора бургеров */}
         {background && (
           <Route path="/ingredients/:id">
             {modalIsVisible && (

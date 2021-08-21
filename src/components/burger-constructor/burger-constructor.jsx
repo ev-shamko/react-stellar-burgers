@@ -153,6 +153,8 @@ function BurgerConstructor() {
   }
 
   const sendOrderToApi = async (event) => {
+    // TODO: 
+    // Показать лоудер -> автологин -> если норм, сделать заказ -> после ответа убрать лоудер
     if (!isLoggedIn) {
       // ! добавить заголовок авторизации в фетч
       return (history.push({ pathname: '/login' }));

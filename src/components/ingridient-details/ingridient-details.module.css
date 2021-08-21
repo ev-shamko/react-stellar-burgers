@@ -1,10 +1,17 @@
+.wrap {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+}
+
 .modalHeader {
-    text-align: left;
-    margin-right: auto;
+    text-align: center;
+    /* margin-right: auto; */
 }
 
 .ingrImage {
-    /* width: 400px; */
+    width: 400px;
 }
 
 .ingrInfo {
