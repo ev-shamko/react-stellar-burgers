@@ -8,4 +8,4 @@ export const urlUserDataEndpoint = 'https://norma.nomoreparties.space/api/auth/u
 export const urlApiToken = 'https://norma.nomoreparties.space/api/auth/token'; // для обновления токенов
 export const urlUserRegistration = 'https://norma.nomoreparties.space/api/auth/register';
 export const urlResetPassword =' https://norma.nomoreparties.space/api/password-reset';
-export const urlSetNewPassword = 'https://norma.nomoreparties.space/api/password-reset/reset'
+export const urlSetNewPassword = 'https://norma.nomoreparties.space/api/password-reset/reset';

@@ -1,7 +1,7 @@
 import React from 'react';
 //import logo from '../../images/logo.svg';
 import indexStyles from './app.module.css';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Route, Switch, useLocation, useHistory, } from 'react-router-dom';
 
 import { ProtectedRoute } from '../protected-route/protected-route';
 
@@ -15,15 +15,23 @@ import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, Pr
 
 function App() {
 
-
+  const history = useHistory();
   let location = useLocation();
+  console.log('location ', location);
 
   // background станет не undefined, когда произойдёт клик по одному из ингридиентов в BurgerIngridients
   // background - это объект location, соответствующий адресу, на котором мы находились, когда произошёл клик по ингридиенту (т.е. '/' ))
   // если таки background !== undefined, он будет использован в качестве location для Switch, и тогда BurgerVendor будет показан в качестве фона под модальным окном с информацией об ингридиенте
   let background = location.state && location.state.background;
+  console.log('background', background);
 
   const { modalIsVisible, ingrInModalData } = useSelector(store => store.burgerVendor);
+
+  // фикс, чтобы при перезагрузке с url ингридиента открывалась одельная страница, а не попап
+  React.useEffect(() => {
+    history.replace();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
