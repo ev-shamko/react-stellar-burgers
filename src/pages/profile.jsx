@@ -43,7 +43,7 @@ export function ProfilePage() {
   return (
     <section className={styles.wrap}>
       <ProfileMenu activeTab={'profile'} />
-      <form className={styles.profileInfo + " profile-inputs"}>
+      <form className={styles.profileInfo + " profile-inputs"} onSubmit={handleSubmit}>
         <Input
           type={"text"}
           name={"name"}
@@ -75,7 +75,7 @@ export function ProfilePage() {
           error={false}
         />
         <div className={styles.buttonWrap}>
-          <Button onClick={handleSubmit}>Сохранить</Button>
+          <Button >Сохранить</Button>
           <Button onClick={handleCansel} type="secondary">Отмена</Button>
         </div>
       </form>

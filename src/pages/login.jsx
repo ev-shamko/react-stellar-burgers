@@ -79,7 +79,7 @@ export function LoginPage() {
           onChange={handleChange}
         />
 
-        <Button onClick={handleSubmit} type="primary" size="medium">
+        <Button type="primary" size="medium">
           Войти
         </Button>
 
