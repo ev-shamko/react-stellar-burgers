@@ -1,101 +1,87 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 //import logo from '../../images/logo.svg';
 import indexStyles from './app.module.css';
+import { Route, Switch, useLocation, useHistory, } from 'react-router-dom';
+
+import { ProtectedRoute } from '../protected-route/protected-route';
+
+import Modal from '../modal/modal';
+import IngridientDetais from '../ingridient-details/ingridient-details';
+import { useSelector } from 'react-redux';
 
 import AppHeader from '../app-header/app-header';
-import BurgerIngredients from '../burger-ingredients/burger-ingredients';
-import BurgerConstructor from '../burger-constructor/burger-constructor';
-import Modal from '../modal/modal';
-import OrderDetails from '../order-details/order-details';
-import IngridientDetais from '../ingridient-details/ingridient-details';
-
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-
-import { useSelector, useDispatch } from 'react-redux';
-import {
-  getIngridientsData,
-} from '../../services/actions/burgerVendor';
-
-// временно захардкодено
-import { urlApiGetIngridients } from '../../utils/api-url';
-// import ingridientsList from '../../utils/data'; // пока не удаляю на случай падения сервера с API
+import BurgerVendor from '../burger-vendor/burger-vendor';
+import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, ProfileOrdersPage, IngridientPage } from '../../pages';
 
 function App() {
 
-  const dispatch = useDispatch();
+  const history = useHistory();
+  let location = useLocation();
+  console.log('location ', location);
 
-  /******************************************************** */
-  /******      Импорт стейтов из редакса        ********* */
-  /****************************************************** */
+  // background станет не undefined, когда произойдёт клик по одному из ингридиентов в BurgerIngridients
+  // background - это объект location, соответствующий адресу, на котором мы находились, когда произошёл клик по ингридиенту (т.е. '/' ))
+  // если таки background !== undefined, он будет использован в качестве location для Switch, и тогда BurgerVendor будет показан в качестве фона под модальным окном с информацией об ингридиенте
+  let background = location.state && location.state.background;
+  console.log('background', background);
 
-  const { modalIsVisible, currentModalType, ingrInModalData, arrOfIngridients, dataIsLoading, dataHasError } = useSelector(store => ({
-    modalIsVisible: store.burgerVendor.modalIsVisible,
-    currentModalType: store.burgerVendor.currentModalType,
-    ingrInModalData: store.burgerVendor.ingrInModalData,
-    arrOfIngridients: store.burgerVendor.ingridientsData.arrOfIngridients,
-    dataIsLoading: store.burgerVendor.ingridientsData.ingrDataIsLoading,
-    dataHasError: store.burgerVendor.ingridientsData.ingrDataHasError,
-  }));
+  const { modalIsVisible, ingrInModalData } = useSelector(store => store.burgerVendor);
 
-  /******************************************************** */
-  /******    Получение массива данных данных от API     ********* */
-  /****************************************************** */
-
-  // фетч произойдёт после первичного рендера App
-  // в dispatch передана функция, что возможно благодаря thunk
-  useEffect(() => dispatch(getIngridientsData(urlApiGetIngridients)), []);
-
-  /******************************************************** */
-  /************      Рендер      ************************* */
-  /****************************************************** */
-
-  // https://www.bxnotes.ru/conspect/lib/react/react-notes/rendering/ - хорошая статья по рендерингу в реакте, надо заюзать
-  // https://max-frontend.gitbook.io/redux-course-ru-v2/sozdanie/optimizatsiya-refaktoring/optimizatsiya-pererisovok - статья про оптимизацию рендера
-
+  // фикс, чтобы при перезагрузке с url ингридиента открывалась одельная страница, а не попап
+  React.useEffect(() => {
+    history.replace();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
-      {/* {console.log('РЕНДЕРЮ app.jsx')} */}
       <AppHeader />
 
       <main className={indexStyles.main}>
-        <section className={indexStyles.headerSection}>
-          <h1 className="text text_type_main-large">Соберите бургер</h1>
-        </section>
+        <Switch location={background || location}>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
 
+          <Route path="/registration">
+            <RegistrationPage />
+          </Route>
 
-        <section className={indexStyles.constructorContainer}>
+          <Route path="/forgot-password">
+            <ForgotPage />
+          </Route>
 
-          {/* Здесь стоит условие: отрисовка компонентов только после успешного получения данных правильного формата
-          * Это очень важно для компонента  BurgerConstructor, который роняет приложение при первичном рендере без fetch или без правильного массива данных с ингридиентами
+          <Route path="/reset-password">
+            <ResetPassword />
+          </Route>
 
-          ***Про условия отрисовки:
-          Условие (!!arrOfIngridients.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch. Предотвращает падение приложения, если в arrOfIngridients запишутся данные неподходящего формата */}
-          {!dataIsLoading && !dataHasError && !!arrOfIngridients.length && (
-            <>
-              <DndProvider backend={HTML5Backend}>
-                <BurgerIngredients />{/* попап  - ingrInModalData */}
-                <BurgerConstructor />{/* попап  - orderData */}
-              </DndProvider>
+          <ProtectedRoute path="/profile" exact={true}>
+            <ProfilePage />
+          </ProtectedRoute>
 
-              {/* рендер попапа с инфой об ингридиенте бургера - ingrInModalData*/}
-              {modalIsVisible && (currentModalType === 'IngridientDetails') &&
-                <Modal>
-                  <IngridientDetais ingrInModalData={ingrInModalData} />
-                </Modal>
-              }
+          <ProtectedRoute path="/profile/orders">
+            <ProfileOrdersPage />
+          </ProtectedRoute>
 
-              {/* рендер попапа с деталями заказа - orderData */}
-              {modalIsVisible && (currentModalType === 'OrderDetails') &&
-                <Modal>
-                  <OrderDetails />
-                </Modal>
-              }
-            </>
-          )}
-        </section>
+          <Route path="/ingredients/:id">
+            <IngridientPage />
+          </Route>
 
+          <Route path="/" exact={true}>{/* exact={true}>; */}
+            <BurgerVendor />
+          </Route>
+        </Switch>
+
+        {/* Вот это модалка с ингридиентом поверх конструктора бургеров */}
+        {background && (
+          <Route path="/ingredients/:id">
+            {modalIsVisible && (
+              <Modal>
+                <IngridientDetais ingredientData={ingrInModalData} />
+              </Modal>
+            )}
+          </Route>
+        )}
       </main>
     </>
   );

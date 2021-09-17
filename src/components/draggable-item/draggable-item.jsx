@@ -1,5 +1,4 @@
 import React from "react";
-import { useCallback } from 'react';
 import diStyles from "./draggable-item.module.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { useDrag, useDrop } from "react-dnd";

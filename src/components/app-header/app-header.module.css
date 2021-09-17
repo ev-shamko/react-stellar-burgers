@@ -58,6 +58,10 @@
   margin-left: 0px;
 }
 
+.navlink {
+  text-decoration: none;
+}
+
 /* не работает без усиления специфичности */
 span.buttonCaption {
   margin-left: 9px;

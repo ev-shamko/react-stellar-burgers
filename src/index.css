@@ -1,4 +1,25 @@
-/* Это фикс для пакета @ya.praktikum/react-developer-burger-ui-components */
+/* Это фиксы для пакета @ya.praktikum/react-developer-burger-ui-components */
 .constructor-element__text {
   width: 254px;
+}
+
+
+.auth-form  .input__container { 
+  margin-bottom: 24px;
+}
+
+.auth-form button {
+  margin-bottom: 80px;
+}
+
+.auth-form .input__container .input {
+  width: 480px;
+}
+
+.profile-inputs .input__container {
+  margin-bottom: 24px;
+}
+
+.profile-inputs .input__container .input {
+  width: 480px;
 }

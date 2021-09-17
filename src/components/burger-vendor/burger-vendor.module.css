@@ -1,0 +1,10 @@
+.headerSection {
+  padding-top: 40px;
+  padding-bottom: 20px;
+}
+
+.constructorContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+}

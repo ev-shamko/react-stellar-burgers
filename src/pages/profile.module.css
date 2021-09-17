@@ -1,0 +1,17 @@
+.wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  padding-top: 120px;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.buttonWrap {
+  display: flex;
+  flex-direction: row-reverse;
+}

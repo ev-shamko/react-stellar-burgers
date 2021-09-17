@@ -1,0 +1,10 @@
+.wrap {
+  margin: auto;  
+  margin-top: calc(100vh / 6);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

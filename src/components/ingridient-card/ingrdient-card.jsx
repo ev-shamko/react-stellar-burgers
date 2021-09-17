@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, DragPreviewImage } from "react-dnd";
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -20,6 +21,10 @@ import {
 // @ts-ignore
 const IngridientCard = ({ objIngridient }) => {
     const dispatch = useDispatch();
+    const history = useHistory();
+    const location = useLocation();
+
+
 
     const [{ outline }, dragRef, dragPreviewImg] = useDrag({
         type: 'ingridient',
@@ -47,6 +52,12 @@ const IngridientCard = ({ objIngridient }) => {
 
     const handleClick = (event) => {
         openIngridientDetails(event);
+
+        // при открытии модального окна с информацией об ингридиенте в адресной строке пропишется уникальный роут ингридиента
+        history.replace({
+            pathname: `/ingredients/${objIngridient._id}`,
+            state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+          });
     };
 
 
