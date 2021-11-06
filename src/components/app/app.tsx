@@ -4,6 +4,7 @@ import indexStyles from './app.module.css';
 import { Route, Switch, useLocation, useHistory, } from 'react-router-dom';
 
 import { ProtectedRoute } from '../protected-route/protected-route';
+import { Location } from 'history';
 
 import Modal from '../modal/modal';
 import IngridientDetais from '../ingridient-details/ingridient-details';
@@ -13,11 +14,15 @@ import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
 import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, ProfileOrdersPage, IngridientPage } from '../../pages';
 
+type TLocationState = {
+  background?: Location;
+};
+
 function App() {
 
   const history = useHistory();
-  let location = useLocation();
-  console.log('location ', location);
+  let location = useLocation<TLocationState | undefined>();
+  // console.log('location ', location);
 
   // background станет не undefined, когда произойдёт клик по одному из ингридиентов в BurgerIngridients
   // background - это объект location, соответствующий адресу, на котором мы находились, когда произошёл клик по ингридиенту (т.е. '/' ))
@@ -25,11 +30,13 @@ function App() {
   let background = location.state && location.state.background;
   console.log('background', background);
 
-  const { modalIsVisible, ingrInModalData } = useSelector(store => store.burgerVendor);
+  const { modalIsVisible, ingrInModalData } = useSelector((store: any) => store.burgerVendor);
 
-  // фикс, чтобы при перезагрузке с url ингридиента открывалась одельная страница, а не попап
+  // фикс, чтобы при перезагрузке с url ингридиента открывалась отдельная страница, а не попап
   React.useEffect(() => {
-    history.replace();
+    history.replace({
+      state: { background: undefined },
+    });
     // eslint-disable-next-line
   }, []);
 
