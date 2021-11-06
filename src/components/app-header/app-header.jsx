@@ -37,7 +37,7 @@ function AppHeader() {
               </Link>
             </li>
             <li className={headerStyles.headerButton}>
-              <Link to='/' className={headerStyles.navlink}>
+              <Link to='/feed' className={headerStyles.navlink}>
                 <div className={headerStyles.navButton + '  text_color_inactive'}>{/* вот здесь через state будем менять цвет текста */}
                   <ListIcon type="secondary" />
                   <span className={headerStyles.buttonCaption}>Лента заказов</span>

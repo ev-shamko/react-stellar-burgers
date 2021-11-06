@@ -59,12 +59,30 @@ function App() {
             <ProfilePage />
           </ProtectedRoute>
 
-          <ProtectedRoute path="/profile/orders">
-            <ProfileOrdersPage />
+          <ProtectedRoute path="/profile/orders" exact={true}>
+            /profile/orders — страница истории заказов пользователя. Доступен только авторизованным пользователям.
+            <br /><a href="/profile/orders/123">Страница заказа 123</a> {/* Не работает, что-то с правом доступа не то */}
           </ProtectedRoute>
+
+          <ProtectedRoute path="/profile/orders/:id">
+            /profile/orders/:id — страница заказа в истории заказов. Доступен только авторизованным пользователям.
+
+          </ProtectedRoute>
+
+          {/* <ProtectedRoute path="/profile/orders">
+            <ProfileOrdersPage />
+          </ProtectedRoute> */}
 
           <Route path="/ingredients/:id">
             <IngridientPage />
+          </Route>
+
+          <Route path="/feed" exact={true}>
+            /feed — страница ленты заказов. Доступен всем пользователям.
+          </Route>
+
+          <Route path="/feed/:id">
+            /feed/:id — страница заказа в ленте. Доступен всем пользователям.
           </Route>
 
           <Route path="/" exact={true}>{/* exact={true}>; */}
@@ -80,6 +98,7 @@ function App() {
                 <IngridientDetais ingredientData={ingrInModalData} />
               </Modal>
             )}
+            {/* TODO: Сюда добавить полноразмерное окно заказа через /feed и заказа через /profile/orders/:id */}
           </Route>
         )}
       </main>
