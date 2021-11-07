@@ -7,7 +7,7 @@ import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { confirmAuth } from '../../services/actions/userActions';
-import { TIngridientType, TIngridientObjData, TIngridientInStore, TFindIngridientInStore, TResortIngrList } from '../../utils/types';
+import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
 
 import {
   postBurgerOrder,
@@ -44,13 +44,13 @@ function BurgerConstructor() {
   /****************************************************** */
 
   // при метком броске карточки ингридиента добавляет ингридиент в конструктор
-  function onDropHandler(objIngridient: TIngridientObjData) {
+  function onDropHandler(objIngridient: TIngredientObjData) {
     addIngridientInConstructor(objIngridient);
   };
 
   // функция возвращает нужный экшн в зависимости от типа ингридиента
   // это нужно для добавления ингридиета в стейт
-  const getAction = (typeOfIngridient: TIngridientType) => {
+  const getAction = (typeOfIngridient: TIngredientType) => {
     if (typeOfIngridient === 'bun') {
       return ADD_BUN;
     }
@@ -64,7 +64,7 @@ function BurgerConstructor() {
     }
   };
 
-  const addIngridientInConstructor = (objIngridient: TIngridientObjData) => {
+  const addIngridientInConstructor = (objIngridient: TIngredientObjData) => {
 
     dispatch({
       type: getAction(objIngridient.type), // в зависимости от типа добавляемого ингридиента сюда подставится нужный экшн
@@ -75,7 +75,7 @@ function BurgerConstructor() {
   const [{ background }, dropTarget] = useDrop({
     accept: "ingridient",
     drop(objIngridient) {
-      onDropHandler(objIngridient as TIngridientObjData);
+      onDropHandler(objIngridient as TIngredientObjData);
     },
     // когда доносим ингридиент до окна конструктора, окно подсветится градиентом
     collect: monitor => ({
@@ -91,10 +91,10 @@ function BurgerConstructor() {
   // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_js/04-sortable/cancel-on-drop-outside?from-embed=&file=/src/Container.jsx:121-162
 
   // Функция возвращает объект с данными ингридиента и с его индексом в массиве из store. Применяется для получения данных о drop-элементе и drag-элементе
-  const findIngridientInStore = useCallback<TFindIngridientInStore>(
+  const findIngridientInStore = useCallback<TFindIngredientInStore>(
     (targetIngrID) => {
       // получаем из хранилища объект ингридиента, у которого objIngr.instanceID равен ID объекта, переданному в функцию в качестве аргумента
-      const objIngrData = chosenDraggableIngr.filter((objIngr: TIngridientInStore) => objIngr.instanceID === targetIngrID)[0];
+      const objIngrData = chosenDraggableIngr.filter((objIngr: TIngredientInStore) => objIngr.instanceID === targetIngrID)[0];
       return {
         objIngrData, // в это свойство кладём объект ингридиента из редакс-хранилища
         ingrIndexInStore: chosenDraggableIngr.indexOf(objIngrData), // сюда запишется индекс, по которому данный объект ингридиента находится в массиве chosenDraggableIngr
@@ -131,7 +131,7 @@ function BurgerConstructor() {
 
     // если есть ингридиенты между булками, то считаем их стоимость
     if (chosenDraggableIngr.length > 0) {
-      priceOfDraggableIngr = chosenDraggableIngr.reduce(function (summ: number, ingridient: TIngridientInStore) {
+      priceOfDraggableIngr = chosenDraggableIngr.reduce(function (summ: number, ingridient: TIngredientInStore) {
         return summ + Number(ingridient.price);
       }, 0);
     }
@@ -149,7 +149,7 @@ function BurgerConstructor() {
     arrWithOrderData.push(chosenBun["_id"]);
 
     // пушим id остальных ингридиентов в массив с данными о заказе
-    chosenDraggableIngr.forEach((obj: TIngridientInStore) => {
+    chosenDraggableIngr.forEach((obj: TIngredientInStore) => {
       arrWithOrderData.push(obj["_id"]);
     });
 
@@ -186,7 +186,7 @@ function BurgerConstructor() {
         {(chosenDraggableIngr.length > 0) &&
           (
             <li className={crStyles.draggableIngridinetContainer} ref={dropResort}>
-              {chosenDraggableIngr.map((ingr: TIngridientInStore, index: number) => {
+              {chosenDraggableIngr.map((ingr: TIngredientInStore, index: number) => {
                 return (
                   <DraggableItem
                     key={ingr.instanceID}

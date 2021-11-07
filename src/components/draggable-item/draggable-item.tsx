@@ -10,16 +10,16 @@ import {
     DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { TIngridientType, TIngridientObjData, TIngridientInStore, TFindIngridientInStore, TResortIngrList } from '../../utils/types';
+import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
 import { AllByAttribute } from "@testing-library/dom";
 
 
 type TDraggableItemProps = {
     ingrInstanceID: number,
-    ingrData: TIngridientObjData,
+    ingrData: TIngredientObjData,
     ingrIndexInStoreArr: number,
     resortIngrList: TResortIngrList,
-    findIngridient: TFindIngridientInStore,
+    findIngridient: TFindIngredientInStore,
 }
 
 

@@ -4,7 +4,7 @@ import styles from './burger-vendor.module.css';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
-import IngridientDetais from '../ingridient-details/ingridient-details';
+import IngredientDetais from '../ingridient-details/ingridient-details';
 import OrderDetails from '../order-details/order-details';
 
 import { DndProvider } from "react-dnd";

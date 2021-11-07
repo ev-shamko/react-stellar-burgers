@@ -9,10 +9,10 @@ import {
     SET_MODAL_TYPE,
     SET_INGRIDIENT_IN_MODAL,
 } from '../../services/actions/burgerVendor';
-import { TIngridientObjData, TIngridientInStore } from '../../utils/types';
+import { TIngredientObjData, TIngredientInStore } from '../../utils/types';
 
 type TIngridientCardProps = {
-    objIngridient: TIngridientObjData
+    objIngridient: TIngredientObjData
 };
 
 const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
@@ -89,7 +89,7 @@ const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
         // если текущий для данного инстанса ингридиент - это соус или начинка, считаем, сколько таких ингридиентов в конструкторе
         if (objIngridient.type === 'sauce' || objIngridient.type === 'main') {
             // если находим в массиве такой же _id, как в этом экземпляре карточки, то увеличиваем счётчик на 1
-            ingrInConstructor.forEach((item: TIngridientInStore) => {
+            ingrInConstructor.forEach((item: TIngredientInStore) => {
                 if (item._id === objIngridient._id) {
                     counterValue++;
                 }

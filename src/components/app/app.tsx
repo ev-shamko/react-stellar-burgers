@@ -7,7 +7,7 @@ import { ProtectedRoute } from '../protected-route/protected-route';
 import { Location } from 'history';
 
 import Modal from '../modal/modal';
-import IngridientDetais from '../ingridient-details/ingridient-details';
+import IngredientDetais from '../ingridient-details/ingridient-details';
 import { useSelector } from 'react-redux';
 
 import AppHeader from '../app-header/app-header';
@@ -102,7 +102,7 @@ function App() {
           <Route path="/ingredients/:id">
             {modalIsVisible && (
               <Modal>
-                <IngridientDetais ingredientData={ingrInModalData} />
+                <IngredientDetais ingredientData={ingrInModalData} />
               </Modal>
             )}
             {/* TODO: Сюда добавить полноразмерное окно заказа через /feed и заказа через /profile/orders/:id */}

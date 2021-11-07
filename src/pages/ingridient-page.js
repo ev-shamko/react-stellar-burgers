@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import IngridientDetais from '../components/ingridient-details/ingridient-details';
+import IngredientDetais from '../components/ingridient-details/ingridient-details';
 
 
 import {
@@ -29,7 +29,7 @@ export function IngridientPage() {
   return (
     // <div>Йа ингридиент {`${ingridientProp}`}</div>
     <div style={{paddingTop: 80,}}>
-    <IngridientDetais ingredientData={ingridientProp} />
+    <IngredientDetais ingredientData={ingridientProp} />
     </div>
   );
 }

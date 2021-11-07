@@ -1,11 +1,11 @@
 // типы, используемые в разных компонентах
 
-export type TIngridientType = 'bun' | 'sauce' | 'main';
+export type TIngredientType = 'bun' | 'sauce' | 'main';
 
-export type TIngridientObjData = {
+export type TIngredientObjData = {
   _id: string;
   name: string;
-  type: TIngridientType;
+  type: TIngredientType;
   proteins: number;
   fat: number;
   carbohydrates: number;
@@ -17,11 +17,11 @@ export type TIngridientObjData = {
   __v: number;
 }
 
-// это типизация объектов draggableIngridients в store (те ингридиенты, которые перетащены в конструктор, кроме булки. Каждый объект имеет уникальный instanceID, генерируемый на основании .getTime())
-export type TIngridientInStore = TIngridientObjData & { instanceID: number }
+// это типизация объектов draggableIngredients в store (те ингридиенты, которые перетащены в конструктор, кроме булки. Каждый объект имеет уникальный instanceID, генерируемый на основании .getTime())
+export type TIngredientInStore = TIngredientObjData & { instanceID: number }
 
-export type TFindIngridientInStore = (targetIngrID: number) => {
-  objIngrData: TIngridientInStore,
+export type TFindIngredientInStore = (targetIngrID: number) => {
+  objIngrData: TIngredientInStore,
   ingrIndexInStore: number,
 };
 
