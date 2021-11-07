@@ -7,6 +7,7 @@ import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { confirmAuth } from '../../services/actions/userActions';
+import { TIngridientType, TIngridientObjData, TIngridientInStore } from '../../utils/types';
 
 import {
   postBurgerOrder,
@@ -24,13 +25,15 @@ import {
 
 import { urlApiPostOrder } from '../../utils/api-url';
 
+type TObjIngridient = {};
+
 // @ts-ignore
 function BurgerConstructor() {
   const dispatch = useDispatch();
   const history = useHistory();
 
   // стейты с данными об ингридиентах бургера
-  const { chosenBun, chosenDraggableIngr, isLoggedIn } = useSelector(store => ({
+  const { chosenBun, chosenDraggableIngr, isLoggedIn } = useSelector((store: any) => ({ // TODO: типизируем в следующем спринте
     chosenBun: store.burgerVendor.bun,
     chosenDraggableIngr: store.burgerVendor.draggableIngridients,
     isLoggedIn: store.user.isLoggedIn,
@@ -41,13 +44,13 @@ function BurgerConstructor() {
   /****************************************************** */
 
   // при метком броске карточки ингридиента добавляет ингридиент в конструктор
-  function onDropHandler(objIngridient) {
+  function onDropHandler(objIngridient: TIngridientObjData) {
     addIngridientInConstructor(objIngridient);
   };
 
   // функция возвращает нужный экшн в зависимости от типа ингридиента
   // это нужно для добавления ингридиета в стейт
-  const getAction = (typeOfIngridient) => {
+  const getAction = (typeOfIngridient: TIngridientType) => {
     if (typeOfIngridient === 'bun') {
       return ADD_BUN;
     }
@@ -61,7 +64,8 @@ function BurgerConstructor() {
     }
   };
 
-  const addIngridientInConstructor = (objIngridient) => {
+  const addIngridientInConstructor = (objIngridient: TIngridientObjData) => {
+
     dispatch({
       type: getAction(objIngridient.type), // в зависимости от типа добавляемого ингридиента сюда подставится нужный экшн
       value: objIngridient,
@@ -71,7 +75,7 @@ function BurgerConstructor() {
   const [{ background }, dropTarget] = useDrop({
     accept: "ingridient",
     drop(objIngridient) {
-      onDropHandler(objIngridient);
+      onDropHandler(objIngridient as TIngridientObjData);
     },
     // когда доносим ингридиент до окна конструктора, окно подсветится градиентом
     collect: monitor => ({
@@ -90,7 +94,7 @@ function BurgerConstructor() {
   const findIngridientInStore = useCallback(
     (targetIngrID) => {
       // получаем из хранилища объект ингридиента, у которого objIngr.instanceID равен ID объекта, переданному в функцию в качестве аргумента
-      const objIngrData = chosenDraggableIngr.filter((objIngr) => objIngr.instanceID === targetIngrID)[0];
+      const objIngrData = chosenDraggableIngr.filter((objIngr: TIngridientInStore) => objIngr.instanceID === targetIngrID)[0];
       return {
         objIngrData, // в это свойство кладём объект ингридиента из редакс-хранилища
         ingrIndexInStore: chosenDraggableIngr.indexOf(objIngrData), // сюда запишется индекс, по которому данный объект ингридиента находится в массиве chosenDraggableIngr
@@ -103,7 +107,7 @@ function BurgerConstructor() {
   const resortIngrList =
     // draggedInstanceId - укикальный ID ингридиента, который мы перетаскиваем. Является свойством объекта ингридиента.
     // droppedIndexInStore - индекс (в массиве хранилища) дроп-элемента, на который перетащили драг-элемент
-    (draggedInstanceId, droppedIndexInStore) => {
+    (draggedInstanceId: TIngridientInStore, droppedIndexInStore: TIngridientInStore) => {
       const { ingrIndexInStore } = findIngridientInStore(draggedInstanceId); // получаем порядковый id ингридиента, на который дропнули перетаскиваемый ингридиент
 
       dispatch({
@@ -127,7 +131,7 @@ function BurgerConstructor() {
 
     // если есть ингридиенты между булками, то считаем их стоимость
     if (chosenDraggableIngr.length > 0) {
-      priceOfDraggableIngr = chosenDraggableIngr.reduce(function (summ, ingridient) {
+      priceOfDraggableIngr = chosenDraggableIngr.reduce(function (summ: number, ingridient: TIngridientInStore) {
         return summ + Number(ingridient.price);
       }, 0);
     }
@@ -137,7 +141,7 @@ function BurgerConstructor() {
 
   // функция создаёт объект тела POST-запроса к API 
   // Его структура такая:  { "ingredients": ["609646e4dc916e00276b286e", "609646e4dc916e00276b2870"]  }  
-  // Первый id в формате строки - это булка, полседующие - остальные ингридиенты*/
+  // Первый id в формате строки - это булка, последующие - остальные ингридиенты*/
   function createPostBody() {
     const arrWithOrderData = [];
 
@@ -145,21 +149,21 @@ function BurgerConstructor() {
     arrWithOrderData.push(chosenBun["_id"]);
 
     // пушим id остальных ингридиентов в массив с данными о заказе
-    chosenDraggableIngr.forEach((obj) => {
+    chosenDraggableIngr.forEach((obj: TIngridientInStore) => {
       arrWithOrderData.push(obj["_id"]);
     });
 
     return { "ingredients": arrWithOrderData };
   }
 
-  const sendOrderToApi = async (event) => {
+  const sendOrderToApi = async () => {
     // TODO: 
     // Показать лоудер -> автологин -> если норм, сделать заказ -> после ответа убрать лоудер
     if (!isLoggedIn) {
       // ! добавить заголовок авторизации в фетч
       return (history.push({ pathname: '/login' }));
     }
-    
+
     return dispatch(postBurgerOrder(urlApiPostOrder, createPostBody));
   };
 
@@ -173,7 +177,7 @@ function BurgerConstructor() {
         {(chosenBun.name) &&
           (
             <li className={crStyles.topIngridinet}>
-              <ConstructorElement type="top" isLocked="true" text={chosenBun.name + " (верх)"} thumbnail={chosenBun.image} price={chosenBun.price} />
+              <ConstructorElement type="top" isLocked={true} text={chosenBun.name + " (верх)"} thumbnail={chosenBun.image} price={chosenBun.price} />
             </li>
           )
         }
@@ -182,7 +186,7 @@ function BurgerConstructor() {
         {(chosenDraggableIngr.length > 0) &&
           (
             <li className={crStyles.draggableIngridinetContainer} ref={dropResort}>
-              {chosenDraggableIngr.map((ingr, index) => {
+              {chosenDraggableIngr.map((ingr: TIngridientInStore, index: number) => {
                 return (
                   <DraggableItem
                     key={ingr.instanceID}
@@ -203,7 +207,7 @@ function BurgerConstructor() {
         {(chosenBun.name) &&
           (
             <li className={crStyles.bottomIngridinet}>
-              <ConstructorElement type="bottom" isLocked="true" text={chosenBun.name + " (низ)"} thumbnail={chosenBun.image} price={chosenBun.price} />
+              <ConstructorElement type="bottom" isLocked={true} text={chosenBun.name + " (низ)"} thumbnail={chosenBun.image} price={chosenBun.price} />
             </li>
           )
         }
