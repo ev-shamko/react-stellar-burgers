@@ -71,7 +71,7 @@ const DraggableItem: React.FC<TDraggableItemProps> = ({ ingrInstanceID, ingrData
         () => ({
             accept: "draggableIngridient",
             canDrop: () => false,
-            hover({ ingrInstanceID: draggedInstanceId }) { // при включенной проверке типов вот здесь всё ломается. Но не переименовать переменную нельзя. Проще всего переписать всю логику по образцу из документации для тайпскрипта, но это всё-равно займёт много времени
+            hover({ ingrInstanceID: draggedInstanceId }) { // при включенной проверке типов вот здесь всё ломается. Но не переименовать переменную нельзя. Что с этим делать - я хз. пше Проще всего переписать всю логику по образцу из документации для тайпскрипта, но это всё-равно займёт много времени
                 if (draggedInstanceId !== ingrInstanceID) {
                     const { ingrIndexInStore: droppedIndexInStore } = findIngridient(ingrInstanceID); // получаем индекс драг-элемента, на который перетащили дроп-элемент
                     resortIngrList(draggedInstanceId, droppedIndexInStore);
