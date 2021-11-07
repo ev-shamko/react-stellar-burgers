@@ -7,7 +7,7 @@ import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { confirmAuth } from '../../services/actions/userActions';
-import { TIngridientType, TIngridientObjData, TIngridientInStore } from '../../utils/types';
+import { TIngridientType, TIngridientObjData, TIngridientInStore, TFindIngridientInStore, TResortIngrList } from '../../utils/types';
 
 import {
   postBurgerOrder,
@@ -91,7 +91,7 @@ function BurgerConstructor() {
   // https://codesandbox.io/s/github/react-dnd/react-dnd/tree/gh-pages/examples_hooks_js/04-sortable/cancel-on-drop-outside?from-embed=&file=/src/Container.jsx:121-162
 
   // Функция возвращает объект с данными ингридиента и с его индексом в массиве из store. Применяется для получения данных о drop-элементе и drag-элементе
-  const findIngridientInStore = useCallback(
+  const findIngridientInStore = useCallback<TFindIngridientInStore>(
     (targetIngrID) => {
       // получаем из хранилища объект ингридиента, у которого objIngr.instanceID равен ID объекта, переданному в функцию в качестве аргумента
       const objIngrData = chosenDraggableIngr.filter((objIngr: TIngridientInStore) => objIngr.instanceID === targetIngrID)[0];
@@ -104,10 +104,10 @@ function BurgerConstructor() {
   );
 
   // Ставит драг-ингридиент перед тем ингридиентом, на который его перетащили
-  const resortIngrList =
+  const resortIngrList: TResortIngrList =
     // draggedInstanceId - укикальный ID ингридиента, который мы перетаскиваем. Является свойством объекта ингридиента.
     // droppedIndexInStore - индекс (в массиве хранилища) дроп-элемента, на который перетащили драг-элемент
-    (draggedInstanceId: TIngridientInStore, droppedIndexInStore: TIngridientInStore) => {
+    (draggedInstanceId: number, droppedIndexInStore: number) => {
       const { ingrIndexInStore } = findIngridientInStore(draggedInstanceId); // получаем порядковый id ингридиента, на который дропнули перетаскиваемый ингридиент
 
       dispatch({

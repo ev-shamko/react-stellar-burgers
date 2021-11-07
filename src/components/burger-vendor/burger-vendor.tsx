@@ -27,7 +27,7 @@ function BurgerVendor() {
   /******      Импорт стейтов из редакса        ********* */
   /****************************************************** */
 
-  const { modalIsVisible, currentModalType, ingrInModalData, arrOfIngridients, dataIsLoading, dataHasError } = useSelector(store => ({
+  const { modalIsVisible, currentModalType, ingrInModalData, arrOfIngridients, dataIsLoading, dataHasError } = useSelector((store: any) => ({
     modalIsVisible: store.burgerVendor.modalIsVisible,
     currentModalType: store.burgerVendor.currentModalType,
     ingrInModalData: store.burgerVendor.ingrInModalData,

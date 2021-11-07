@@ -19,3 +19,10 @@ export type TIngridientObjData = {
 
 // это типизация объектов draggableIngridients в store (те ингридиенты, которые перетащены в конструктор, кроме булки. Каждый объект имеет уникальный instanceID, генерируемый на основании .getTime())
 export type TIngridientInStore = TIngridientObjData & { instanceID: number }
+
+export type TFindIngridientInStore = (targetIngrID: number) => {
+  objIngrData: TIngridientInStore,
+  ingrIndexInStore: number,
+};
+
+export type TResortIngrList = (dragID: number, dropID: number) => void;

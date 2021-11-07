@@ -1,7 +1,7 @@
 import React from "react";
 import diStyles from "./draggable-item.module.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { useDrag, useDrop } from "react-dnd";
+import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import {
     UPDATE_DRAGGABLE_INGRIDIENTS,
 } from '../../services/actions/burgerVendor';
@@ -10,11 +10,23 @@ import {
     DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { TIngridientType, TIngridientObjData, TIngridientInStore, TFindIngridientInStore, TResortIngrList } from '../../utils/types';
+import { AllByAttribute } from "@testing-library/dom";
 
-function DraggableItem({ ingrInstanceID, ingrData, ingrIndexInStoreArr, resortIngrList, findIngridient }) {
+
+type TDraggableItemProps = {
+    ingrInstanceID: number,
+    ingrData: TIngridientObjData,
+    ingrIndexInStoreArr: number,
+    resortIngrList: TResortIngrList,
+    findIngridient: TFindIngridientInStore,
+}
+
+
+const DraggableItem: React.FC<TDraggableItemProps> = ({ ingrInstanceID, ingrData, ingrIndexInStoreArr, resortIngrList, findIngridient }) => {
     const dispatch = useDispatch();
 
-    const stateDraggableIngridients = useSelector(store => store.burgerVendor.draggableIngridients); // массив объектов  
+    const stateDraggableIngridients = useSelector((store: any) => store.burgerVendor.draggableIngridients); // массив объектов  
 
     const deleteThisIngridient = () => {
         // копируем данные из стейта родительского компонента в эту переменную
@@ -55,10 +67,11 @@ function DraggableItem({ ingrInstanceID, ingrData, ingrIndexInStoreArr, resortIn
 
     // дополнительно помечаем все перетаскиваемые ингридиенты ещё и как цель дропа
     const [, targetOfDrop] = useDrop(
+        // @ts-ignore: god no please no
         () => ({
             accept: "draggableIngridient",
             canDrop: () => false,
-            hover({ ingrInstanceID: draggedInstanceId }) {
+            hover({ ingrInstanceID: draggedInstanceId }) { // при включенной проверке типов вот здесь всё ломается. Но не переименовать переменную нельзя. Проще всего переписать всю логику по образцу из документации для тайпскрипта, но это всё-равно займёт много времени
                 if (draggedInstanceId !== ingrInstanceID) {
                     const { ingrIndexInStore: droppedIndexInStore } = findIngridient(ingrInstanceID); // получаем индекс драг-элемента, на который перетащили дроп-элемент
                     resortIngrList(draggedInstanceId, droppedIndexInStore);
@@ -76,7 +89,7 @@ function DraggableItem({ ingrInstanceID, ingrData, ingrIndexInStoreArr, resortIn
 
         <div className={diStyles.draggableItime} ref={(node) => targetOfDrop(draggedPreview(node))} style={{ opacity }}>
             <button ref={dragItem} className={diStyles.draggableButton}>
-                <DragIcon />
+                <DragIcon type="primary" />
             </button>
             <ConstructorElement text={ingrData.name} thumbnail={ingrData.image} price={ingrData.price} handleClose={deleteThisIngridient} />
         </div>
