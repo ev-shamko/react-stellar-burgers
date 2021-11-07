@@ -30,7 +30,7 @@ function App() {
   let background = location.state && location.state.background;
   console.log('background', background);
 
-  const { modalIsVisible, ingrInModalData } = useSelector((store: any) => store.burgerVendor);
+  const { modalIsVisible, ingrInModalData } = useSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
 
   // фикс, чтобы при перезагрузке с url ингридиента открывалась отдельная страница, а не попап
   React.useEffect(() => {

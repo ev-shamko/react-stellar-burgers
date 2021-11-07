@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { LegacyRef, useRef } from "react";
 import ingrStyles from "./burger-ingredients.module.css";
 import CardList from "../ingridients-cardlist/ingridients-cardlist";
 
@@ -6,41 +6,67 @@ import {
     Tab,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+type TBunRef = {
+    'bun': LegacyRef<HTMLDivElement>, // без подсказок в жизни бы не подобрала подходящий тип, ппц
+    'sauce': LegacyRef<HTMLDivElement>,
+    'main': LegacyRef<HTMLDivElement>,
+}
+
+type TTabName = 'bun' | 'sauce' | 'main';
+
 // <BurgerIngredients openModal={openModal} /> 
 function BurgerIngredients() {
 
     // стейт  для переключения активного таба в компоненте <Tab />
     // компонент <Tab /> "под капотом" передаёт этому методу в качестве аргумента значение пропса value
-    const [currentTab, setCurrentTab] = React.useState("bun");
+    const [currentTab, setCurrentTab] = React.useState<string>("bun");
 
     // рефы и scrollIntoRef используются для автопрокрутки блока с ингридиентами при клике на табы с названиями типов ингридиентов
-    const bunRef = useRef(null);
-    const sauceRef = useRef(null);
-    const mainRef = useRef(null);
-    const scrollContainerRef = useRef(null);
+    const bunRef = useRef<HTMLDivElement>(null);
+    const sauceRef = useRef<HTMLDivElement>(null);
+    const mainRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    function scrollIntoRef(stringArg) {
+    function scrollIntoRef(tabName: TTabName): void {
         // в этом объекте ключи должны соответствовать типам ингридиентов бургера.
         // Пока что всего 3 типа ингридиентов. Если будут добавлены другие типы ингридиентов, нужно дополнить объект
-        const objRefKeys = {
-            'bun': bunRef,
-            'sauce': sauceRef,
-            'main': mainRef
-        };
+        // const objRefKeys: TBunRef = {
+        //     'bun': bunRef,
+        //     'sauce': sauceRef,
+        //     'main': mainRef,
+        // };
 
-        objRefKeys[stringArg].current.scrollIntoView({ block: "start", behavior: "smooth" });
+        // Ниже идёт серия else if плюс двойная проверка currentTab && currentTab.current &&
+        // Они нужны, потому что иначе не получилось победить веру тайпскрипта в то, что currentTab может быть либо null, либо набором из всех типов, встречающихся в этом компоненте
+
+        let currentTab;
+
+        if (tabName === 'bun') {
+            currentTab = bunRef;
+        }
+        else if (tabName === 'sauce') {
+            currentTab = sauceRef;
+        }
+        else if (tabName === 'main') {
+            currentTab = mainRef
+        }
+
+        currentTab && currentTab.current && currentTab.current.scrollIntoView({ block: "start", behavior: "smooth" });
+
     }
 
-    const handleTabClick = (value) => {
+    const handleTabClick = (value: string): void => {
         setCurrentTab(value);
-        scrollIntoRef(value);
+        scrollIntoRef(value as TTabName); // сделала как в вебинаре, но не понимаю, почему иначе тс капризничает
     };
 
     const handleScroll = () => {
-        const scrollContainerPosition = scrollContainerRef.current.getBoundingClientRect().top;
-        const bunHeaderPosition = bunRef.current.getBoundingClientRect().top;
-        const sauceHeaderPosition = sauceRef.current.getBoundingClientRect().top;
-        const mainHeaderPosition = mainRef.current.getBoundingClientRect().top;
+
+        // У четырёх перменных ниже используется рернарный оператор. Это нужно, чтобы тайпскрипт не ругался на возможность записи null в переменную
+        const scrollContainerPosition = scrollContainerRef.current ? scrollContainerRef.current.getBoundingClientRect().top : 0;
+        const bunHeaderPosition = bunRef.current ? bunRef.current.getBoundingClientRect().top : 0;
+        const sauceHeaderPosition = sauceRef.current ? sauceRef.current.getBoundingClientRect().top : 0;
+        const mainHeaderPosition = mainRef.current ? mainRef.current.getBoundingClientRect().top : 0;
         // console.log("scroll container pos: ", scrollContainerPosition);
         // console.log("bun header pos: ", bunHeaderPosition);
         // console.log("sauce header pos: ", sauceHeaderPosition);
