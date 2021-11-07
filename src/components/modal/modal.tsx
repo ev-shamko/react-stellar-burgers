@@ -1,25 +1,24 @@
-import React from 'react';
+import React, { FC, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import modalStyles from './modal.module.css';
 import ModalOverlay from './modal-overlay/modal-overlay';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import { useDispatch } from 'react-redux';
-import { 
-    CLOSE_MODAL, 
-    SET_MODAL_TYPE, 
+import {
+    CLOSE_MODAL,
+    SET_MODAL_TYPE,
 } from '../../services/actions/burgerVendor';
 
-function Modal({ children }) {
+const Modal: FC = ({ children }) => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const modalRoot = document.getElementById("react-modals");
+    const modalRoot = document.getElementById("react-modals") as HTMLElement;
 
     // Функция передаётся в onClick <article>. Предотвращает всплытие события клика с модального окна до ModalOverlay. Иначе клик по любому месту модального окна закроет модальное окно. А надо, чтобы так делал только клик по крестику и клик по ModalOverlay.
-    const stopPropagation = (event) => {
+    const stopPropagation = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation();
     }
 
@@ -35,8 +34,19 @@ function Modal({ children }) {
 
         history.replace({
             pathname: `/`,
-          });
+        });
     }
+
+    // Логика закрытия по esc. Она не работает, если написать ее в компоненте modaloverlay на .tsx  Не понимаю, почему ломается.
+    useEffect(() => {
+        const escHandler = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                handleClose();
+            }
+        }
+        document.addEventListener('keydown', escHandler);
+        return () => document.removeEventListener('keydown', escHandler);
+    })
 
     return ReactDOM.createPortal(
         (
@@ -45,7 +55,7 @@ function Modal({ children }) {
 
                 <article className={modalStyles.modal} onClick={stopPropagation}>
                     <button onClick={handleClose} className={modalStyles.closeButton}>
-                        <CloseIcon />
+                        <CloseIcon type="primary" />
                     </button>
                     {children}
                 </article>
@@ -53,9 +63,5 @@ function Modal({ children }) {
         ), modalRoot
     );
 }
-
-Modal.propTypes = {
-    children: PropTypes.element.isRequired
-};
 
 export default Modal;
