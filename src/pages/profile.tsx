@@ -12,7 +12,7 @@ import {
 
 export function ProfilePage() {
   const [form, setFormValues] = useState({ name: '', email: '', password: '' });
-  const { userName, userEmail } = useSelector(state => state.user);
+  const { userName, userEmail } = useSelector((state: any) => state.user);
 
   const dispatch = useDispatch();
 
@@ -26,17 +26,19 @@ export function ProfilePage() {
     //eslint-disable-next-line
   }, []);
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log('сабмитим изменения в профиле');
     dispatch(patchUserData(form, setFormValues));
   }
   
-  const handleCansel = e => {
+  const handleCansel = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    console.log('canselling changes');
     setFormValues({ name: userName, email: userEmail, password: '' });
   }
 
@@ -76,7 +78,7 @@ export function ProfilePage() {
         />
         <div className={styles.buttonWrap}>
           <Button >Сохранить</Button>
-          <Button onClick={handleCansel} type="secondary">Отмена</Button>
+          <Button onClick={handleCansel as () => void} type="secondary">Отмена</Button>
         </div>
       </form>
     </section>

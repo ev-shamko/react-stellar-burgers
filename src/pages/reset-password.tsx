@@ -13,12 +13,12 @@ import {
 
 export function ResetPassword() {
   const [form, setFormValues] = useState({ password: '', resetCode: '' });
-  const { isLoggedIn, canResetPassword, hasResetPassword } = useSelector(store => store.user);
+  const { isLoggedIn, canResetPassword, hasResetPassword } = useSelector((store: any) => store.user);
 
   const dispatch = useDispatch();
 
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -72,7 +72,6 @@ export function ResetPassword() {
           value={form.password}
           name={'password'}
           size={'default'}
-          type={"password"}
           onChange={handleChange}
         />
 
