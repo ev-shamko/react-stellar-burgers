@@ -26,3 +26,5 @@ export type TFindIngredientInStore = (targetIngrID: number) => {
 };
 
 export type TResortIngrList = (dragID: number, dropID: number) => void;
+
+export type TProfileMenuTabsValue = 'profile' | 'orderHistory' | 'logOut';
