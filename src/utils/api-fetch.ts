@@ -9,8 +9,14 @@ import {
   urlSetNewPassword,
 } from './api-url';
 
+type TRegistrationData = {
+  'email': string,
+  'password': string,
+  'name': string,
+}
+
 // Регистрация нового пользователя
-export function fetchUserRegistration(data) {
+export function fetchUserRegistration(data: TRegistrationData) {
   return fetch(urlUserRegistration, {
     method: 'POST',
     headers: {
@@ -32,14 +38,7 @@ export function fetchUserRegistration(data) {
       return res;
     })
 }
-
-/* Нужно отправить такое body 
-{
-    "email": "", 
-    "password": "", 
-    "name": "" 
-} 
-
+/*
 Тело ответа при успешной регистрации:
 {
   "success": true,
@@ -52,10 +51,14 @@ export function fetchUserRegistration(data) {
 } 
 */
 
+type TLogInData = {
+  'email': string,
+  'password': string,
+}
 
 // logIN авторизация по email, password
 // в аргумент data нужно передать объект ответа от сервера с email, password успешно залогинившегося пользователя
-export function fetchLogIn(data) {
+export function fetchLogIn(data: TLogInData) {
   return fetch(urlLoginRout, {
     method: 'POST',
     headers: {
@@ -77,12 +80,8 @@ export function fetchLogIn(data) {
 };
 
 // запрашивает у сервера код для смены пароля. Код придёт на почту
-/* Тело запроса
-  {
-      "email": ""
-  }
-  */
-export function fetchRequestResetCode(userEmail) {
+
+export function fetchRequestResetCode(userEmail: string) {
   console.log('body', JSON.stringify({ email: userEmail }))
   return fetch(urlResetPassword, {
     method: 'POST',
@@ -105,7 +104,7 @@ export function fetchRequestResetCode(userEmail) {
 }
 
 // запрос об установке нового пароля
-export function fetchResetPassword(newPassword, resetCode) {
+export function fetchResetPassword(newPassword: string, resetCode: string) {
   return fetch(urlSetNewPassword, {
     method: 'POST',
     headers: {
@@ -135,11 +134,12 @@ export function fetchResetPassword(newPassword, resetCode) {
 // получение данных о пользователе с помощью accessToken (который живёт 20 мин)
 export function fetchGetUserData() {
   // console.log('accessToken', getCookie('accessToken'));
+
   return fetch(urlUserDataEndpoint, {
     headers: {
       method: 'GET',
       'Content-Type': 'application/json;charset=utf-8',
-      authorization: getCookie('accessToken'),
+      authorization: getCookie('accessToken') as string,
     },
   })
     .then(async (res) => {
@@ -170,8 +170,14 @@ export function fetchGetUserData() {
 } 
 */
 
+type TChangeUserDataArg = {
+  "name": string,
+  "email": string,
+  "password": string,
+}
+
 //запрос на изменение данных о пользователе (имя, мыло, пароль)
-export function fetchChangeUserData(form) {
+export function fetchChangeUserData(form: TChangeUserDataArg) {
   // console.log('getCookie( accessToken )', getCookie('accessToken'));
   // console.log('body is',
   //   `
@@ -186,7 +192,7 @@ export function fetchChangeUserData(form) {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
-      'Authorization': getCookie('accessToken'), // у меня записан вместе с 'Bearer '
+      'Authorization': getCookie('accessToken') as string, // у меня записан вместе с 'Bearer '
     },
     body: JSON.stringify({
       "name": form.name,

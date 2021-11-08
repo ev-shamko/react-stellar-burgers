@@ -1,30 +1,24 @@
 import React, { useEffect } from "react";
-import PropTypes from 'prop-types';
 import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, DragPreviewImage } from "react-dnd";
 import { useHistory, useLocation } from 'react-router-dom';
-
 import { useDispatch, useSelector } from 'react-redux';
 import {
     OPEN_MODAL,
     SET_MODAL_TYPE,
     SET_INGRIDIENT_IN_MODAL,
 } from '../../services/actions/burgerVendor';
+import { TIngredientObjData, TIngredientInStore } from '../../utils/types';
 
-/* <IngridientCard
-        objIngridient={obj}
-        key={obj._id}
-    />
-*/
+type TIngridientCardProps = {
+    objIngridient: TIngredientObjData
+};
 
-// @ts-ignore
-const IngridientCard = ({ objIngridient }) => {
+const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const location = useLocation();
-
-
 
     const [{ outline }, dragRef, dragPreviewImg] = useDrag({
         type: 'ingridient',
@@ -36,7 +30,7 @@ const IngridientCard = ({ objIngridient }) => {
         }),
     });
 
-    const openIngridientDetails = (event) => {
+    const openIngridientDetails = () => {
         dispatch({
             type: OPEN_MODAL,
         });
@@ -50,14 +44,14 @@ const IngridientCard = ({ objIngridient }) => {
         });
     };
 
-    const handleClick = (event) => {
-        openIngridientDetails(event);
+    const handleClick = () => {
+        openIngridientDetails();
 
         // при открытии модального окна с информацией об ингридиенте в адресной строке пропишется уникальный роут ингридиента
         history.replace({
             pathname: `/ingredients/${objIngridient._id}`,
             state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
-          });
+        });
     };
 
 
@@ -66,11 +60,10 @@ const IngridientCard = ({ objIngridient }) => {
     /****************************************************************** */
 
     // стейт для хранения состояния счетчика на карточке ингридиента
-    const [ingrCounter, setIngrCounter] = React.useState();
-
+    const [ingrCounter, setIngrCounter] = React.useState<number>();
 
     // получаем стейт из редакса, из которого можно понять, сколько штук текущего ингридиента положено в конструктор бургера. Какой конкретно стейт нам нужен зависит от ингридиента в пропсах инстанса текущего компонента
-    const { ingrInConstructor } = useSelector(state => {
+    const { ingrInConstructor } = useSelector((state: any): any => { // функция возвращает пока что тип any по рекомендации наставника
         // если у нас тут карточка булки, то в переменную запишется 1 объект: либо пустой, либо с 1 булкой
         if (objIngridient.type === 'bun') {
             return ({ ingrInConstructor: state.burgerVendor.bun });
@@ -82,7 +75,7 @@ const IngridientCard = ({ objIngridient }) => {
     })
 
     // в зависимости от типа текущего ингридиента функция проверит, сколько таких ингридиентов лежит в соответствующем стейте в редаксе
-    function getNumOfIngridients() {
+    function getNumOfIngridients(): number {
         let counterValue = 0;
 
         // если в стейте лежит именно эта булка, счётчик выставляем на 1, иначе на 0
@@ -96,7 +89,7 @@ const IngridientCard = ({ objIngridient }) => {
         // если текущий для данного инстанса ингридиент - это соус или начинка, считаем, сколько таких ингридиентов в конструкторе
         if (objIngridient.type === 'sauce' || objIngridient.type === 'main') {
             // если находим в массиве такой же _id, как в этом экземпляре карточки, то увеличиваем счётчик на 1
-            ingrInConstructor.forEach((item) => {
+            ingrInConstructor.forEach((item: TIngredientInStore) => {
                 if (item._id === objIngridient._id) {
                     counterValue++;
                 }
@@ -109,6 +102,7 @@ const IngridientCard = ({ objIngridient }) => {
     // при каждом изменении стейта в редаксе будет обновляться стейт счетчика ингридиента ingrCounter
     useEffect(() => {
         setIngrCounter(getNumOfIngridients());
+        // eslint-disable-next-line
     }, [ingrInConstructor, objIngridient]);
 
     /**************************************************** */
@@ -128,25 +122,6 @@ const IngridientCard = ({ objIngridient }) => {
             </div>
         </>
     );
-}
-
-const ingridientsInnerObjStructure = PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.string.isRequired,
-    proteins: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    carbohydrates: PropTypes.number.isRequired,
-    calories: PropTypes.number.isRequired,
-    price: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    image_mobile: PropTypes.string.isRequired,
-    image_large: PropTypes.string.isRequired,
-    __v: PropTypes.number.isRequired,
-});
-
-IngridientCard.propTypes = {
-    objIngridient: PropTypes.shape(ingridientsInnerObjStructure.isRequired),
 }
 
 export default IngridientCard;

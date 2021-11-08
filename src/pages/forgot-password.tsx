@@ -1,9 +1,8 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import styles from './auth-form.module.css';
-import { Link, useHistory, Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { ALLOW_RESET_PASSWORD, confirmAuth, requestResetCode, } from '../services/actions/userActions';
-import { setCookie } from '../utils/cookie';
+import { confirmAuth, requestResetCode, } from '../services/actions/userActions';
 import {
   Input,
   Button,
@@ -12,7 +11,7 @@ import {
 
 export function ForgotPage() {
   const [form, setFormValues] = useState({ email: '' });
-  const { isLoggedIn, canResetPassword } = useSelector(store => store.user);
+  const { isLoggedIn, canResetPassword } = useSelector((store: any) => store.user);
 
   // const history = useHistory();
   const dispatch = useDispatch();
@@ -29,7 +28,7 @@ export function ForgotPage() {
     dispatch(confirmAuth());
   }, [dispatch]);
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 

@@ -1,17 +1,23 @@
 // эта функция нормализует работу с временем жизни куки и обрабатывает те случаи, когда время жизни куки не было передано.
 // { expires: 20 * 60 } - передать такое в качестве аргумента props, чтобы выставить время жизни куки на 20 минут
-export function setCookie(name, value, props) {
+export function setCookie(name: string, value: string | null, props: any) {
   props = props || {};
   let exp = props.expires;
+
   if (typeof exp == "number" && exp) {
     const d = new Date();
     d.setTime(d.getTime() + exp * 1000);
     exp = props.expires = d;
   }
+
   if (exp && exp.toUTCString) {
     props.expires = exp.toUTCString();
   }
-  value = encodeURIComponent(value);
+
+  if (value) { // проверка для ts
+    value = encodeURIComponent(value);
+  }
+
   let updatedCookie = name + "=" + value;
   for (const propName in props) {
     updatedCookie += "; " + propName;
@@ -26,7 +32,7 @@ export function setCookie(name, value, props) {
 }
 
 // Authorization: 'Bearer ' + getCookie('accessToken')
-export const getCookie = (name) => {
+export const getCookie = (name: string): string | undefined => {
   const matches = document.cookie.match(
     new RegExp(
       //eslint-disable-next-line
@@ -36,6 +42,6 @@ export const getCookie = (name) => {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 };
 
-export function deleteCookie(name) {
+export function deleteCookie(name: string) {
   setCookie(name, null, { expires: -1 });
 }

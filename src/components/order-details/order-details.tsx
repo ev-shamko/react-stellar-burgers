@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { FC } from 'react';
 import stylesOD from './order-details.module.css';
 import { useSelector } from 'react-redux';
 
 
 // <OrderDetails orderData={orderData} />
-function OrderDetais() {
-    const orderState = useSelector(store => store.burgerVendor.orderData);
+const OrderDetais: FC = () => {
+    const orderState = useSelector((store: any) => store.burgerVendor.orderData);
 
     return (
         <>

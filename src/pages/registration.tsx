@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import styles from './auth-form.module.css';
-import { Link, useHistory, Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { confirmAuth, registerNewUser } from '../services/actions/userActions';
 
@@ -13,9 +13,8 @@ import {
 
 export function RegistrationPage() {
   const [form, setFormValues] = useState({ email: '', name: '', password: '' });
-  const { isLoggedIn } = useSelector(store => store.user);
+  const { isLoggedIn } = useSelector((store: any) => store.user);
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -30,7 +29,7 @@ export function RegistrationPage() {
     );
   }, [isLoggedIn]);
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -83,7 +82,6 @@ export function RegistrationPage() {
           value={form.password}
           name={'password'}
           size={'default'}
-          type={"password"}
           onChange={handleChange}
         />
 

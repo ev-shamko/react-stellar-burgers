@@ -1,8 +1,12 @@
 import React from 'react';
 import stylesID from './ingridient-details.module.css';
-import PropTypes from 'prop-types';
+import { TIngredientObjData } from '../../utils/types';
 
-function IngridientDetais({ingredientData}) {
+type TIngredientDetaisProps = {
+    ingredientData: TIngredientObjData
+};
+
+function IngredientDetais({ ingredientData }: TIngredientDetaisProps) {
 
     return (
         <div className={stylesID.wrap}>
@@ -28,14 +32,8 @@ function IngridientDetais({ingredientData}) {
                     <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'}>{ingredientData['carbohydrates']}</p>
                 </li>
             </ul>
-            {/* <p></p>
-            <p></p> */}
         </div>
     )
 }
 
-IngridientDetais.propTypes = {
-    ingredientData: PropTypes.object.isRequired,
-};
-
-export default IngridientDetais;
+export default IngredientDetais;

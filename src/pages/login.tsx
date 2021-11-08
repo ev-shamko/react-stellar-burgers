@@ -11,12 +11,12 @@ import {
 
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
-  const { isLoggedIn } = useSelector(store => store.user);
+  const { isLoggedIn } = useSelector((store: any): any => store.user); // TODO: типизируем в следующем спринте
   const dispatch = useDispatch();
 
   // https://reactrouter.com/web/api/Hooks/uselocation
   // https://reactrouter.com/web/api/location 
-  const location = useLocation(); // создаст объект, в котором будут и текущий адрес, и адрес, откуда пришли, если пришли из ProtectedRoute (location.state.from.pathname)
+  const location = useLocation<{ from: Location }>(); // создаст объект, в котором будут и текущий адрес, и адрес, откуда пришли, если пришли из ProtectedRoute (location.state.from.pathname)
 
   // автологин
   useEffect(() => {
@@ -35,7 +35,7 @@ export function LoginPage() {
   }, [isLoggedIn, location]);
 
 
-  const handleChange = e => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -75,7 +75,6 @@ export function LoginPage() {
           value={form.password}
           name={'password'}
           size={'default'}
-          type={"password"}
           onChange={handleChange}
         />
 
