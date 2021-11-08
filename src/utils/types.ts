@@ -1,6 +1,7 @@
-// типы, используемые в разных компонентах
+// типы, переиспользуемые в разных компонентах
 
 export type TIngredientType = 'bun' | 'sauce' | 'main';
+export type TProfileMenuTabsValue = 'profile' | 'orderHistory' | 'logOut';
 
 export type TIngredientObjData = {
   _id: string;
@@ -26,5 +27,3 @@ export type TFindIngredientInStore = (targetIngrID: number) => {
 };
 
 export type TResortIngrList = (dragID: number, dropID: number) => void;
-
-export type TProfileMenuTabsValue = 'profile' | 'orderHistory' | 'logOut';

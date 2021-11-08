@@ -1,12 +1,11 @@
 /* eslint-disable */
-import React, { useEffect } from "react";
+import React from "react";
 import { useCallback } from "react";
 import crStyles from "./burger-constructor.module.css";
 import DraggableItem from "../draggable-item/draggable-item";
 import { useDrop } from "react-dnd";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { confirmAuth } from '../../services/actions/userActions';
 import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
 
 import {
@@ -25,9 +24,6 @@ import {
 
 import { urlApiPostOrder } from '../../utils/api-url';
 
-type TObjIngridient = {};
-
-// @ts-ignore
 function BurgerConstructor() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -48,9 +44,11 @@ function BurgerConstructor() {
     addIngridientInConstructor(objIngridient);
   };
 
+  type TGetActionResponse = 'ADD_BUN' | 'ADD_SAUCE' | 'ADD_MAIN' | 'error'; 
+
   // функция возвращает нужный экшн в зависимости от типа ингридиента
   // это нужно для добавления ингридиета в стейт
-  const getAction = (typeOfIngridient: TIngredientType) => {
+  const getAction = (typeOfIngridient: TIngredientType): TGetActionResponse  => {
     if (typeOfIngridient === 'bun') {
       return ADD_BUN;
     }
@@ -62,10 +60,11 @@ function BurgerConstructor() {
     if (typeOfIngridient === 'main') {
       return ADD_MAIN;
     }
+
+    return 'error';
   };
 
   const addIngridientInConstructor = (objIngridient: TIngredientObjData) => {
-
     dispatch({
       type: getAction(objIngridient.type), // в зависимости от типа добавляемого ингридиента сюда подставится нужный экшн
       value: objIngridient,
@@ -74,8 +73,8 @@ function BurgerConstructor() {
 
   const [{ background }, dropTarget] = useDrop({
     accept: "ingridient",
-    drop(objIngridient) {
-      onDropHandler(objIngridient as TIngredientObjData);
+    drop(objIngridient: TIngredientObjData) {
+      onDropHandler(objIngridient);
     },
     // когда доносим ингридиент до окна конструктора, окно подсветится градиентом
     collect: monitor => ({
@@ -125,7 +124,7 @@ function BurgerConstructor() {
   /************************************************************************************ */
 
   // подсчитываем стоимость всех ингридиентов, инфу берём из стейта редакса
-  function getTotalPrice() {
+  function getTotalPrice(): number {
     const priceOfBun = chosenBun.price * 2; // цена верхней и нижней булки
     let priceOfDraggableIngr = 0;
 

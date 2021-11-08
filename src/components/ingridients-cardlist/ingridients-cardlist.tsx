@@ -1,14 +1,14 @@
 import React from "react";
 import { useSelector } from 'react-redux';
 import IngridientCard from "../ingridient-card/ingrdient-card";
-import { TIngredientObjData } from '../../utils/types';
+import { TIngredientObjData, TIngredientType } from '../../utils/types';
 
 
 // *********  Как работает этот компонет:
 // получаем из стейта полный список ингридиентов (массив объектов)
 // на его основании рендерим новый массив по типу ингридиента, полученного в пропсе
 
-type TCardListProps = { type: 'bun' | 'sauce' | 'main' };
+type TCardListProps = { type: TIngredientType };
 
 const CardList: React.FC<TCardListProps> = ({ type }) => {
 

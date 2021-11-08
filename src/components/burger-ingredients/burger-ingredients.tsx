@@ -6,13 +6,14 @@ import {
     Tab,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
+import { TIngredientType } from '../../utils/types';
+
 type TBunRef = {
     'bun': LegacyRef<HTMLDivElement>, // без подсказок в жизни бы не подобрала подходящий тип, ппц
     'sauce': LegacyRef<HTMLDivElement>,
     'main': LegacyRef<HTMLDivElement>,
 }
 
-type TTabName = 'bun' | 'sauce' | 'main';
 
 // <BurgerIngredients openModal={openModal} /> 
 function BurgerIngredients() {
@@ -27,15 +28,7 @@ function BurgerIngredients() {
     const mainRef = useRef<HTMLDivElement>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    function scrollIntoRef(tabName: TTabName): void {
-        // в этом объекте ключи должны соответствовать типам ингридиентов бургера.
-        // Пока что всего 3 типа ингридиентов. Если будут добавлены другие типы ингридиентов, нужно дополнить объект
-        // const objRefKeys: TBunRef = {
-        //     'bun': bunRef,
-        //     'sauce': sauceRef,
-        //     'main': mainRef,
-        // };
-
+    function scrollIntoRef(tabName: TIngredientType): void {
         // Ниже идёт серия else if плюс двойная проверка currentTab && currentTab.current &&
         // Они нужны, потому что иначе не получилось победить веру тайпскрипта в то, что currentTab может быть либо null, либо набором из всех типов, встречающихся в этом компоненте
 
@@ -57,7 +50,7 @@ function BurgerIngredients() {
 
     const handleTabClick = (value: string): void => {
         setCurrentTab(value);
-        scrollIntoRef(value as TTabName); // сделала как в вебинаре, но не понимаю, почему иначе тс капризничает
+        scrollIntoRef(value as TIngredientType); // сделала как в вебинаре, но не понимаю, почему иначе тс капризничает
     };
 
     const handleScroll = () => {
