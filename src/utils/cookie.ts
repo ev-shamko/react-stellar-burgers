@@ -32,7 +32,7 @@ export function setCookie(name: string, value: string | null, props: any) {
 }
 
 // Authorization: 'Bearer ' + getCookie('accessToken')
-export const getCookie = (name: string) => {
+export const getCookie = (name: string): string | undefined => {
   const matches = document.cookie.match(
     new RegExp(
       //eslint-disable-next-line
