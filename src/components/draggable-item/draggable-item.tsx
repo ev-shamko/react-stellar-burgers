@@ -67,7 +67,7 @@ const DraggableItem: React.FC<TDraggableItemProps> = ({ ingrInstanceID, ingrData
 
     // дополнительно помечаем все перетаскиваемые ингридиенты ещё и как цель дропа
     const [, targetOfDrop] = useDrop(
-        // @ts-ignore: god no please no -- я не понимаю, что тут происходит и как пофиксить
+        // @ts-ignore: god no please no -- я не понимаю, что тут происходит c типами и как пофиксить
         () => ({
             accept: "draggableIngridient",
             canDrop: () => false,
