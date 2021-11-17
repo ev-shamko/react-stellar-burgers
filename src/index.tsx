@@ -6,6 +6,8 @@ import App from './components/app/app';
 import { BrowserRouter } from "react-router-dom";
 import { createStore, compose, applyMiddleware } from 'redux';
 import { rootReducer } from './services/reducers/index';
+// import { initStore } from './services/store';
+import { wsCreatedMiddleware } from './services/store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 
@@ -15,9 +17,10 @@ const composeEnhancers =
     ? (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({})
     : compose;
 
-const enhancer = composeEnhancers(applyMiddleware(thunk));
 
-const store = createStore(rootReducer, enhancer);
+const enhancer = composeEnhancers(applyMiddleware(thunk, wsCreatedMiddleware));
+const store = createStore(rootReducer, enhancer); // вот при этом плагин Redux DevTools работает
+
 // const store = createStore(rootReducer, applyMiddleware(thunk));  // если так, то не работает Redux DevTools
 
 ReactDOM.render(

@@ -4,7 +4,6 @@ import styles from './burger-vendor.module.css';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
-import IngredientDetais from '../ingridient-details/ingridient-details';
 import OrderDetails from '../order-details/order-details';
 
 import { DndProvider } from "react-dnd";
@@ -27,7 +26,7 @@ function BurgerVendor() {
   /******      Импорт стейтов из редакса        ********* */
   /****************************************************** */
 
-  const { modalIsVisible, currentModalType, ingrInModalData, arrOfIngridients, dataIsLoading, dataHasError } = useSelector((store: any) => ({
+  const { modalIsVisible, currentModalType, arrOfIngridients, dataIsLoading, dataHasError } = useSelector((store: any) => ({
     modalIsVisible: store.burgerVendor.modalIsVisible,
     currentModalType: store.burgerVendor.currentModalType,
     ingrInModalData: store.burgerVendor.ingrInModalData,
@@ -65,8 +64,9 @@ function BurgerVendor() {
 * Это очень важно для компонента  BurgerConstructor, который роняет приложение при первичном рендере без fetch или без правильного массива данных с ингридиентами
 
 ***Про условия отрисовки:
-Условие (!!arrOfIngridients.length) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch. Предотвращает падение приложения, если в arrOfIngridients запишутся данные неподходящего формата */}
-        {!dataIsLoading && !dataHasError && !!arrOfIngridients.length && (
+Условие (!!arrOfIngridients) пересчитается в false как при первичном рендере до фетча, так и при .catch в fetch. Предотвращает падение приложения, если arrOfIngridients === undefined, что может быть при падении сервера или изменении структуры ответа от api 
+Условие (!!arrOfIngridients.length) уточняет проверку !!arrOfIngridient.  Если сервер вернёт пустой массив, мы не будем отображать компоненты конструктора бургера */}
+        {!dataIsLoading && !dataHasError && !!arrOfIngridients&& !!arrOfIngridients.length && (
           <>
             <DndProvider backend={HTML5Backend}>
               <BurgerIngredients />{/* попап  - ingrInModalData */}

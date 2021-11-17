@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
-import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, IngridientPage } from '../../pages';
+import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage } from '../../pages';
 
 type TLocationState = {
   background?: Location;
@@ -85,7 +85,7 @@ function App() {
           </Route>
 
           <Route path="/feed" exact={true}>
-            /feed — страница ленты заказов. Доступен всем пользователям.
+            <FeedPage />
           </Route>
 
           <Route path="/feed/:id">
