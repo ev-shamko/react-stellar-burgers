@@ -7,9 +7,10 @@ import { TOrder, TIngredientObjData } from '../../utils/types';
 type TFeedCard = {
   orderData: TOrder,
   key: number,
+  isPersonal: boolean,
 }
 
-export function FeedCard({ orderData }: TFeedCard) {
+export function FeedCard({ orderData, isPersonal }: TFeedCard) {
 
   const ingrData = useSelector((state: any) => state.burgerVendor.ingridientsData.arrOfIngridients);
 
@@ -40,6 +41,8 @@ export function FeedCard({ orderData }: TFeedCard) {
     }, 0);
   }
 
+  // ******************* Для иконок ингридиентов
+
   const getIcons = (url: string, index: number) => {
     return (<div className={s.imgContainer} style={{ backgroundImage: `url(${url})` }} key={index}></div>)
   }
@@ -67,6 +70,19 @@ export function FeedCard({ orderData }: TFeedCard) {
 
   normalizedPics = formateArr(arrImages);
 
+  // *******************
+
+  const getStatus = (): string => {
+    switch (orderData.status) {
+      case ('done'): {
+        return 'Выполнен';
+      }
+      case ('pending'): {
+        return 'Готовится';
+      }
+      default: return 'Отменён'
+    }
+  }
 
   return (
     <article className={s.main}>
@@ -75,7 +91,7 @@ export function FeedCard({ orderData }: TFeedCard) {
         <span className={' text text_type_main-default text_color_inactive'}>сегодня, {getTime(orderData.createdAt)}</span>
       </div>
       <h4 className={s.header + ' text text_type_main-medium mb-2'}>{orderData.name}</h4>
-
+      {isPersonal ? (<span className={' text text_type_main-default text_color_inactive mb-2'}>{getStatus()}</span>) : null}
       <div className={s.plane}>
         <div className={s.iconsContainer}>
           {normalizedPics && normalizedPics.map((url: string, index) => (getIcons(url, index)))}

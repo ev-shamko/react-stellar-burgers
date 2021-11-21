@@ -9,13 +9,23 @@ type TScrollableListProps = {
   isPersonal: boolean,
 }
 
-export function ScrollableList ({isPersonal}: TScrollableListProps) {
+export function ScrollableList({ isPersonal }: TScrollableListProps) {
 
   const currentOrders: Array<TOrder> = useSelector((store: any) => store.ws.ordersData.orders);
 
+  let reversedOrdersList: Array<TOrder> = [];
+  if (currentOrders && isPersonal) {
+    reversedOrdersList = currentOrders.reverse();
+  }
+
   return (
-    <article className={isPersonal ? s.mainReversed : s.main}> {/* в profile/orders ленту заказов нужно отображать в обратном порядке */}
-      { currentOrders && currentOrders.map((order: TOrder) => <FeedCard orderData={order} key={order.number} />) }   
+    <article className={s.main}>
+
+      {/* в /feed ленту заказов нужно отображать в прямом порядке, как она с сервера приходит */}
+      {!isPersonal && currentOrders && currentOrders.map((order: TOrder) => <FeedCard orderData={order} isPersonal={isPersonal} key={order.number} />)}
+
+      {/* в profile/orders ленту заказов нужно отображать в обратном порядке, потому что с сервера она приходит отсортированная так, что наверху самые старые заказы */}
+      {isPersonal && reversedOrdersList && reversedOrdersList.map((order: TOrder) => <FeedCard orderData={order} isPersonal={isPersonal} key={order.number} />)}
     </article>
   );
 }
