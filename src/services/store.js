@@ -4,9 +4,9 @@ import { socketMiddleware } from './middleware';
 import { wsActions } from '../services/actions/wsActions';
 import thunkMiddleware from 'redux-thunk';
 
-const wsUrlAll = "wss://norma.nomoreparties.space/orders/all";
+// const wsUrlAll = "wss://norma.nomoreparties.space/orders/all";
 
-export const wsCreatedMiddleware = socketMiddleware(wsUrlAll, wsActions);
+export const wsCreatedMiddleware = socketMiddleware(wsActions);
 
 // export const initStore = (initialState = {}) =>
 //   createStore(

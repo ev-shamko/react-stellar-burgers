@@ -5,7 +5,7 @@
 За подключение к серверу отвечает объект класса WebSocket, который будет создан внутри мидлвара. Все события этого объекта класса будут отправлять экшены в глобальный стейт.
 */
 
-export const socketMiddleware = (wsUrl, wsActions) => {
+export const socketMiddleware = (wsActions) => {
   return store => {
     let socket = null;
 
@@ -33,7 +33,8 @@ export const socketMiddleware = (wsUrl, wsActions) => {
       // для подключения к общедоступной ленте заказов
       if (type === openConnection) {
         console.log('Initiating Websocket connection');
-        socket = new WebSocket(wsUrl);
+        console.log('action.url is ', action.url);
+        socket = new WebSocket(action.url);
       }
 
       if (type === closeConnection) {

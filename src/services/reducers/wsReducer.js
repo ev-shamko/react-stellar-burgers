@@ -17,7 +17,17 @@ const initialState = {
   wsError: false,
   ordersData: {
     success: null,
-    orders: [],
+    orders: [ // TODO: здесь подробный initialstate зря, при рефакторинге убрать и добавить нормальные предохранители при рендеринге эленментов карточек
+      // {
+      //   _id: "619a2a6019cb95001bc35bed",
+      //   ingredients: ["60d3b41abdacab0026a733c7"],
+      //   status: 'pending',
+      //   name: "Краторный бургер",
+      //   createdAt: '2021-11-21T11:15:44.544Z',
+      //   updatedAt: '2021-11-21T11:15:44.544Z',
+      //   number: 1234,
+      // },
+    ],
     total: 0,
     totalToday: 0,
   }

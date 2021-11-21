@@ -35,10 +35,9 @@ export function FeedPage() {
   }
 
   useEffect(() => {
-    // dispatch(getIngredients());
     dispatch({
       type: wsActions.openConnection,
-      url: "wss://norma.nomoreparties.space/orders/all",
+      url: "wss://norma.nomoreparties.space/orders/all", 
     });
     return () => {
       console.log('Размонтируем /feed');
@@ -56,7 +55,7 @@ export function FeedPage() {
 
       {/* СЛЕВА: Секция с лентой заказов */}
         <section className={s.feedContent}>
-          <ScrollableList />
+          <ScrollableList isPersonal={false} />
         </section>
 
       {/* СПРАВА: Секция со статистикой */}

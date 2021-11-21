@@ -1,4 +1,5 @@
 import { getCookie } from '../../utils/cookie';
+import { getAccessTokenLiteral } from '../../utils/cookie';
 
 export const TOGGLE_MODAL_VISIBILITY = 'TOGGLE_MODAL_VISIBILITY';
 export const SET_CURRENT_MODAL_TYPE = 'SET_CURRENT_MODAL_TYPE';
@@ -57,7 +58,7 @@ export function getIngridientsData(url = '') {
 // отправляет API массив с инфой о заказе, затем меняет стейт редакса в зависимости от ответа
 export function postBurgerOrder(url = '', createPostBody) {
     return function (dispatch) {
-        fetch(url, {
+        fetch(url + `?token=${getAccessTokenLiteral()}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',

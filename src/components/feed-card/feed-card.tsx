@@ -13,6 +13,7 @@ export function FeedCard({ orderData }: TFeedCard) {
 
   const ingrData = useSelector((state: any) => state.burgerVendor.ingridientsData.arrOfIngridients);
 
+
   // собираем массив с данными об используемых ингридиентах
   let arrOfUsedIngr: [] | Array<TIngredientObjData> = [];
   let arrImages: Array<string> = []
@@ -39,8 +40,8 @@ export function FeedCard({ orderData }: TFeedCard) {
     }, 0);
   }
 
-  const getIcons = (url: string) => {
-    return (<div className={s.imgContainer} style={{ backgroundImage: `url(${url})` }}></div>)
+  const getIcons = (url: string, index: number) => {
+    return (<div className={s.imgContainer} style={{ backgroundImage: `url(${url})` }} key={index}></div>)
   }
 
   let normalizedPics = []
@@ -50,7 +51,7 @@ export function FeedCard({ orderData }: TFeedCard) {
   const formateArr = (arr: Array<string>) => {
 
     if (arr.length < 1) { // предохранитель, чтобы не было рендеринга undefined на некоторых этапах жизни компонента
-      return []; 
+      return [];
     }
 
     let normalizerArr = arr.map(i => i);
@@ -66,6 +67,7 @@ export function FeedCard({ orderData }: TFeedCard) {
 
   normalizedPics = formateArr(arrImages);
 
+
   return (
     <article className={s.main}>
       <div className={s.plane + ' mb-6'}>
@@ -76,7 +78,7 @@ export function FeedCard({ orderData }: TFeedCard) {
 
       <div className={s.plane}>
         <div className={s.iconsContainer}>
-          {/* {normalizedPics.map((img: string) => (getIcons(img)))} */}
+          {normalizedPics && normalizedPics.map((url: string, index) => (getIcons(url, index)))}
         </div>
 
         <div className={s.price}><span className={' text text_type_digits-default mr-2'}>{getPrice(arrOfUsedIngr)}</span><CurrencyIcon type="primary" /></div>

@@ -1,5 +1,8 @@
 .main {
   display: block;
+  display: flex;
+  flex-direction: column;
+  
 
   overflow-y: scroll;
 }
@@ -13,6 +16,12 @@
 }
 .main::-webkit-scrollbar-thumb {
   background: #8585ad;
+}
+
+.mainReversed {
+  composes: main;
+
+  flex-direction: column-reverse;
 }
 
 .temporary {

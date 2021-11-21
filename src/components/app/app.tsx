@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
-import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage } from '../../pages';
+import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage, ProfileOrdersPage } from '../../pages';
 
 type TLocationState = {
   background?: Location;
@@ -67,12 +67,12 @@ function App() {
           </ProtectedRoute>
 
           <ProtectedRoute path="/profile/orders" exact={true}>
-            /profile/orders — страница истории заказов пользователя. Доступен только авторизованным пользователям.
-            <br /><a href="/profile/orders/123">Страница заказа 123</a> {/* Не работает, что-то с правом доступа не то */}
+            <ProfileOrdersPage />
+
           </ProtectedRoute>
 
           <ProtectedRoute path="/profile/orders/:id">
-            /profile/orders/:id — страница заказа в истории заказов. Доступен только авторизованным пользователям.
+            {/* /profile/orders/:id — страница заказа в истории заказов. Доступен только авторизованным пользователям. */}
 
           </ProtectedRoute>
 
