@@ -27,3 +27,13 @@ export type TFindIngredientInStore = (targetIngrID: number) => {
 };
 
 export type TResortIngrList = (dragID: number, dropID: number) => void;
+
+export type TOrder = {
+  ingredients: string[];
+  _id: string;
+  status: 'status' | 'pending' | 'done';
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+}
