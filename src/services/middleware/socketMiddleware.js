@@ -63,7 +63,7 @@ export const socketMiddleware = (wsActions) => {
 
           dispatch({
             type: onGotOrders,
-            payload: parseData,
+            ordersData: parseData,
           });
         }
 

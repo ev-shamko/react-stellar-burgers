@@ -15,7 +15,8 @@ export function ScrollableList({ isPersonal }: TScrollableListProps) {
 
   let reversedOrdersList: Array<TOrder> = [];
   if (currentOrders && isPersonal) {
-    reversedOrdersList = currentOrders.reverse();
+    reversedOrdersList = currentOrders.slice();
+    reversedOrdersList = reversedOrdersList.reverse();
   }
 
   return (

@@ -2,9 +2,10 @@ import {
   WS_CONNECTED_SUCCESSFULLY, // соединение успешно открылось
   WS_ERROR, // возникла ошибка
   WS_GOT_ORDERS, // когда пришли данные о заказах
-  WS_SEND_MESSAGE, // отправка заказа на сервер
   WS_DISCONNECTED, // ws статус переменился на CLOSED
+  TwsActions // 
 } from '../actions/wsActions';
+import { TOrder } from '../../utils/types';
 
 // const initialState = {
 //   wsConnected: false,
@@ -12,28 +13,37 @@ import {
 //   ordersData: []
 // };
 
-const initialState = {
+export type TwsState = {
+  wsConnected: boolean,
+  wsError: boolean,
+  ordersData: TOrdersStoreData,
+  //   {
+  //     success: null | boolean,
+  //     orders: ReadonlyArray<TOrder>,
+  //     total: number,
+  //     totalToday: number,
+  // }
+}
+
+export type TOrdersStoreData = {
+    success: null | boolean,
+    orders: ReadonlyArray<TOrder>,
+    total: number,
+    totalToday: number,
+}
+
+const initialState: TwsState = {
   wsConnected: false,
   wsError: false,
   ordersData: {
     success: null,
-    orders: [ // TODO: здесь подробный initialstate зря, при рефакторинге убрать и добавить нормальные предохранители при рендеринге эленментов карточек
-      // {
-      //   _id: "619a2a6019cb95001bc35bed",
-      //   ingredients: ["60d3b41abdacab0026a733c7"],
-      //   status: 'pending',
-      //   name: "Краторный бургер",
-      //   createdAt: '2021-11-21T11:15:44.544Z',
-      //   updatedAt: '2021-11-21T11:15:44.544Z',
-      //   number: 1234,
-      // },
-    ],
+    orders: [],
     total: 0,
     totalToday: 0,
   }
 };
 
-export const wsReducer = (state = initialState, action) => {
+export const wsReducer = (state = initialState, action: TwsActions): TwsState => {
   switch (action.type) {
     case WS_CONNECTED_SUCCESSFULLY:
       return {
@@ -44,13 +54,13 @@ export const wsReducer = (state = initialState, action) => {
     case WS_GOT_ORDERS:
       return {
         ...state,
-        ordersData: action.payload,
+        ordersData: action.ordersData,
       };
     case WS_DISCONNECTED:
       return {
         ...state,
         wsConnected: false,
-        ordersData: []
+        // ordersData: []
       };
     case WS_ERROR:
       return {
