@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { appUseDispatch } from '../services/hooks';
-import { confirmAuth } from '../services/actions/userActions';
+import { confirmAuthThunk } from '../services/actions/userActions';
 import { wsActions } from '../services/actions/wsActions';
 import styles from './profile.module.css';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
@@ -25,7 +25,7 @@ export function ProfileOrdersPage() {
 
   useEffect(() => {
     console.log('Auth in /order');
-    dispatch(confirmAuth());
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
   useEffect(() => {

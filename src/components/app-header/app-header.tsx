@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import headerStyles from "./app-header.module.css";
 import { appUseDispatch } from '../../services/hooks';
-import { confirmAuth } from '../../services/actions/userActions';
+import { confirmAuthThunk } from '../../services/actions/userActions';
 import { Link } from 'react-router-dom';
 import {
   Logo,
@@ -19,7 +19,7 @@ function AppHeader() {
   const dispatch = appUseDispatch();
 
   useEffect(() => {
-    dispatch(confirmAuth());
+    dispatch(confirmAuthThunk());
     dispatch(getIngridientsData(urlApiGetIngridients));
   }, [dispatch]);
 

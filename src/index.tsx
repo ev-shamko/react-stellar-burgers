@@ -28,7 +28,7 @@ const store = createStore(rootReducer, enhancer); // вот при этом пл
 // ************** Типизация Redux
 
 // эту типизацию можно вынести в /services/types/index.ts   но здесь её держать удобнее и нагляднее. К тому же тут всего несколько строк
-export type RootState = ReturnType<typeof rootReducer>; // типизация redux-хранилища - - - можно <typeof rootReducer>  
+export type RootState = ReturnType<typeof rootReducer>; // типизация redux-хранилища  
 
 // Типизация метода dispatch для проверки на валидность отправляемого экшена
 export type AppDispatch = typeof store.dispatch;

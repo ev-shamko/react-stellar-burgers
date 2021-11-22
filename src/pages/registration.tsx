@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { appUseDispatch, appUseSelector } from '../services/hooks';
 import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
-import { confirmAuth, registerNewUser } from '../services/actions/userActions';
+import { confirmAuthThunk, registerNewUserThunk } from '../services/actions/userActions';
 
 import {
   Input,
@@ -18,7 +18,7 @@ export function RegistrationPage() {
 
   useEffect(() => {
     console.log('Auth in /registration');
-    dispatch(confirmAuth());
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
    // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
@@ -37,7 +37,7 @@ export function RegistrationPage() {
     e => {
       e.preventDefault();
       console.log('Sending registration request');
-      dispatch(registerNewUser(form));
+      dispatch(registerNewUserThunk(form));
 
       // if (true) {
       //   history.replace({ pathname: '/login' });

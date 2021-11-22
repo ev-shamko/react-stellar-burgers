@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
 import { appUseSelector, appUseDispatch } from '../services/hooks';
-import { confirmAuth, requestResetCode, } from '../services/actions/userActions';
+import { confirmAuthThunk, requestResetCodeThunk, } from '../services/actions/userActions';
 import {
   Input,
   Button,
@@ -11,7 +11,7 @@ import {
 
 export function ForgotPage() {
   const [form, setFormValues] = useState({ email: '' });
-  const { isLoggedIn, canResetPassword } = appUseSelector((store: any) => store.user);
+  const { isLoggedIn, canResetPassword } = appUseSelector((store) => store.user);
 
   // const history = useHistory();
   const dispatch = appUseDispatch();
@@ -25,7 +25,7 @@ export function ForgotPage() {
 
   useEffect(() => {
     console.log('Auth in /forgot-password');
-    dispatch(confirmAuth());
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +42,7 @@ export function ForgotPage() {
       //   type: ALLOW_RESET_PASSWORD,
       // });
 
-      dispatch(requestResetCode(form.email));
+      dispatch(requestResetCodeThunk(form.email));
 
       // if (true) { // после ушедшего запроса на сервер
       //   history.replace({ pathname: '/reset-password' });

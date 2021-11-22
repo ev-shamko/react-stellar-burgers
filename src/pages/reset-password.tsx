@@ -3,7 +3,7 @@ import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
 import { appUseSelector, appUseDispatch } from '../services/hooks';
 import { getCookie } from '../utils/cookie';
-import { setNewPassword } from '../services/actions/userActions';
+import { setNewPasswordThunk } from '../services/actions/userActions';
 
 import {
   Input,
@@ -33,7 +33,7 @@ export function ResetPassword() {
       console.log('newPassword', newPassword);
       console.log('resetCode', resetCode);
 
-      dispatch(setNewPassword(newPassword, resetCode));
+      dispatch(setNewPasswordThunk(newPassword, resetCode));
 
       setFormValues({ ...form, password: '' });
     }, [dispatch, form]

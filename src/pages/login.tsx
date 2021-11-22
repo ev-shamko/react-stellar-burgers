@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, Redirect, useLocation } from 'react-router-dom';
-import { logInAppThunk, confirmAuth } from '../services/actions/userActions';
+import { logInAppThunk, confirmAuthThunk } from '../services/actions/userActions';
 
 import { appUseDispatch, appUseSelector } from '../services/hooks';
 
@@ -23,7 +23,7 @@ export function LoginPage() {
   // автологин
   useEffect(() => {
     console.log('Auth in /login');
-    dispatch(confirmAuth());
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
   // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ

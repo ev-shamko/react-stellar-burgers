@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { appUseSelector, appUseDispatch } from '../services/hooks';
-import { confirmAuth, patchUserData } from '../services/actions/userActions';
+import { confirmAuthThunk, patchUserDataThunk } from '../services/actions/userActions';
 import styles from './profile.module.css';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
 
@@ -16,7 +16,7 @@ export function ProfilePage() {
   const dispatch = appUseDispatch();
 
   useEffect(() => {
-    dispatch(confirmAuth());
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
   // при загрузке компонента в поля поставятся имя и почта из стейта
@@ -32,7 +32,7 @@ export function ProfilePage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log('сабмитим изменения в профиле');
-    dispatch(patchUserData(form, setFormValues));
+    dispatch(patchUserDataThunk(form, setFormValues));
   }
   
   const handleCansel = (e: React.ChangeEvent<HTMLInputElement>) => {
