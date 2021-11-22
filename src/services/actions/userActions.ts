@@ -84,7 +84,7 @@ export interface IHasResetPassword {
 export type TUserActionsUnion = ILoginSuccessful | ISetUserData | ILoginFailed | ILogoutSuccessful | IAllowResetPassword | IHasResetPassword;
 
 
-
+// Миддлвары для thunk:
 
 export function registerNewUser(data: TUserForm) {
   console.log('Начинаем регистрацию нового пользователя');

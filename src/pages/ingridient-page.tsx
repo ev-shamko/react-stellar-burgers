@@ -18,6 +18,7 @@ export function IngridientPage() {
 
   // запрашиваем у сервера массив ингридиентов. 
   // Поскольку переход на данную страницу возможен только по прямой ссылке /ingredients/:id, store будет дефолтным, и нам всегда нужно получить массив ингридиентов для отображения конкретного ингридиента
+  //@ts-ignore
   React.useEffect(() => dispatch(getIngridientsData(urlApiGetIngridients)), [dispatch]);
 
   let ingridientProp = arrOfIngridients.find((ingr: TIngredientObjData) => ingr._id === id);

@@ -41,6 +41,7 @@ function BurgerVendor() {
 
   // фетч произойдёт после первичного рендера App
   // в dispatch передана функция, что возможно благодаря thunk
+  //@ts-ignore
   useEffect(() => dispatch(getIngridientsData(urlApiGetIngridients)), [dispatch]);
 
 

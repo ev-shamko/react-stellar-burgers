@@ -1,4 +1,7 @@
 import update from "immutability-helper"; // этот пакет для ресортировки массива, хранящегося в стейте
+import { TBurgerVendorAcrtionsUnion } from '../actions/burgerVendor';
+
+import { TOrderData, TDraggableIngr, TIngredientObjData, TModalType } from '../../utils/types';
 
 import {
     TOGGLE_MODAL_VISIBILITY,
@@ -18,6 +21,21 @@ import {
     RESORT_DRAGGABLE_INGRIDIENTS,
 } from '../actions/burgerVendor';
 
+export type TBurgerVendorInitialState = {
+    ingridientsData: {
+        arrOfIngridients: Array<TIngredientObjData>,
+        ingrDataIsLoading: boolean,
+        ingrDataHasError: boolean,
+    }
+    bun: TIngredientObjData,
+    draggableIngridients: Array<TDraggableIngr>,
+
+    modalIsVisible: boolean,
+    currentModalType: TModalType,
+    ingrInModalData: TIngredientObjData,
+    orderData: TOrderData,
+
+}
 
 const initialState = {
     ingridientsData: {
@@ -41,12 +59,12 @@ const initialState = {
 // создание редьюсера
 // выполняю рекомендацию к проекту: на данном этапе собираю все редьюсеры в одном файле
 
-export const burgerVendorReducer = (state = initialState, action) => {
+export const burgerVendorReducer = (state = initialState, action: TBurgerVendorAcrtionsUnion) => {
     switch (action.type) {
         case TOGGLE_MODAL_VISIBILITY: {
             return {
                 ...state,
-                modalIsVisible: action.value, // true/false
+                modalIsVisible: action.value,
             }
         }
         case SET_CURRENT_MODAL_TYPE: {
@@ -62,7 +80,6 @@ export const burgerVendorReducer = (state = initialState, action) => {
             }
         }
         case SET_ORDER_STATE: {
-            console.log('SET_ORDER_STATE: ', action.value)
             return {
                 ...state,
                 orderData: action.value, // {}
@@ -103,7 +120,7 @@ export const burgerVendorReducer = (state = initialState, action) => {
         case SET_MODAL_TYPE: {
             return {
                 ...state,
-                currentModalType: action.value, // 'none' / 'IngridientDetails' / 'OrderDetails'
+                currentModalType: action.value,
             }
         }
         case ADD_BUN: {
@@ -114,9 +131,10 @@ export const burgerVendorReducer = (state = initialState, action) => {
         }
         case ADD_SAUCE: {
             const instanceID = (new Date()).getTime(); // лучше сделать гарантированно уникальный id, иначе забагует DND
-            const objIngridientWithId = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID (instanceID), он нужен для DND-ресортировки в конструкторе бургера. Почему называется obj.instanceID, а не просто obj.id? Потому что внутри таких объектов уже есть свойство obj._id, и оно не уникально для массива draggableInghidients, т.к. в массив можно добавить несколько одинаковых ингридиентов с одним и тем же obj._id. И ещё лично мне легко перепутать obj._id и ob.id - слишком похожее написание.
+            const objIngridientWithId: TDraggableIngr = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID (instanceID), он нужен для DND-ресортировки в конструкторе бургера. Почему называется obj.instanceID, а не просто obj.id? Потому что внутри таких объектов уже есть свойство obj._id, и оно не уникально для массива draggableInghidients, т.к. в массив можно добавить несколько одинаковых ингридиентов с одним и тем же obj._id. И ещё лично мне легко перепутать obj._id и ob.id - слишком похожее написание.
             return {
                 ...state,
+                //@ts-ignore
                 draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
             }
         }
@@ -125,6 +143,7 @@ export const burgerVendorReducer = (state = initialState, action) => {
             const objInstance = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный instanceID, он нужен для DND-ресортировки в конструкторе бургера
             return {
                 ...state,
+                //@ts-ignore
                 draggableIngridients: state.draggableIngridients.concat(objInstance)  // добавляем в исходный массив объектов новый объект
             };
         }
