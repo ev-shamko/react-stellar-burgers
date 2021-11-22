@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { appUseSelector, appUseDispatch } from '../services/hooks';
 import { confirmAuth, patchUserData } from '../services/actions/userActions';
 import styles from './profile.module.css';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
@@ -12,9 +11,9 @@ import {
 
 export function ProfilePage() {
   const [form, setFormValues] = useState({ name: '', email: '', password: '' });
-  const { userName, userEmail } = useSelector((state: any) => state.user);
+  const { userName, userEmail } = appUseSelector((state) => state.user);
 
-  const dispatch = useDispatch();
+  const dispatch = appUseDispatch();
 
   useEffect(() => {
     dispatch(confirmAuth());

@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from 'react-redux';
+import { appUseSelector } from '../../services/hooks';
 
 import { FeedCard } from '../feed-card/feed-card';
 import s from './scrollable-list.module.css';
@@ -11,7 +11,7 @@ type TScrollableListProps = {
 
 export function ScrollableList({ isPersonal }: TScrollableListProps) {
 
-  const currentOrders: Array<TOrder> = useSelector((store: any) => store.ws.ordersData.orders);
+  const currentOrders: ReadonlyArray<TOrder> = appUseSelector((store) => store.ws.ordersData.orders);
 
   let reversedOrdersList: Array<TOrder> = [];
   if (currentOrders && isPersonal) {

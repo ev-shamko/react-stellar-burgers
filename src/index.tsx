@@ -4,12 +4,15 @@ import './index.css';
 import App from './components/app/app';
 //import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
+
 import { createStore, compose, applyMiddleware } from 'redux';
 import { rootReducer } from './services/reducers/index';
-// import { initStore } from './services/store';
-import { wsCreatedMiddleware } from './services/store';
-import { Provider } from 'react-redux';
+import { wsCreatedMiddleware, TApplicationActionsUnion } from './services/store';
+import { Action, ActionCreator } from 'redux';
+import { ThunkAction } from 'redux-thunk';
 import thunk from 'redux-thunk';
+
+import { Provider } from 'react-redux';
 
 // следующие две переменные нужны для подключения Redux Devtools
 const composeEnhancers =
@@ -20,8 +23,24 @@ const composeEnhancers =
 
 const enhancer = composeEnhancers(applyMiddleware(thunk, wsCreatedMiddleware));
 const store = createStore(rootReducer, enhancer); // вот при этом плагин Redux DevTools работает
-
 // const store = createStore(rootReducer, applyMiddleware(thunk));  // если так, то не работает Redux DevTools
+
+// ************** Типизация Redux
+
+// эту типизацию можно вынести в /services/types/index.ts   но здесь её держать удобнее и нагляднее. К тому же тут всего несколько строк
+export type RootState = ReturnType<typeof rootReducer>; // типизация redux-хранилища - - - можно <typeof rootReducer>  
+
+// Типизация метода dispatch для проверки на валидность отправляемого экшена
+export type AppDispatch = typeof store.dispatch;
+
+// Типизация thunk'ов в нашем приложении
+// "thunk — это функция которая возвращает другую функцию, в замыкании которой есть метод dispatch и которая может вернуть (а может и не вернуть) какой-то результат 🤯" (с)
+export type AppThunk<ReturnType = void> = ActionCreator<ThunkAction<ReturnType, Action, RootState, TApplicationActionsUnion>>; // это, конечно, совершенно чудовищная конструкция
+
+
+
+// ************** 
+
 
 ReactDOM.render(
   <React.StrictMode>

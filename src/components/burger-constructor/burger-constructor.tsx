@@ -4,7 +4,8 @@ import { useCallback } from "react";
 import crStyles from "./burger-constructor.module.css";
 import DraggableItem from "../draggable-item/draggable-item";
 import { useDrop } from "react-dnd";
-import { useDispatch, useSelector } from 'react-redux';
+import { appUseSelector, appUseDispatch } from '../../services/hooks';
+
 import { useHistory } from 'react-router-dom';
 import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
 
@@ -25,11 +26,11 @@ import {
 import { urlApiPostOrder } from '../../utils/api-url';
 
 function BurgerConstructor() {
-  const dispatch = useDispatch();
+  const dispatch = appUseDispatch();
   const history = useHistory();
 
   // стейты с данными об ингридиентах бургера
-  const { chosenBun, chosenDraggableIngr, isLoggedIn } = useSelector((store: any) => ({ // TODO: типизируем в следующем спринте
+  const { chosenBun, chosenDraggableIngr, isLoggedIn } = appUseSelector((store: any) => ({ // TODO: типизируем в следующем спринте
     chosenBun: store.burgerVendor.bun,
     chosenDraggableIngr: store.burgerVendor.draggableIngridients,
     isLoggedIn: store.user.isLoggedIn,

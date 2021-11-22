@@ -10,6 +10,7 @@ import {
 } from '../../utils/api-fetch';
 import { setCookie, deleteCookie, getCookie } from '../../utils/cookie';
 import { TUserForm, TLoginForm } from '../../utils/types';
+import { AppDispatch, AppThunk } from '../../index';
 
 export const LOGIN_SUCCESSFUL: 'LOGIN_SUCCESSFUL' = 'LOGIN_SUCCESSFUL';
 export const SET_USER_DATA: 'SET_USER_DATA' = 'SET_USER_DATA';
@@ -59,9 +60,9 @@ export interface ILoginFailed {
 
 export interface ILogoutSuccessful {
   readonly type: typeof LOGOUT_SUCCESSFUL;
-  readonly isLoggedIn: boolean,
-  readonly name: '',
-  readonly email: '',
+  // readonly isLoggedIn: boolean,
+  // readonly name: '',
+  // readonly email: '',
 }
 
 // *****
@@ -89,8 +90,8 @@ export type TUserActionsUnion = ILoginSuccessful | ISetUserData | ILoginFailed |
 export function registerNewUser(data: TUserForm) {
   console.log('Начинаем регистрацию нового пользователя');
   console.log('data: ', data);
-  //@ts-ignore
-  return function (dispatch) {
+
+  return function (dispatch: AppDispatch) {
     fetchUserRegistration(data)
       .then(({ user, accessToken, refreshToken }) => {
         // поскольку после успешной регистрации сервер возвращает токены и юзернейм, есть смысл автоматом залогинить юзера
@@ -98,6 +99,7 @@ export function registerNewUser(data: TUserForm) {
           type: LOGIN_SUCCESSFUL,
           name: user.name,
           email: user.email,
+          isLoggedIn: true,
         });
         setCookie("accessToken", accessToken, { expires: 20 * 60 });
         localStorage.setItem('refreshToken', refreshToken);
@@ -109,9 +111,9 @@ export function registerNewUser(data: TUserForm) {
   }
 }
 
-export function logInApp(data: TLoginForm) {
-  //@ts-ignore
-  return function (dispatch) {
+export const logInAppThunk: AppThunk = (data: TLoginForm) => {
+
+  return function (dispatch: AppDispatch) {
     fetchLogIn(data)
       .then(({ user, accessToken, refreshToken, success }) => {
         if (success === true) {
@@ -119,6 +121,8 @@ export function logInApp(data: TLoginForm) {
             type: LOGIN_SUCCESSFUL,
             name: user.name,
             email: user.email,
+            isLoggedIn: true,
+
           });
 
           setCookie("accessToken", accessToken, { expires: 20 * 60 });
@@ -128,18 +132,20 @@ export function logInApp(data: TLoginForm) {
       .catch(err => {
         dispatch({
           type: LOGIN_FAILED,
+          isLoggedIn: false,
+          name: '',
+          email: '',
         });
 
         console.log('Ошибка при авторизации по логину и паролю');
-        return console.log(err);
+        console.log(err);
       });
   };
 }
 
-export function logOut() {
-  //@ts-ignore
+export const logOutThunk: AppThunk = () => {
 
-  return function (dispatch) {
+  return function (dispatch: AppDispatch) {
     console.log('Logging you out, Shepard'); // ;-)
 
     fetchLogOut()
@@ -152,14 +158,14 @@ export function logOut() {
           localStorage.removeItem('refreshToken');
 
           dispatch({
-            type: LOGOUT_SUCCESSFUL
+            type: LOGOUT_SUCCESSFUL,
           });
           console.log('Logged out successfully');
         }
       })
       .catch(err => {
         console.log('Ошибка при разлогинивании');
-        return console.log(err);
+        console.log(err);
       });
   };
 }

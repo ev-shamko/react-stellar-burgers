@@ -3,7 +3,7 @@ import {
   WS_ERROR, // возникла ошибка
   WS_GOT_ORDERS, // когда пришли данные о заказах
   WS_DISCONNECTED, // ws статус переменился на CLOSED
-  TwsActions // 
+  TwsActionsUnion // 
 } from '../actions/wsActions';
 import { TOrder } from '../../utils/types';
 
@@ -13,24 +13,20 @@ import { TOrder } from '../../utils/types';
 //   ordersData: []
 // };
 
+
+export type TOrdersStoreData = {
+  success: null | boolean,
+  orders: ReadonlyArray<TOrder>,
+  total: number,
+  totalToday: number,
+}
+
 export type TwsState = {
   wsConnected: boolean,
   wsError: boolean,
   ordersData: TOrdersStoreData,
-  //   {
-  //     success: null | boolean,
-  //     orders: ReadonlyArray<TOrder>,
-  //     total: number,
-  //     totalToday: number,
-  // }
 }
 
-export type TOrdersStoreData = {
-    success: null | boolean,
-    orders: ReadonlyArray<TOrder>,
-    total: number,
-    totalToday: number,
-}
 
 const initialState: TwsState = {
   wsConnected: false,
@@ -43,7 +39,7 @@ const initialState: TwsState = {
   }
 };
 
-export const wsReducer = (state = initialState, action: TwsActions): TwsState => {
+export const wsReducer = (state = initialState, action: TwsActionsUnion): TwsState => {
   switch (action.type) {
     case WS_CONNECTED_SUCCESSFULLY:
       return {
@@ -60,7 +56,7 @@ export const wsReducer = (state = initialState, action: TwsActions): TwsState =>
       return {
         ...state,
         wsConnected: false,
-        // ordersData: []
+        ordersData: initialState.ordersData // предпочитаю обнулить данные о заказах, чтобы при переходе на разные фиды там не отображались поначалу данные из предыдущего фида
       };
     case WS_ERROR:
       return {

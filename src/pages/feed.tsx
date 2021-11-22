@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { appUseSelector, appUseDispatch } from '../services/hooks';
 import { ScrollableList } from '../components/scrollable-list/scrollable-list';
-import { confirmAuth, patchUserData } from '../services/actions/userActions';
 import { wsActions } from '../services/actions/wsActions';
 import { TOrder } from '../utils/types';
 import s from './feed.module.css';
 
 export function FeedPage() {
 
-  const dispatch = useDispatch();
+  const dispatch = appUseDispatch();
 
-  const currentOrders: Array<TOrder> = useSelector((store: any) => store.ws.ordersData.orders);
-  const ordersTotalToday = useSelector((store: any) => store.ws.ordersData.totalToday);
-  const ordersTotalEver = useSelector((store: any) => store.ws.ordersData.total);
+  const currentOrders: ReadonlyArray<TOrder> = appUseSelector((store) => store.ws.ordersData.orders);
+  const ordersTotalToday = appUseSelector((store) => store.ws.ordersData.totalToday);
+  const ordersTotalEver = appUseSelector((store) => store.ws.ordersData.total);
 
   // массивы для хранения выполненных и готовящихся заказов
   const оrdersDone: number[] = [];

@@ -21,23 +21,23 @@ import {
     RESORT_DRAGGABLE_INGRIDIENTS,
 } from '../actions/burgerVendor';
 
-export type TBurgerVendorInitialState = {
+export type TBurgerVendorReducer = {
     ingridientsData: {
         arrOfIngridients: Array<TIngredientObjData>,
         ingrDataIsLoading: boolean,
         ingrDataHasError: boolean,
     }
-    bun: TIngredientObjData,
+    bun: TIngredientObjData | {},
     draggableIngridients: Array<TDraggableIngr>,
 
     modalIsVisible: boolean,
     currentModalType: TModalType,
-    ingrInModalData: TIngredientObjData,
+    ingrInModalData: TIngredientObjData | {},
     orderData: TOrderData,
 
 }
 
-const initialState = {
+const initialState: TBurgerVendorReducer = {
     ingridientsData: {
         arrOfIngridients: [],
         ingrDataIsLoading: false,
@@ -53,13 +53,19 @@ const initialState = {
     currentModalType: 'none',
     ingrInModalData: {}, // TODO: переименовать в ingrDataInModal
 
-    orderData: {},
+    orderData: {
+        success: false,
+        name: '',
+        order: {
+            number: '',
+        },
+    }
 };
 
 // создание редьюсера
 // выполняю рекомендацию к проекту: на данном этапе собираю все редьюсеры в одном файле
 
-export const burgerVendorReducer = (state = initialState, action: TBurgerVendorAcrtionsUnion) => {
+export const burgerVendorReducer = (state = initialState, action: TBurgerVendorAcrtionsUnion): TBurgerVendorReducer => {
     switch (action.type) {
         case TOGGLE_MODAL_VISIBILITY: {
             return {
@@ -99,9 +105,9 @@ export const burgerVendorReducer = (state = initialState, action: TBurgerVendorA
             return {
                 ...state,
                 ingridientsData: {
-                    ingridientsData: [],
-                    isLoading: false,
-                    hasError: true
+                    arrOfIngridients: [],
+                    ingrDataIsLoading: false,
+                    ingrDataHasError: true
                 },
             }
         }

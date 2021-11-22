@@ -27,7 +27,7 @@ const initialState: TUserState = {
 
 };
 
-export const userReducer = (state = initialState, action: TUserActionsUnion) => {
+export const userReducer = (state = initialState, action: TUserActionsUnion): TUserState => {
   switch (action.type) {
     case LOGIN_SUCCESSFUL: {
       return {

@@ -9,7 +9,7 @@ import OrderDetails from '../order-details/order-details';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { useSelector, useDispatch } from 'react-redux';
+import { appUseSelector, appUseDispatch } from '../../services/hooks';
 
 import {
   getIngridientsData,
@@ -20,13 +20,13 @@ import { urlApiGetIngridients } from '../../utils/api-url';
 
 function BurgerVendor() {
 
-  const dispatch = useDispatch();
+  const dispatch = appUseDispatch();
 
   /******************************************************** */
   /******      Импорт стейтов из редакса        ********* */
   /****************************************************** */
 
-  const { modalIsVisible, currentModalType, arrOfIngridients, dataIsLoading, dataHasError } = useSelector((store: any) => ({
+  const { modalIsVisible, currentModalType, arrOfIngridients, dataIsLoading, dataHasError } = appUseSelector((store: any) => ({
     modalIsVisible: store.burgerVendor.modalIsVisible,
     currentModalType: store.burgerVendor.currentModalType,
     ingrInModalData: store.burgerVendor.ingrInModalData,

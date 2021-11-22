@@ -1,5 +1,6 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { appUseSelector } from '../../services/hooks';
+
 import s from './feed-card.module.css';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { TOrder, TIngredientObjData } from '../../utils/types';
@@ -12,7 +13,7 @@ type TFeedCard = {
 
 export function FeedCard({ orderData, isPersonal }: TFeedCard) {
 
-  const ingrData = useSelector((state: any) => state.burgerVendor.ingridientsData.arrOfIngridients);
+  const ingrData = appUseSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
 
 
   // собираем массив с данными об используемых ингридиентах

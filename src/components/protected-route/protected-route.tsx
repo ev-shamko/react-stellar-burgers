@@ -1,13 +1,11 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-// import { confirmAuth } from '../../services/actions/userActions';
+import { appUseSelector } from '../../services/hooks';
 import { RouteProps } from 'react-router';
 
 export function ProtectedRoute({ children, ...rest }: RouteProps) {
-  // const dispatch = useDispatch();
 
-  const { isLoggedIn } = useSelector( (store: any) => store.user); // TODO: типизируем в следующем спринте
+  const { isLoggedIn } = appUseSelector( (store) => store.user);
 
 
   // useEffect(() => {

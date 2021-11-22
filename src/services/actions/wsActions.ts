@@ -108,4 +108,4 @@ export const onCloseAction = (): IonCloseAction => {
 }
 
 // это union-тип, объединяющий в себе все типы экшенов
-export type TwsActions = IopenConnectionAction | IonOpenAction | IonErrorAction | IonGotOrdersAction | IsendMessageAction | IcloseConnectionAction | IcloseConnectionAction | IonCloseAction;
+export type TwsActionsUnion = IopenConnectionAction | IonOpenAction | IonErrorAction | IonGotOrdersAction | IsendMessageAction | IcloseConnectionAction | IcloseConnectionAction | IonCloseAction;

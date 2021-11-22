@@ -5,15 +5,15 @@ import { useHistory } from 'react-router-dom';
 import modalStyles from './modal.module.css';
 import ModalOverlay from './modal-overlay/modal-overlay';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { appUseDispatch } from '../../services/hooks';
 
-import { useDispatch } from 'react-redux';
 import {
     CLOSE_MODAL,
     SET_MODAL_TYPE,
 } from '../../services/actions/burgerVendor';
 
 const Modal: FC = ({ children }) => {
-    const dispatch = useDispatch();
+    const dispatch = appUseDispatch();
     const history = useHistory();
     const modalRoot = document.getElementById("react-modals") as HTMLElement;
 

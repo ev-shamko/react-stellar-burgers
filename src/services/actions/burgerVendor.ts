@@ -40,7 +40,7 @@ export interface ISetOrderState {
 
 export interface IIngrFetchSuccess {
     readonly type: typeof INGRIDIENT_FETCH_SUCCESS,
-    readonly value: TIngredientObjData,
+    readonly value: Array<TIngredientObjData>,
 }
 
 export interface IIngrFetchError {
@@ -117,6 +117,7 @@ export function getIngridientsData(url = '') {
                     console.log(`Didn't find array in res.data  :-(   Probably got wrong response from ${url}`);
                     return Promise.reject(res);
                 }
+                console.log('ATTENTION: res.data ingridients', res.data)
                 dispatch({
                     type: INGRIDIENT_FETCH_SUCCESS,
                     value: res.data,

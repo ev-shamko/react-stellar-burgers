@@ -2,16 +2,17 @@ import React, { useState, FC } from 'react';
 import styles from './profile-menu.module.css';
 import { ProfileTab } from '../profile-tab/profile-tab';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { logOut } from '../../services/actions/userActions';
+import { logOutThunk } from '../../services/actions/userActions';
 import { TProfileMenuTabsValue } from '../../utils/types';
+
+import { appUseDispatch } from '../../services/hooks';
 
 type TProfileMenuProps = { activeTab: TProfileMenuTabsValue };
 
 export const ProfileMenu: FC<TProfileMenuProps> = ({ activeTab }) => {
   const [currentTab] = useState(activeTab);
   const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = appUseDispatch();
 
   const handleTabClick = (value: TProfileMenuTabsValue) => {
     if (value === 'profile') {
@@ -24,7 +25,7 @@ export const ProfileMenu: FC<TProfileMenuProps> = ({ activeTab }) => {
 
     if (value === 'logOut') {
       console.log('Gonna try to log you out');
-      dispatch(logOut());
+      dispatch(logOutThunk());
     }
   }
 

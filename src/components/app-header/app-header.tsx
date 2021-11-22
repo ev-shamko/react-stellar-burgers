@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import headerStyles from "./app-header.module.css";
-import { useDispatch } from 'react-redux';
+import { appUseDispatch } from '../../services/hooks';
 import { confirmAuth } from '../../services/actions/userActions';
 import { Link } from 'react-router-dom';
 import {
@@ -16,7 +16,7 @@ import {
 import { urlApiGetIngridients } from '../../utils/api-url';
 
 function AppHeader() {
-  const dispatch = useDispatch();
+  const dispatch = appUseDispatch();
 
   useEffect(() => {
     dispatch(confirmAuth());

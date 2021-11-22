@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useDispatch } from 'react-redux';
+import { appUseDispatch } from '../services/hooks';
 import { confirmAuth } from '../services/actions/userActions';
 import { wsActions } from '../services/actions/wsActions';
 import styles from './profile.module.css';
@@ -11,7 +11,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 export function ProfileOrdersPage() {
-  const dispatch = useDispatch();
+  const dispatch = appUseDispatch();
 
   // const getAccessTokenLiteral = (): string => {
   //   let str = getCookie('accessToken');

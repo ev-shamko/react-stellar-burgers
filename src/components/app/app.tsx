@@ -8,7 +8,7 @@ import { Location } from 'history';
 
 import Modal from '../modal/modal';
 import IngredientDetais from '../ingridient-details/ingridient-details';
-import { useSelector } from 'react-redux';
+import { appUseSelector } from '../../services/hooks';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
@@ -30,7 +30,7 @@ function App() {
   let background = location.state && location.state.background;
   console.log('background', background);
 
-  const { modalIsVisible, ingrInModalData } = useSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
+  const { modalIsVisible, ingrInModalData } = appUseSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
 
   // фикс, чтобы при перезагрузке с url ингридиента открывалась отдельная страница, а не попап
   React.useEffect(() => {

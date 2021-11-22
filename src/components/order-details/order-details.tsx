@@ -1,11 +1,10 @@
 import React, { FC } from 'react';
 import stylesOD from './order-details.module.css';
-import { useSelector } from 'react-redux';
+import { appUseSelector } from '../../services/hooks';
 
 
-// <OrderDetails orderData={orderData} />
 const OrderDetais: FC = () => {
-    const orderState = useSelector((store: any) => store.burgerVendor.orderData);
+    const orderState = appUseSelector((store) => store.burgerVendor.orderData);
 
     return (
         <>

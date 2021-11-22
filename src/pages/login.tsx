@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, Redirect, useLocation } from 'react-router-dom';
-import { logInApp, confirmAuth } from '../services/actions/userActions';
-import { useSelector, useDispatch } from 'react-redux';
+import { logInAppThunk, confirmAuth } from '../services/actions/userActions';
+
+import { appUseDispatch, appUseSelector } from '../services/hooks';
+
 import {
   Input,
   PasswordInput,
@@ -11,8 +13,8 @@ import {
 
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
-  const { isLoggedIn } = useSelector((store: any): any => store.user); // TODO: типизируем в следующем спринте
-  const dispatch = useDispatch();
+  const { isLoggedIn } = appUseSelector((store) => store.user); // TODO: типизируем в следующем спринте
+  const dispatch = appUseDispatch();
 
   // https://reactrouter.com/web/api/Hooks/uselocation
   // https://reactrouter.com/web/api/location 
@@ -45,7 +47,7 @@ export function LoginPage() {
       console.log('Sending login request');
       console.log(form);
 
-      dispatch(logInApp(form));
+      dispatch(logInAppThunk(form));
     },
     [form, dispatch]
   );
