@@ -4,24 +4,12 @@ import { confirmAuthThunk } from '../services/actions/userActions';
 import { wsActions } from '../services/actions/wsActions';
 import styles from './profile.module.css';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
-import { getCookie, getAccessTokenLiteral } from '../utils/cookie';
+import { getAccessTokenLiteral } from '../utils/cookie';
+import { wsOrders } from '../utils/api-url';
 import { ScrollableList } from '../components/scrollable-list/scrollable-list';
-import {
-  Button,
-} from '@ya.praktikum/react-developer-burger-ui-components';
 
 export function ProfileOrdersPage() {
   const dispatch = appUseDispatch();
-
-  // const getAccessTokenLiteral = (): string => {
-  //   let str = getCookie('accessToken');
-  //   if (str) {
-  //     str = str.split("Bearer ")[1]
-  //   } else {
-  //     str = '';
-  //   }
-  //   return str;
-  // }
 
   useEffect(() => {
     console.log('Auth in /order');
@@ -31,8 +19,7 @@ export function ProfileOrdersPage() {
   useEffect(() => {
     dispatch({
       type: wsActions.openConnection,
-      url: `wss://norma.nomoreparties.space/orders?token=${getAccessTokenLiteral()}`,
-      // `wss://norma.nomoreparties.space/orders?token=${ token?.split("Bearer ")[1]} `
+      url: wsOrders + `?token=${getAccessTokenLiteral()}`,     
     });
     return () => {
       console.log('Размонтируем /feed');

@@ -3,6 +3,7 @@ import { appUseSelector, appUseDispatch } from '../services/hooks';
 import { ScrollableList } from '../components/scrollable-list/scrollable-list';
 import { wsActions } from '../services/actions/wsActions';
 import { TOrder } from '../utils/types';
+import { wsAllOrders } from '../utils/api-url';
 import s from './feed.module.css';
 
 export function FeedPage() {
@@ -36,7 +37,7 @@ export function FeedPage() {
   useEffect(() => {
     dispatch({
       type: wsActions.openConnection,
-      url: "wss://norma.nomoreparties.space/orders/all", 
+      url: wsAllOrders, 
     });
     return () => {
       console.log('Размонтируем /feed');
