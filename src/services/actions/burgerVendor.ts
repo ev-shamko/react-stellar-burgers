@@ -1,6 +1,8 @@
 import { getCookie } from '../../utils/cookie';
 import { getAccessTokenLiteral } from '../../utils/cookie';
-import { TIngredientObjData, TOrderData, TIngrData, TDraggableIngr, TModalType } from '../../utils/types';
+import { TIngredientObjData, TOrderData, TDraggableIngr, TModalType } from '../../utils/types';
+import { AppDispatch, AppThunk } from '../../index';
+
 
 export const TOGGLE_MODAL_VISIBILITY: 'TOGGLE_MODAL_VISIBILITY' = 'TOGGLE_MODAL_VISIBILITY';
 export const SET_CURRENT_MODAL_TYPE: 'SET_CURRENT_MODAL_TYPE' = 'SET_CURRENT_MODAL_TYPE';
@@ -98,9 +100,9 @@ export type TBurgerVendorAcrtionsUnion = IToggleModalVisibility | ISetCurrentMod
 // Миддлвары для thunk:
 
 // запрос к серверу для получения списка доступных ингридиентов бургера
-export function getIngridientsData(url = '') {
+export const  getIngridientsDataThunk: AppThunk = (url = '') => {
     //@ts-ignore
-    return function (dispatch) {
+    return function (dispatch: AppDispatch) {
         fetch(url)
             .then((res) => {
                 /* https://github.com/ev-shamko/react-stellar-burgers/pull/2#discussion_r648116469 
@@ -136,9 +138,9 @@ export function getIngridientsData(url = '') {
 };
 
 // отправляет API массив с инфой о заказе, затем меняет стейт редакса в зависимости от ответа
-export function postBurgerOrder(url = '', createPostBody: any) {
+export const  postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) => {
     //@ts-ignore
-    return function (dispatch) {
+    return function (dispatch: AppDispatch) {
         fetch(url + `?token=${getAccessTokenLiteral()}`, {
             method: 'POST',
             //@ts-ignore getCookie может вернуть undefined, это не страшно

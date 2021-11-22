@@ -12,7 +12,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { appUseSelector, appUseDispatch } from '../../services/hooks';
 
 import {
-  getIngridientsData,
+  getIngridientsDataThunk,
 } from '../../services/actions/burgerVendor';
 
 // временно захардкодено
@@ -42,7 +42,7 @@ function BurgerVendor() {
   // фетч произойдёт после первичного рендера App
   // в dispatch передана функция, что возможно благодаря thunk
   //@ts-ignore
-  useEffect(() => dispatch(getIngridientsData(urlApiGetIngridients)), [dispatch]);
+  useEffect(() => dispatch(getIngridientsDataThunk(urlApiGetIngridients)), [dispatch]);
 
 
   /******************************************************** */

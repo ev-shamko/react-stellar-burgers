@@ -11,7 +11,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
 import {
-  getIngridientsData,
+  getIngridientsDataThunk,
 } from '../../services/actions/burgerVendor';
 import { urlApiGetIngridients } from '../../utils/api-url';
 
@@ -20,7 +20,7 @@ function AppHeader() {
 
   useEffect(() => {
     dispatch(confirmAuthThunk());
-    dispatch(getIngridientsData(urlApiGetIngridients));
+    dispatch(getIngridientsDataThunk(urlApiGetIngridients));
   }, [dispatch]);
 
   return (

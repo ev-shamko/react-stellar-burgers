@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
 
 import {
-  postBurgerOrder,
+  postBurgerOrderThunk,
   ADD_BUN,
   ADD_SAUCE,
   ADD_MAIN,
@@ -164,7 +164,7 @@ function BurgerConstructor() {
       return (history.push({ pathname: '/login' }));
     }
 
-    return dispatch(postBurgerOrder(urlApiPostOrder, createPostBody));
+    return dispatch(postBurgerOrderThunk(urlApiPostOrder, createPostBody));
   };
 
   return (
