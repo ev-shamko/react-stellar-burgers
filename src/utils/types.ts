@@ -37,3 +37,14 @@ export type TOrder = {
   updatedAt: string;
   name: string;
 }
+
+export type TUserForm = {
+  email: string,
+  name: string,
+  password: string,
+}
+
+export type TLoginForm = {
+  email: string,
+  password: string,
+}

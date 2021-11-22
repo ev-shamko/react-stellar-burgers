@@ -7,18 +7,27 @@ import {
   HAS_RESET_PASSWORD,
 } from '../actions/userActions';
 
-const initialState = {
+import { TUserActionsUnion } from '../actions/userActions';
+
+export type TUserState = {
+  isLoggedIn: boolean,
+  userName: string,
+  userEmail: string,
+  canResetPassword: boolean,
+  hasResetPassword: boolean,
+
+};
+
+const initialState: TUserState = {
   isLoggedIn: false,
   userName: '',
   userEmail: '',
-
-
   canResetPassword: false,
   hasResetPassword: false,
 
 };
 
-export const userReducer = (state = initialState, action) => {
+export const userReducer = (state = initialState, action: TUserActionsUnion) => {
   switch (action.type) {
     case LOGIN_SUCCESSFUL: {
       return {

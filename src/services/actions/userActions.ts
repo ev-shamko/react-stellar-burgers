@@ -9,17 +9,87 @@ import {
   fetchChangeUserData,
 } from '../../utils/api-fetch';
 import { setCookie, deleteCookie, getCookie } from '../../utils/cookie';
+import { TUserForm, TLoginForm } from '../../utils/types';
 
-export const LOGIN_SUCCESSFUL = 'LOGIN_SUCCESSFUL';
-export const SET_USER_DATA = 'SET_USER_DATA';
-export const LOGIN_FAILED = 'LOGIN_FAILED';
-export const LOGOUT_SUCCESSFUL = 'LOGOUT_SUCCESSFUL';
-export const ALLOW_RESET_PASSWORD = 'ALLOW_RESET_PASSWORD';
-export const HAS_RESET_PASSWORD = 'HAS_RESET_PASSWORD';
+export const LOGIN_SUCCESSFUL: 'LOGIN_SUCCESSFUL' = 'LOGIN_SUCCESSFUL';
+export const SET_USER_DATA: 'SET_USER_DATA' = 'SET_USER_DATA';
+export const LOGIN_FAILED: 'LOGIN_FAILED' = 'LOGIN_FAILED';
+export const LOGOUT_SUCCESSFUL: 'LOGOUT_SUCCESSFUL' = 'LOGOUT_SUCCESSFUL';
+export const ALLOW_RESET_PASSWORD: 'ALLOW_RESET_PASSWORD' = 'ALLOW_RESET_PASSWORD';
+export const HAS_RESET_PASSWORD: 'HAS_RESET_PASSWORD' = 'HAS_RESET_PASSWORD';
 
-export function registerNewUser(data) {
+
+// типизирует генератор экшена и экшен в reducer/user
+export interface ILoginSuccessful {
+  readonly type: typeof LOGIN_SUCCESSFUL;
+  readonly name: string,
+  readonly email: string
+  readonly isLoggedIn: boolean,
+}
+
+// генератор экшенов, некоторым с ними удобнее
+export const LoginSuccessful = (name: string, email: string): ILoginSuccessful => {
+  return {
+    type: LOGIN_SUCCESSFUL,
+    isLoggedIn: true,
+    name,
+    email,
+  };
+}
+
+// *****
+
+export interface ISetUserData {
+  readonly type: typeof SET_USER_DATA;
+  readonly isLoggedIn: boolean,
+  readonly name: string,
+  readonly email: string,
+}
+
+// *****
+
+export interface ILoginFailed {
+  readonly type: typeof LOGIN_FAILED;
+  readonly isLoggedIn: boolean,
+  readonly name: '',
+  readonly email: '',
+}
+
+// *****
+
+export interface ILogoutSuccessful {
+  readonly type: typeof LOGOUT_SUCCESSFUL;
+  readonly isLoggedIn: boolean,
+  readonly name: '',
+  readonly email: '',
+}
+
+// *****
+
+export interface IAllowResetPassword {
+  readonly type: typeof ALLOW_RESET_PASSWORD;
+  readonly canResetPassword: boolean,
+  readonly hasResetPassword: boolean,
+}
+
+// *****
+
+export interface IHasResetPassword {
+  readonly type: typeof HAS_RESET_PASSWORD;
+  readonly canResetPassword: boolean,
+  readonly hasResetPassword: boolean,
+}
+
+// это union-тип, объединяющий в себе все типы экшенов
+export type TUserActionsUnion = ILoginSuccessful | ISetUserData | ILoginFailed | ILogoutSuccessful | IAllowResetPassword | IHasResetPassword;
+
+
+
+
+export function registerNewUser(data: TUserForm) {
   console.log('Начинаем регистрацию нового пользователя');
   console.log('data: ', data);
+  //@ts-ignore
   return function (dispatch) {
     fetchUserRegistration(data)
       .then(({ user, accessToken, refreshToken }) => {
@@ -39,7 +109,8 @@ export function registerNewUser(data) {
   }
 }
 
-export function logInApp(data) {
+export function logInApp(data: TLoginForm) {
+  //@ts-ignore
   return function (dispatch) {
     fetchLogIn(data)
       .then(({ user, accessToken, refreshToken, success }) => {
@@ -66,6 +137,8 @@ export function logInApp(data) {
 }
 
 export function logOut() {
+  //@ts-ignore
+
   return function (dispatch) {
     console.log('Logging you out, Shepard'); // ;-)
 
@@ -91,7 +164,9 @@ export function logOut() {
   };
 }
 
-export function requestResetCode(email) {
+export function requestResetCode(email: string) {
+  //@ts-ignore
+
   return function (dispatch) {
     console.log(`Запрашиваем код для смены пароля для email: ${email}`);
 
@@ -116,7 +191,9 @@ export function requestResetCode(email) {
   }
 }
 
-export function setNewPassword(newPassword, resetCode) {
+export function setNewPassword(newPassword: string, resetCode: string) {
+  //@ts-ignore
+
   return function (dispatch) {
     console.log('newPassword', newPassword);
     console.log('resetCode', resetCode);
@@ -138,26 +215,25 @@ export function setNewPassword(newPassword, resetCode) {
   }
 }
 
-// кажется, на свервере баг. Через PATCH-запрос меняется только мыло. Имя и пароль не меняются
-export function patchUserData(form, setFormValues) {
-   
+export function patchUserData(form: TUserForm, setFormValues: any) {
+  //@ts-ignore
   return function (dispatch) {
     // console.log('new Name', form.name);
     // console.log('new Email', form.email);
     // console.log('new Password', form.password);
 
     fetchChangeUserData(form)
-    .then(res => {
-      console.log(res);
+      .then(res => {
+        console.log(res);
 
-      dispatch({
-        type: SET_USER_DATA,
-        name: res.user.name,
-        email: res.user.email,
-      });
+        dispatch({
+          type: SET_USER_DATA,
+          name: res.user.name,
+          email: res.user.email,
+        });
 
-      setFormValues({ name: res.user.name, email: res.user.email, password: '' });
-    })
+        setFormValues({ name: res.user.name, email: res.user.email, password: '' });
+      })
   }
 }
 
@@ -168,6 +244,8 @@ export function patchUserData(form, setFormValues) {
 
 // авторизует пользователя, если есть accessToken. Или, если есть refreshToken, рефрешнет токены, а потом авторизует
 export function confirmAuth() {
+  //@ts-ignore
+
   return async function (dispatch) {
     const hasAccessCookie = (getCookie('accessToken') != null); // когда куки удалятся, getCookie вернёт undefined. Проверку можно сделать нестрогой, т.к. в любом случае корректный токен - это строка с length > 0
     const hasRefreshToken = (localStorage.getItem('refreshToken') != null);
@@ -188,7 +266,7 @@ export function confirmAuth() {
   }
 }
 
-export function getUser(safetyCounter) {
+export function getUser(safetyCounter: number) {
   console.log('Starting fn getUser with accessToken');
 
   /**** safetyCounter - предохранитель, чтобы не было бесконечной рекурсии ****/
@@ -199,12 +277,13 @@ export function getUser(safetyCounter) {
   // А нужно, чтобы цепочка максимум была такая: getUser >> refreshAccessToken >> getUser
   // Ситуация с бесконечной рекурсией маловероятна и свидетельствует о проблемах на сервере. Однако на всякий случай этот предохранитель со счётчиком  пусть будет. Он остановит бесконечные запросы к серверу.
   if (safetyCounter > 2) {
-    return function (dispatch) {
+    return function () {
       console.log('Вошли в рекурсию в fn getUser. Заканчиваем это безобразие.');
 
     }
   };
   /*************************************************************************** */
+  //@ts-ignore
 
   return function (dispatch) {
     fetchGetUserData()
@@ -232,8 +311,10 @@ export function getUser(safetyCounter) {
   }
 }
 
-export function refreshAccessToken(safetyCounter) {
+export function refreshAccessToken(safetyCounter: number) {
   console.log('Refreshing tokens now');
+  //@ts-ignore
+
   return function (dispatch) {
     fetchRefreshTokens()
       .then(({ accessToken, refreshToken }) => {
