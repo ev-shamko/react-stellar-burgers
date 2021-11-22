@@ -19,14 +19,25 @@ export const wsActions = {
   onClose: WS_DISCONNECTED, // ws статус переменился на CLOSED
 };
 
+export type TwsActions = {
+  openConnection: typeof WS_OPEN_CONNECTION, // для отправки запроса на установлениe ws
+  onOpen: typeof WS_CONNECTED_SUCCESSFULLY, // соединение успешно открылось
+  onError: typeof WS_ERROR, // возникла ошибка
+  onGotOrders: typeof WS_GOT_ORDERS, // когда пришли данные о заказах
+  sendMessage: typeof WS_SEND_MESSAGE, // отправка заказа на сервер
+  closeConnection: typeof WS_CLOSE_CONNECTION, // экшн для отправки запроса на закрытие ws
+  onClose: typeof WS_DISCONNECTED, // ws статус переменился на CLOSED
+};
 
-// Эти функции называются action creator - они нужны что бы не писать каждый раз создание объекта, а просто вызывать функцию, которая возвращает нужные объект экшена
-// Мне и без них норм, но пусть пока тут лежат, мб позже оценю их прелесть
 
+
+// типизация для редьюсера и для генератора экшена
 export interface IopenConnectionAction {
   readonly type: typeof WS_OPEN_CONNECTION;
 }
 
+// Эти функции называются action creator - они нужны что бы не писать каждый раз создание объекта, а просто вызывать функцию, которая возвращает нужные объект экшена
+// Мне и без них норм, но пусть пока тут лежат, мб позже оценю их прелесть
 export const openConnectionAction = (): IopenConnectionAction => {
   return {
     type: WS_OPEN_CONNECTION
@@ -75,11 +86,14 @@ export const onGotOrdersAction = (ordersData: TOrdersStoreData): IonGotOrdersAct
 
 export interface IsendMessageAction {
   readonly type: typeof WS_SEND_MESSAGE;
+  readonly payload: string,
+  
 }
 
-export const sendMessageAction = (): IsendMessageAction => {
+export const sendMessageAction = (message: string): IsendMessageAction => {
   return {
-    type: WS_SEND_MESSAGE
+    type: WS_SEND_MESSAGE,
+    payload: message,
   };
 }
 

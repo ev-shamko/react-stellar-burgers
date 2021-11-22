@@ -3,6 +3,7 @@ import {
   WS_ERROR, // возникла ошибка
   WS_GOT_ORDERS, // когда пришли данные о заказах
   WS_DISCONNECTED, // ws статус переменился на CLOSED
+  WS_SEND_MESSAGE,
   TwsActionsUnion // 
 } from '../actions/wsActions';
 import { TOrder } from '../../utils/types';

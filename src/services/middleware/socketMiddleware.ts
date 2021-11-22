@@ -1,17 +1,21 @@
-
+import { RootState, AppDispatch, AppThunk } from '../../index';
+import { Middleware } from 'redux';
+import { getAccessTokenLiteral } from '../../utils/cookie';
+import { TwsActionsUnion, TwsActions } from "../actions/wsActions";
 
 /* 
 Всю логику взаимодействия с WebSocket разместим внутри мидлвара, что позволит разделить зоны ответственности частей приложения и сделать код более читабельным и поддерживаемым.
 За подключение к серверу отвечает объект класса WebSocket, который будет создан внутри мидлвара. Все события этого объекта класса будут отправлять экшены в глобальный стейт.
 */
 
-export const socketMiddleware = (wsActions) => {
+export const socketMiddleware = (wsActions: TwsActions): Middleware<{}, RootState> => {
   return store => {
-    let socket = null;
+    let socket: WebSocket | null = null;
 
     return next => action => {
       const { dispatch } = store;
       const { type } = action;
+      const { payload } = action;
 
       const {
         openConnection,  // для отправки запроса на установлениу ws
@@ -20,15 +24,8 @@ export const socketMiddleware = (wsActions) => {
         onGotOrders, // когда пришли данные о заказах
         onClose, // ws статус переменился на CLOSED
         sendMessage, // отправка заказа на сервер
-        closeConnection,
+        closeConnection, // экшн для отправки запроса на закрытие ws
       } = wsActions;
-
-      // const { user } = getState().user;
-
-      // для доступа к заказам прользователя нужно ещё передать токен
-      // if (type === wsInit && user) {
-      //   socket = new WebSocket(`${wsUrl}?token=${user.token}`);
-      // }
 
       // для подключения к общедоступной ленте заказов
       if (type === openConnection) {
@@ -37,7 +34,7 @@ export const socketMiddleware = (wsActions) => {
         socket = new WebSocket(action.url);
       }
 
-      if (type === closeConnection) {
+      if (socket && type === closeConnection) {
         console.log('Отправляем команду на закрытие сокета');
         socket.close();
         socket = null;
@@ -50,8 +47,8 @@ export const socketMiddleware = (wsActions) => {
           dispatch({ type: onOpen });
         }
 
-        socket.onError = (event) => {
-          console.log('WebSocket got erroe. Event is:');
+        socket.onerror = (event) => {
+          console.log('WebSocket got error. Event is:');
           console.log(event);
           dispatch({ type: onError });
         }
@@ -71,22 +68,14 @@ export const socketMiddleware = (wsActions) => {
           console.log('Closed WebSocket connection');
           dispatch({ type: onClose });
         }
+      }
 
-        // всю эту логику нужно дописать во всех файлах
-
-        // if (type === sendMessage && socket) {
-        //   const message = {
-        //     ...payload,
-        //     token: getCookie("accessToken"),
-        //   };
-        //   socket.send(JSON.stringify(message));
-        // }
-
-        // if (type === wsSendMessage) {
-        //   const message = { ...payload, token: user.token };
-        //   socket.send(JSON.stringify(message));
-        // }
-
+      // в приложении это сейчас не используется, но по заданию добавить нужно. Для универсальности
+      if (socket && type === sendMessage) {
+        socket.send(JSON.stringify({
+          ...payload,
+          token: getAccessTokenLiteral(),
+        }));
       }
 
       next(action);
