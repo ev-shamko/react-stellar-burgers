@@ -4,7 +4,7 @@ import { type } from "os";
 
 export type TIngredientType = 'bun' | 'sauce' | 'main';
 export type TProfileMenuTabsValue = 'profile' | 'orderHistory' | 'logOut';
-export type TModalType = 'none' | 'IngridientDetails' | 'OrderDetails';
+export type TModalType = 'none' | 'IngridientDetails' | 'OrderDetails' | 'OrderCard';
 
 export type TIngredientObjData = {
   _id: string;

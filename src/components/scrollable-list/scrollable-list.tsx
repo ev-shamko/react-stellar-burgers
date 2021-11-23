@@ -5,6 +5,8 @@ import { FeedCard } from '../feed-card/feed-card';
 import s from './scrollable-list.module.css';
 import { TOrder } from '../../utils/types';
 
+import Modal from '../modal/modal';
+
 type TScrollableListProps = {
   isPersonal: boolean,
 }
@@ -12,6 +14,10 @@ type TScrollableListProps = {
 export function ScrollableList({ isPersonal }: TScrollableListProps) {
 
   const currentOrders: ReadonlyArray<TOrder> = appUseSelector((store) => store.ws.ordersData.orders);
+  const { modalIsVisible, currentModalType } = appUseSelector((store) => ({
+    modalIsVisible: store.burgerVendor.modalIsVisible,
+    currentModalType: store.burgerVendor.currentModalType,
+  }));
 
   let reversedOrdersList: Array<TOrder> = [];
   if (currentOrders && isPersonal) {
@@ -27,6 +33,12 @@ export function ScrollableList({ isPersonal }: TScrollableListProps) {
 
       {/* в profile/orders ленту заказов нужно отображать в обратном порядке, потому что с сервера она приходит отсортированная так, что наверху самые старые заказы */}
       {isPersonal && reversedOrdersList && reversedOrdersList.map((order: TOrder) => <FeedCard orderData={order} isPersonal={isPersonal} key={order.number} />)}
+
+      {modalIsVisible && (currentModalType === 'OrderCard') &&
+              <Modal>
+                {/* <OrderDetails /> */}
+              </Modal>
+            }
     </article>
   );
 }
