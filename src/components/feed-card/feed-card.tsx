@@ -1,9 +1,17 @@
 import React from 'react';
-import { appUseSelector } from '../../services/hooks';
+import { appUseSelector, appUseDispatch } from '../../services/hooks';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import s from './feed-card.module.css';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { TOrder, TIngredientObjData } from '../../utils/types';
+
+
+import {
+  OPEN_MODAL,
+  SET_MODAL_TYPE,
+  // SET_INGRIDIENT_IN_MODAL, // заменить на подстановку данных о заказе
+} from '../../services/actions/burgerVendor';
 
 type TFeedCard = {
   orderData: TOrder,
@@ -12,6 +20,11 @@ type TFeedCard = {
 }
 
 export function FeedCard({ orderData, isPersonal }: TFeedCard) {
+
+  const dispatch = appUseDispatch();
+  const history = useHistory();
+  const location = useLocation();
+
 
   const ingrData = appUseSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
 
@@ -85,8 +98,43 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
     }
   }
 
+  // *******************
+
+  const openIngridientDetails = () => {
+    dispatch({
+      type: OPEN_MODAL,
+    });
+    dispatch({
+      type: SET_MODAL_TYPE,
+      value: 'OrderCard',
+    });
+    // dispatch({
+    //   type: SET_INGRIDIENT_IN_MODAL,
+    //   value: objIngridient,
+    // });
+
+    console.log(orderData);
+  };
+
+
+
+  const handleClick = () => {
+    openIngridientDetails();
+
+    // console.log('history.location 1', history.location )
+    // console.log('location 1', location)
+
+    // при открытии модального окна с информацией об ингридиенте в адресной строке пропишется уникальный роут ингридиента
+      history.replace({
+        pathname: `${history.location.pathname}/${orderData._id}`,
+        state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+      });
+
+
+    };
+
   return (
-    <article className={s.main}>
+    <article className={s.main} onClick={handleClick}>
       <div className={s.plane + ' mb-6'}>
         <span className={s.number + ' text text_type_digits-default'}>#{orderData.number}</span>
         <span className={' text text_type_main-default text_color_inactive'}>сегодня, {getTime(orderData.createdAt)}</span>

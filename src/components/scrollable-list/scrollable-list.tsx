@@ -37,6 +37,7 @@ export function ScrollableList({ isPersonal }: TScrollableListProps) {
       {modalIsVisible && (currentModalType === 'OrderCard') &&
               <Modal>
                 {/* <OrderDetails /> */}
+                {<p>Текст</p>}
               </Modal>
             }
     </article>

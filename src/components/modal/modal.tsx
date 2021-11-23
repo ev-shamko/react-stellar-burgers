@@ -1,20 +1,27 @@
 import React, { FC, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import modalStyles from './modal.module.css';
 import ModalOverlay from './modal-overlay/modal-overlay';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { appUseDispatch } from '../../services/hooks';
+import { appUseDispatch, appUseSelector } from '../../services/hooks';
 
 import {
     CLOSE_MODAL,
     SET_MODAL_TYPE,
 } from '../../services/actions/burgerVendor';
 
+type TLocationState = {
+    background?: Location;
+};
+
 const Modal: FC = ({ children }) => {
     const dispatch = appUseDispatch();
     const history = useHistory();
+    const location = useLocation<TLocationState | undefined>();
+    const currentModalType = appUseSelector(state => state.burgerVendor.currentModalType);
+
     const modalRoot = document.getElementById("react-modals") as HTMLElement;
 
     // Функция передаётся в onClick <article>. Предотвращает всплытие события клика с модального окна до ModalOverlay. Иначе клик по любому месту модального окна закроет модальное окно. А надо, чтобы так делал только клик по крестику и клик по ModalOverlay.
@@ -31,10 +38,21 @@ const Modal: FC = ({ children }) => {
             type: SET_MODAL_TYPE,
             value: 'none',
         });
+        // console.log('history.location 2', history.location)
+        // console.log('location 2', location)
+        // history.goBack(); // не, это тут не работает, но метод прикольный
 
-        history.replace({
-            pathname: `/`,
-        });
+        if (currentModalType === 'OrderCard') {
+            history.replace({
+                // pathname: `/`,
+                pathname: location.pathname,
+            });
+        } else {
+            history.replace({
+                pathname: `/`,
+            }); 
+        }
+
     }
 
     // Логика закрытия по esc. Она не работает, если написать ее в компоненте modaloverlay на .tsx  Не понимаю, почему ломается.
