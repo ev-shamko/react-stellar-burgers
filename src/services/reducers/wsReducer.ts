@@ -67,7 +67,6 @@ export const wsReducer = (state = initialState, action: TwsActionsUnion): TwsSta
       return {
         ...state,
         wsConnected: false,
-        ordersData: initialState.ordersData // предпочитаю обнулить данные о заказах, чтобы при переходе на разные фиды там не отображались поначалу данные из предыдущего фида
       };
     case WS_ERROR:
       return {

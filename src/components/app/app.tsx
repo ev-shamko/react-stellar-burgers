@@ -12,7 +12,7 @@ import { appUseSelector } from '../../services/hooks';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
-import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage, ProfileOrdersPage } from '../../pages';
+import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage, ProfileOrdersPage, OrderPage } from '../../pages';
 
 type TLocationState = {
   background?: Location;
@@ -72,7 +72,8 @@ function App() {
           </ProtectedRoute>
 
           <ProtectedRoute path="/profile/orders/:id">
-            {/* /profile/orders/:id — страница заказа в истории заказов. Доступен только авторизованным пользователям. */}
+            {/* /profile/orders/:id — страница заказа в истории заказов. Доступна только авторизованным пользователям. */}
+            <OrderPage privatType={'personalOrder'} />
 
           </ProtectedRoute>
 
@@ -89,7 +90,8 @@ function App() {
           </Route>
 
           <Route path="/feed/:id">
-            /feed/:id — страница заказа в ленте. Доступен всем пользователям.
+            {/* Страница конкретного заказа из /feed */}
+            <OrderPage privatType={'feed'} />
           </Route>
 
           <Route path="/" exact={true}>{/* exact={true}>; */}
