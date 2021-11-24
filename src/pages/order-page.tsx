@@ -54,12 +54,12 @@ export const OrderPage = ({ privatType }: TOrderPageProps) => {
       });
     }
 
-    // if (privatType === 'personalOrder') {
-    //   dispatch({
-    //     type: wsActions.openConnection,
-    //     url: wsOrders + `?token=${getAccessTokenLiteral()}`,     
-    //   });
-    // }
+    if (privatType === 'personalOrder') {
+      dispatch({
+        type: wsActions.openConnection,
+        url: wsOrders + `?token=${getAccessTokenLiteral()}`,     
+      });
+    }
 
 
 

@@ -35,12 +35,12 @@ export const FeedDetailedCard = () => {
     return (<div className={s.imgContainer} style={{ backgroundImage: `url(${url})` }}></div>)
   }
 
-  const getListItem = (ingrObj: TIngredientObjData | null, amount: number = 1) => {
+  const getListItem = (ingrObj: TIngredientObjData | null, amount: number = 1, index: number) => {
 
     return (
       ingrObj ?
         (
-          <li className={s.ingrItem}>
+          <li className={s.ingrItem} key={index}>
             <div className={s.ingrIdent}>
               {getIcon(ingrObj.image_mobile)}
               <span className={' text text_type_main-default'}>{ingrObj.name}</span>
@@ -66,10 +66,10 @@ export const FeedDetailedCard = () => {
 
       <ul className={s.ingrList}>
         {/* Булка */}
-        {bunItem ? getListItem(bunItem, 2) : null}
+        {bunItem ? getListItem(bunItem, 2, 999) : null}
 
         {/* Остальные ингредиенты */}
-        {restIngr ? restIngr.map(ingr => getListItem(ingr, 1)) : null}
+        {restIngr ? restIngr.map( (ingr, index) => getListItem(ingr, 1, index)) : null}
       </ul>
 
       <div className={s.plane}>
