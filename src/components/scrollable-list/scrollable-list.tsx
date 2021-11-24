@@ -1,6 +1,6 @@
 import React from "react";
 import { appUseSelector } from '../../services/hooks';
-
+import { FeedDetailedCard } from '../feed-detailed-card/feed-detailed-card';
 import { FeedCard } from '../feed-card/feed-card';
 import s from './scrollable-list.module.css';
 import { TOrder } from '../../utils/types';
@@ -36,8 +36,7 @@ export function ScrollableList({ isPersonal }: TScrollableListProps) {
 
       {modalIsVisible && (currentModalType === 'OrderCard') &&
               <Modal>
-                {/* <OrderDetails /> */}
-                {<p>Текст</p>}
+                <FeedDetailedCard />
               </Modal>
             }
     </article>

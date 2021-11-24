@@ -6,12 +6,17 @@ import s from './feed-card.module.css';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { TOrder, TIngredientObjData } from '../../utils/types';
 
+import { getOrderStatus, getPrice } from '../../utils/utils';
+
 
 import {
   OPEN_MODAL,
   SET_MODAL_TYPE,
-  // SET_INGRIDIENT_IN_MODAL, // заменить на подстановку данных о заказе
 } from '../../services/actions/burgerVendor';
+
+import {
+  SET_DETAILED_ORDER_IN_MODAL,
+} from '../../services/actions/wsActions';
 
 type TFeedCard = {
   orderData: TOrder,
@@ -49,11 +54,11 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
     return formatedTime;
   }
 
-  const getPrice = (arr: Array<TIngredientObjData>) => {
-    return arr.reduce((previousValue: number, currentValue: TIngredientObjData) => {
-      return previousValue + currentValue.price;
-    }, 0);
-  }
+  // const getPrice = (arr: Array<TIngredientObjData>) => {
+  //   return arr.reduce((previousValue: number, currentValue: TIngredientObjData) => {
+  //     return previousValue + currentValue.price;
+  //   }, 0);
+  // }
 
   // ******************* Для иконок ингридиентов
 
@@ -86,17 +91,6 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
 
   // *******************
 
-  const getStatus = (): string => {
-    switch (orderData.status) {
-      case ('done'): {
-        return 'Выполнен';
-      }
-      case ('pending'): {
-        return 'Готовится';
-      }
-      default: return 'Отменён'
-    }
-  }
 
   // *******************
 
@@ -108,12 +102,10 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
       type: SET_MODAL_TYPE,
       value: 'OrderCard',
     });
-    // dispatch({
-    //   type: SET_INGRIDIENT_IN_MODAL,
-    //   value: objIngridient,
-    // });
-
-    console.log(orderData);
+    dispatch({
+      type: SET_DETAILED_ORDER_IN_MODAL,
+      orderData,
+    });
   };
 
 
@@ -129,8 +121,6 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
         pathname: `${history.location.pathname}/${orderData._id}`,
         state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
       });
-
-
     };
 
   return (
@@ -140,7 +130,7 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
         <span className={' text text_type_main-default text_color_inactive'}>сегодня, {getTime(orderData.createdAt)}</span>
       </div>
       <h4 className={s.header + ' text text_type_main-medium mb-2'}>{orderData.name}</h4>
-      {isPersonal ? (<span className={' text text_type_main-default text_color_inactive mb-2'}>{getStatus()}</span>) : null}
+      {isPersonal ? (<span className={' text text_type_main-default text_color_inactive mb-2'}>{getOrderStatus(orderData.status)}</span>) : null}
       <div className={s.plane}>
         <div className={s.iconsContainer}>
           {normalizedPics && normalizedPics.map((url: string, index) => (getIcons(url, index)))}

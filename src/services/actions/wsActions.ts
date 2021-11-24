@@ -8,6 +8,7 @@ export const WS_GOT_ORDERS: 'WS_GOT_ORDERS' = 'WS_GOT_ORDERS';
 export const WS_SEND_MESSAGE: 'WS_SEND_MESSAGE' = 'WS_SEND_MESSAGE';
 export const WS_CLOSE_CONNECTION: 'WS_CLOSE_CONNECTION' = 'WS_CLOSE_CONNECTION';
 export const WS_DISCONNECTED: 'WS_DISCONNECTED' = 'WS_DISCONNECTED';
+export const SET_DETAILED_ORDER_IN_MODAL: 'SET_DETAILED_ORDER_IN_MODAL' = 'SET_DETAILED_ORDER_IN_MODAL';
 
 export const wsActions = {
   openConnection: WS_OPEN_CONNECTION, // для отправки запроса на установлениe ws
@@ -17,6 +18,7 @@ export const wsActions = {
   sendMessage: WS_SEND_MESSAGE, // отправка заказа на сервер
   closeConnection: WS_CLOSE_CONNECTION, // экшн для отправки запроса на закрытие ws
   onClose: WS_DISCONNECTED, // ws статус переменился на CLOSED
+  setOrderInModal: SET_DETAILED_ORDER_IN_MODAL, // устанавливает данные заказа для отображения в модальном окне
 };
 
 export type TwsActions = {
@@ -27,8 +29,14 @@ export type TwsActions = {
   sendMessage: typeof WS_SEND_MESSAGE, // отправка заказа на сервер
   closeConnection: typeof WS_CLOSE_CONNECTION, // экшн для отправки запроса на закрытие ws
   onClose: typeof WS_DISCONNECTED, // ws статус переменился на CLOSED
+  setOrderInModal: typeof SET_DETAILED_ORDER_IN_MODAL, // устанавливает данные заказа для отображения в модальном окне
 };
 
+
+export interface IsetOrderInModalAction {
+  readonly type: typeof SET_DETAILED_ORDER_IN_MODAL;
+  readonly orderData: TOrder,
+}
 
 // ********************** Интерфейсы и генераторы экшенов ***************
 
@@ -123,4 +131,4 @@ export const onCloseAction = (): IonCloseAction => {
 }
 
 // это union-тип, объединяющий в себе все типы экшенов
-export type TwsActionsUnion = IopenConnectionAction | IonOpenAction | IonErrorAction | IonGotOrdersAction | IsendMessageAction | IcloseConnectionAction | IcloseConnectionAction | IonCloseAction;
+export type TwsActionsUnion = IopenConnectionAction | IonOpenAction | IonErrorAction | IonGotOrdersAction | IsendMessageAction | IcloseConnectionAction | IcloseConnectionAction | IonCloseAction | IsetOrderInModalAction;

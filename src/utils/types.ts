@@ -40,7 +40,7 @@ export type TResortIngrList = (dragID: number, dropID: number) => void;
 export type TOrder = {
   ingredients: string[];
   _id: string;
-  status: 'status' | 'pending' | 'done';
+  status: string; // 'done' | 'pending' | ??? отменен | мб еще что-то
   number: number;
   createdAt: string;
   updatedAt: string;

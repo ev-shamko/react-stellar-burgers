@@ -3,6 +3,7 @@ import {
   WS_ERROR, // возникла ошибка
   WS_GOT_ORDERS, // когда пришли данные о заказах
   WS_DISCONNECTED, // ws статус переменился на CLOSED
+  SET_DETAILED_ORDER_IN_MODAL, // устанавливает данные заказа для отображения в модальном окне
   TwsActionsUnion // 
 } from '../actions/wsActions';
 import { TOrder } from '../../utils/types';
@@ -25,6 +26,7 @@ export type TwsState = {
   wsConnected: boolean,
   wsError: boolean,
   ordersData: TOrdersStoreData,
+  detailedOrder: TOrder,
 }
 
 
@@ -36,7 +38,16 @@ const initialState: TwsState = {
     orders: [],
     total: 0,
     totalToday: 0,
-  }
+  },
+  detailedOrder: {
+    ingredients: [],
+    _id: '',
+    status: 'pending',
+    number: 0,
+    createdAt: '',
+    updatedAt: '',
+    name: '',
+  },
 };
 
 export const wsReducer = (state = initialState, action: TwsActionsUnion): TwsState => {
@@ -63,6 +74,11 @@ export const wsReducer = (state = initialState, action: TwsActionsUnion): TwsSta
         ...state,
         wsConnected: false,
         wsError: true,
+      }
+    case SET_DETAILED_ORDER_IN_MODAL:
+      return {
+        ...state,
+        detailedOrder: action.orderData,
       }
 
     default:
