@@ -15,7 +15,7 @@ export type TUserState = {
   userEmail: string,
   canResetPassword: boolean,
   hasResetPassword: boolean,
-
+  userChecked: boolean;
 };
 
 const initialState: TUserState = {
@@ -24,7 +24,7 @@ const initialState: TUserState = {
   userEmail: '',
   canResetPassword: false,
   hasResetPassword: false,
-
+  userChecked: false,
 };
 
 export const userReducer = (state = initialState, action: TUserActionsUnion): TUserState => {
@@ -35,15 +35,18 @@ export const userReducer = (state = initialState, action: TUserActionsUnion): TU
         isLoggedIn: true,
         userName: action.name,
         userEmail: action.email,
+        userChecked: true, // можно не делать, т.к. даже после диспатча LOGIN_SUCCESSFUL все защищённые роуты будут перепроверяться через getUser, который диспатчит SET_USER_DATA
       }
     }
     // дублирует LOGIN_SUCCESSFUL для удобства чтения экшенов
+    // используется при успешном автозалогинивании
     case SET_USER_DATA: {
       return {
         ...state,
         isLoggedIn: true,
         userName: action.name,
         userEmail: action.email,
+        userChecked: true,
       }
     }
     case LOGIN_FAILED: {
@@ -52,6 +55,7 @@ export const userReducer = (state = initialState, action: TUserActionsUnion): TU
         isLoggedIn: false,
         userName: '',
         userEmail: '',
+        userChecked: false,
       }
     }
     case LOGOUT_SUCCESSFUL: {

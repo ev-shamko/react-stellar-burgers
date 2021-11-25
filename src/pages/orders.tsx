@@ -12,7 +12,7 @@ export function ProfileOrdersPage() {
   const dispatch = appUseDispatch();
 
   useEffect(() => {
-    console.log('Auth in /order');
+    console.log('Auth in profile/orders');
     dispatch(confirmAuthThunk());
   }, [dispatch]);
 

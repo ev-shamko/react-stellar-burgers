@@ -34,11 +34,6 @@ export function ScrollableList({ isPersonal }: TScrollableListProps) {
       {/* в profile/orders ленту заказов нужно отображать в обратном порядке, потому что с сервера она приходит отсортированная так, что наверху самые старые заказы */}
       {isPersonal && reversedOrdersList && reversedOrdersList.map((order: TOrder) => <FeedCard orderData={order} isPersonal={isPersonal} key={order.number} />)}
 
-      {modalIsVisible && (currentModalType === 'OrderCard') &&
-              <Modal>
-                <FeedDetailedCard />
-              </Modal>
-            }
     </article>
   );
 }

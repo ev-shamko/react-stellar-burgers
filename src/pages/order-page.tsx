@@ -15,10 +15,10 @@ import {
 
 
 type TOrderPageProps = {
-  privatType: 'feed' | 'personalOrder'
+  orderSource: 'feed' | 'personalOrder'
 }
 
-export const OrderPage = ({ privatType }: TOrderPageProps) => {
+export const OrderPage = ({ orderSource }: TOrderPageProps) => {
   const dispatch = appUseDispatch();
   let { id } = useParams<{ id?: string }>();
 
@@ -36,32 +36,21 @@ export const OrderPage = ({ privatType }: TOrderPageProps) => {
     });
   }
 
-  console.log('id in OrderPage is ', id);
-  console.log('obj', selectedOrder);
-
-
-  // dispatch({
-  //   type: wsActions.openConnection,
-  //   url: wsOrders + `?token=${getAccessTokenLiteral()}`,     
-  // });
-
   useEffect(() => {
 
-    if (privatType === 'feed') {
+    if (orderSource === 'feed') {
       dispatch({
         type: wsActions.openConnection,
         url: wsAllOrders,
       });
     }
 
-    if (privatType === 'personalOrder') {
+    if (orderSource === 'personalOrder') {
       dispatch({
         type: wsActions.openConnection,
         url: wsOrders + `?token=${getAccessTokenLiteral()}`,     
       });
     }
-
-
 
     return () => {
       dispatch({ type: wsActions.closeConnection });
@@ -70,13 +59,6 @@ export const OrderPage = ({ privatType }: TOrderPageProps) => {
 
   return (
     <>
-      <div>
-      {`id in OrderPage is ${id}`}<br />
-      {`type is ${privatType}`}<br />
-      {`url will be ${wsAllOrders + '/' + id}`}<br />
-      {selectedOrder ? selectedOrder.name : null}<br />
-    </div>
-
       {currentOrders && selectedOrder ? <FeedDetailedCard /> : null}<br />
     </>
   )

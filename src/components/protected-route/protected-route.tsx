@@ -5,12 +5,13 @@ import { RouteProps } from 'react-router';
 
 export function ProtectedRoute({ children, ...rest }: RouteProps) {
 
-  const { isLoggedIn } = appUseSelector( (store) => store.user);
+  const { isLoggedIn, userChecked } = appUseSelector((store) => store.user);
 
-
+  if (localStorage.getItem('refreshToken') && !userChecked) return null;
+  
   // useEffect(() => {
-    // если совершён прямой переход на защищённые роуты, стейт isLoggedIn всегда будет false. Тогда пользователя редиректнет на /login без лишнего запроса к серверу
-    // если пользователь залогинен, произойдёт проверка актуальности токенов, только потом пустит на защищённые роуты
+  // если совершён прямой переход на защищённые роуты, стейт isLoggedIn всегда будет false. Тогда пользователя редиректнет на /login без лишнего запроса к серверу
+  // если пользователь залогинен, произойдёт проверка актуальности токенов, только потом пустит на защищённые роуты
   //   if (isLoggedIn) {
   //     console.log('Auth in ProtectedRout');
   //     dispatch(confirmAuth());

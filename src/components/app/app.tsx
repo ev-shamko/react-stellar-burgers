@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useEffect } from "react";
 //import logo from '../../images/logo.svg';
 import indexStyles from './app.module.css';
 import { Route, Switch, useLocation, useHistory, } from 'react-router-dom';
+
+import { appUseDispatch } from '../../services/hooks';
+import { confirmAuthThunk } from '../../services/actions/userActions';
+import {
+  getIngridientsDataThunk,
+} from '../../services/actions/burgerVendor';
+import { urlApiGetIngridients } from '../../utils/api-url';
 
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { Location } from 'history';
@@ -12,10 +19,14 @@ import { appUseSelector } from '../../services/hooks';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
+import { FeedDetailedCard } from '../feed-detailed-card/feed-detailed-card';
 import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage, ProfileOrdersPage, OrderPage } from '../../pages';
 
 type TLocationState = {
-  background?: Location;
+  //background?: Location; // фикс: это убираем
+  ingredientModal?: Location; // а эти три строчки добавляем
+  feedModal?: Location;
+  profileOrderModal?: Location;
 };
 
 function App() {
@@ -27,25 +38,43 @@ function App() {
   // background станет не undefined, когда произойдёт клик по одному из ингридиентов в BurgerIngridients
   // background - это объект location, соответствующий адресу, на котором мы находились, когда произошёл клик по ингридиенту (т.е. '/' ))
   // если таки background !== undefined, он будет использован в качестве location для Switch, и тогда BurgerVendor будет показан в качестве фона под модальным окном с информацией об ингридиенте
-  let background = location.state && location.state.background;
-  console.log('background', background);
+
+  // let background = location.state && location.state.background; // фикс: это не надо
+  // console.log('background', background);
+
+  const action = history.action === 'PUSH' || history.action === 'REPLACE'; //  history.action is mutable and automatically updates as the location changes. https://github.com/remix-run/history/blob/main/docs/api-reference.md 
+
+  // три переменные ниже - это, по сути, background для каждого из модальных окон
+  const modalIngredientOpen = action && location.state && location.state.ingredientModal;
+  const modalFeedOrderOpen = action && location.state && location.state.feedModal;
+  const modalProfileOrderOpen = action && location.state && location.state.profileOrderModal;
+
 
   const { modalIsVisible, ingrInModalData } = appUseSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
 
   // фикс, чтобы при перезагрузке с url ингридиента открывалась отдельная страница, а не попап
-  React.useEffect(() => {
-    history.replace({
-      state: { background: undefined },
-    });
-    // eslint-disable-next-line
-  }, []);
+  // React.useEffect(() => {
+  //   history.replace({
+  //     state: { background: undefined },
+  //   });
+  //   // eslint-disable-next-line
+  // }, []);
+  const dispatch = appUseDispatch();
+
+  
+  useEffect(() => {
+    dispatch(confirmAuthThunk());
+    dispatch(getIngridientsDataThunk(urlApiGetIngridients));
+  }, [dispatch]);
 
   return (
     <>
       <AppHeader />
 
       <main className={indexStyles.main}>
-        <Switch location={background || location}>
+        {/* <Switch location={background || location}> */}
+        <Switch location={modalIngredientOpen || modalFeedOrderOpen || modalProfileOrderOpen || location}>
+
           <Route path="/login">
             <LoginPage />
           </Route>
@@ -73,7 +102,7 @@ function App() {
 
           <ProtectedRoute path="/profile/orders/:id">
             {/* /profile/orders/:id — страница заказа в истории заказов. Доступна только авторизованным пользователям. */}
-            <OrderPage privatType={'personalOrder'} />
+            <OrderPage orderSource={'personalOrder'} />
 
           </ProtectedRoute>
 
@@ -91,7 +120,7 @@ function App() {
 
           <Route path="/feed/:id">
             {/* Страница конкретного заказа из /feed */}
-            <OrderPage privatType={'feed'} />
+            <OrderPage orderSource={'feed'} />
           </Route>
 
           <Route path="/" exact={true}>{/* exact={true}>; */}
@@ -99,17 +128,31 @@ function App() {
           </Route>
         </Switch>
 
-        {/* Вот это модалка с ингридиентом поверх конструктора бургеров */}
-        {background && (
+        {/* Вот это модальные окна с разным содержимым. Модальные окна - это именно когда окно поверх основного контента страницы */}
+        {modalIngredientOpen && (
           <Route path="/ingredients/:id">
-            {modalIsVisible && (
               <Modal>
                 <IngredientDetais ingredientData={ingrInModalData} />
               </Modal>
-            )}
-            {/* TODO: Сюда добавить полноразмерное окно заказа через /feed и заказа через /profile/orders/:id */}
           </Route>
         )}
+        
+        {modalFeedOrderOpen && (
+          <Route path="/feed/:id">
+              <Modal>
+                <FeedDetailedCard />
+              </Modal>
+          </Route>
+        )}
+
+        {modalProfileOrderOpen && (
+          <ProtectedRoute path="/profile/orders/:id">
+              <Modal>
+                <FeedDetailedCard />
+              </Modal>
+          </ProtectedRoute>
+        )}
+
       </main>
     </>
   );

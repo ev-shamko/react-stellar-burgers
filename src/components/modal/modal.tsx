@@ -40,18 +40,7 @@ const Modal: FC = ({ children }) => {
         });
         // console.log('history.location 2', history.location)
         // console.log('location 2', location)
-        // history.goBack(); // не, это тут не работает, но метод прикольный
-
-        if (currentModalType === 'OrderCard') {
-            history.replace({
-                // pathname: `/`,
-                pathname: location.pathname,
-            });
-        } else {
-            history.replace({
-                pathname: `/`,
-            }); 
-        }
+        history.goBack(); // теперь это работает, потому что содержимое объекта location корректно меняется при открытии модалок
 
     }
 

@@ -117,10 +117,22 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
     // console.log('location 1', location)
 
     // при открытии модального окна с информацией об ингридиенте в адресной строке пропишется уникальный роут ингридиента
-      history.replace({
-        pathname: `${history.location.pathname}/${orderData._id}`,
-        state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
-      });
+      // history.replace({
+      //   pathname: `${history.location.pathname}/${orderData._id}`,
+      //   state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+      // });
+
+      if (isPersonal) {
+        history.push({
+          pathname: `${history.location.pathname}/${orderData._id}`,
+          state: { profileOrderModal: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+        });
+      } else {
+        history.push({
+          pathname: `${history.location.pathname}/${orderData._id}`,
+          state: { feedModal: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+        });
+      }
     };
 
   return (

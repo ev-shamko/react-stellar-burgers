@@ -52,9 +52,9 @@ const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
         console.log('location 1', location)
 
         // при открытии модального окна с информацией об ингридиенте в адресной строке пропишется уникальный роут ингридиента
-        history.replace({
+        history.push({
             pathname: `/ingredients/${objIngridient._id}`,
-            state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+            state: { ingredientModal: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
         });
 
         console.log('history.location 3', history.location )
