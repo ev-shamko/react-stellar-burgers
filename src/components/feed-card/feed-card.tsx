@@ -6,7 +6,7 @@ import s from './feed-card.module.css';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { TOrder, TIngredientObjData } from '../../utils/types';
 
-import { getOrderStatus, getPrice } from '../../utils/utils';
+import { getOrderStatus, getPrice, getCompletedIngrList } from '../../utils/utils';
 
 
 import {
@@ -31,15 +31,27 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
   const location = useLocation();
 
 
-  const ingrData = appUseSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
+  const allIngrCatalog = appUseSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
 
+  // ***** собираем полный массив ингридиентов для подсчёта стоимости заказа
 
-  // собираем массив с данными об используемых ингридиентах
+  // const fullIngrList: Array<TIngredientObjData> = [];
+
+  // for (let ingrId of orderData.ingredients) {
+  //   arrOfIngridients.forEach((ingrObj) => {
+  //     if (ingrObj._id === ingrId) {
+  //       fullIngrList.push(ingrObj)
+  //     }
+  //   })
+  // }
+
+  //******* собираем массив с данными об используемых ингридиентах
   let arrOfUsedIngr: [] | Array<TIngredientObjData> = [];
   let arrImages: Array<string> = []
 
-  if (ingrData && orderData) {
-    arrOfUsedIngr = ingrData.filter((ingr: TIngredientObjData) => orderData.ingredients.includes(ingr._id));
+
+  if (allIngrCatalog && orderData) {
+    arrOfUsedIngr = allIngrCatalog.filter((ingr: TIngredientObjData) => orderData.ingredients.includes(ingr._id));
 
     arrOfUsedIngr.forEach((ingr: TIngredientObjData) => { arrImages.push(ingr.image_mobile) })
   }
@@ -117,23 +129,23 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
     // console.log('location 1', location)
 
     // при открытии модального окна с информацией об ингридиенте в адресной строке пропишется уникальный роут ингридиента
-      // history.replace({
-      //   pathname: `${history.location.pathname}/${orderData._id}`,
-      //   state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
-      // });
+    // history.replace({
+    //   pathname: `${history.location.pathname}/${orderData._id}`,
+    //   state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+    // });
 
-      if (isPersonal) {
-        history.push({
-          pathname: `${history.location.pathname}/${orderData._id}`,
-          state: { profileOrderModal: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
-        });
-      } else {
-        history.push({
-          pathname: `${history.location.pathname}/${orderData._id}`,
-          state: { feedModal: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
-        });
-      }
-    };
+    if (isPersonal) {
+      history.push({
+        pathname: `${history.location.pathname}/${orderData._id}`,
+        state: { profileOrderModal: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+      });
+    } else {
+      history.push({
+        pathname: `${history.location.pathname}/${orderData._id}`,
+        state: { feedModal: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+      });
+    }
+  };
 
   return (
     <article className={s.main} onClick={handleClick}>
@@ -148,7 +160,7 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
           {normalizedPics && normalizedPics.map((url: string, index) => (getIcons(url, index)))}
         </div>
 
-        <div className={s.price}><span className={' text text_type_digits-default mr-2'}>{getPrice(arrOfUsedIngr)}</span><CurrencyIcon type="primary" /></div>
+        <div className={s.price}><span className={' text text_type_digits-default mr-2'}>{getPrice(getCompletedIngrList(orderData, allIngrCatalog))}</span><CurrencyIcon type="primary" /></div>
       </div>
     </article >
   );

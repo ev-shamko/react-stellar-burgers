@@ -20,7 +20,6 @@ import { appUseSelector } from '../../services/hooks';
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
 import { FeedDetailedCard } from '../feed-detailed-card/feed-detailed-card';
-import OrderDetails from '../order-details/order-details';
 
 import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage, ProfileOrdersPage, OrderPage } from '../../pages';
 
@@ -49,12 +48,11 @@ function App() {
 
   // три переменные ниже - это, по сути, background для каждого из модальных окон
   const modalIngredientOpen = action && location.state && location.state.ingredientModal;
-  const modalLastOrderOpen = action && location.state && location.state.modalLastOrderOpen;
   const modalFeedOrderOpen = action && location.state && location.state.feedModal;
   const modalProfileOrderOpen = action && location.state && location.state.profileOrderModal;
 
 
-  const { modalIsVisible, ingrInModalData } = appUseSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
+  const { ingrInModalData } = appUseSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
 
   // фикс, чтобы при перезагрузке с url ингридиента открывалась отдельная страница, а не попап
   // React.useEffect(() => {

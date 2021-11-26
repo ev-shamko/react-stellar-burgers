@@ -1,27 +1,27 @@
 import s from './feed-detailed-card.module.css';
 import { appUseSelector } from '../../services/hooks';
 import { wsActions } from '../../services/actions/wsActions';
-import { getOrderStatus, getPrice } from '../../utils/utils';
+import { getOrderStatus, getPrice, getCompletedIngrList } from '../../utils/utils';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { TOrder, TIngredientObjData } from '../../utils/types';
+import { TOrder, TIngredientObjData, } from '../../utils/types';
 
 
 
 
 export const FeedDetailedCard = () => {
   const orderData = appUseSelector(store => store.ws.detailedOrder);
-  const allIngredientsData = appUseSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
+  const allIngrCatalog = appUseSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
 
   // собираем массив с данными об используемых ингридиентах
   let arrOfUsedIngr: null | Array<TIngredientObjData> = null;
   let bunItem: null | TIngredientObjData = null;
   let restIngr: null | Array<TIngredientObjData> = null;
 
-  if (allIngredientsData && orderData) {
+  if (allIngrCatalog && orderData) {
     
-    arrOfUsedIngr = allIngredientsData.filter((ingr: TIngredientObjData) => orderData.ingredients.includes(ingr._id));
+    arrOfUsedIngr = allIngrCatalog.filter((ingr: TIngredientObjData) => orderData.ingredients.includes(ingr._id));
 
-    restIngr = allIngredientsData.filter((ingr: TIngredientObjData) => orderData.ingredients.includes(ingr._id));
+    restIngr = allIngrCatalog.filter((ingr: TIngredientObjData) => orderData.ingredients.includes(ingr._id));
 
 
     bunItem = restIngr[0];
@@ -76,7 +76,7 @@ export const FeedDetailedCard = () => {
         <span className={' text text_type_main-default text_color_inactive'}>сегодня, 13:50 i-GMT+3{/*getTime(orderData.createdAt)*/}</span>
 
         <div className={s.price}><span className={' text text_type_digits-default mr-2'}>
-          { arrOfUsedIngr ? ( getPrice(arrOfUsedIngr) ) : null}
+          { arrOfUsedIngr ? ( getPrice(getCompletedIngrList(orderData, allIngrCatalog)) ) : null}
           </span><CurrencyIcon type="primary" /></div>
       </div>
     </article>
