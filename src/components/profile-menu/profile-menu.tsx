@@ -25,6 +25,7 @@ export const ProfileMenu: FC<TProfileMenuProps> = ({ activeTab }) => {
 
     if (value === 'logOut') {
       console.log('Gonna try to log you out');
+      console.log(`localStorage.getItem('refreshToken')`, localStorage.getItem('refreshToken'))
       dispatch(logOutThunk());
     }
   }

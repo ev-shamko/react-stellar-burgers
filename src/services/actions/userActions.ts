@@ -149,6 +149,11 @@ export const logOutThunk: AppThunk = () => {
       .catch(err => {
         console.log('Ошибка при разлогинивании');
         console.log(err);
+
+        // в случае ошибки при разлогинивании необходимо удалить токены. Это сразу запретит заходить на роуты, требующие авторизации.
+        console.log('Удаляем токены');
+        deleteCookie('accessToken');
+        localStorage.removeItem('refreshToken');
       });
   };
 }

@@ -19,6 +19,12 @@ export const ADD_MAIN: 'ADD_MAIN' = 'ADD_MAIN';
 export const UPDATE_DRAGGABLE_INGRIDIENTS: 'UPDATE_DRAGGABLE_INGRIDIENTS' = 'UPDATE_DRAGGABLE_INGRIDIENTS';
 export const REMOVE_ALL_INGRIDIENTS: 'REMOVE_ALL_INGRIDIENTS' = 'REMOVE_ALL_INGRIDIENTS';
 export const RESORT_DRAGGABLE_INGRIDIENTS: 'RESORT_DRAGGABLE_INGRIDIENTS' = 'RESORT_DRAGGABLE_INGRIDIENTS';
+export const SET_CONSTRUCTOR_LOADER: 'SET_CONSTRUCTOR_LOADER' = 'SET_CONSTRUCTOR_LOADER';
+
+export interface ISetConstructorLoader {
+    readonly type: typeof SET_CONSTRUCTOR_LOADER,
+    readonly value: boolean,
+}
 
 export interface IToggleModalVisibility {
     readonly type: typeof TOGGLE_MODAL_VISIBILITY,
@@ -94,13 +100,14 @@ export interface IRemoveAllIngr {
 }
 
 // union-тип для типизации в редьюсере
-export type TBurgerVendorAcrtionsUnion = IToggleModalVisibility | ISetCurrentModalType | ISetIngrInModal | ISetOrderState | IIngrFetchSuccess | IIngrFetchError | IOpenModal | ICloseModal | ISetModalType | IAddBun | IAddSauce | IAddMain | IUpdateDraggableIngr | IResortDraggableIngr | IRemoveAllIngr ;
+export type TBurgerVendorActionsUnion = IToggleModalVisibility | ISetCurrentModalType | ISetIngrInModal | ISetOrderState | IIngrFetchSuccess | IIngrFetchError | IOpenModal | ICloseModal | ISetModalType | IAddBun | IAddSauce | IAddMain | IUpdateDraggableIngr | IResortDraggableIngr | IRemoveAllIngr | ISetConstructorLoader;
 
 
 // Миддлвары для thunk:
 
 // запрос к серверу для получения списка доступных ингридиентов бургера
-export const  getIngridientsDataThunk: AppThunk = (url = '') => {
+export const getIngridientsDataThunk: AppThunk = (url = '') => {
+
     //@ts-ignore
     return function (dispatch: AppDispatch) {
         fetch(url)
@@ -138,9 +145,13 @@ export const  getIngridientsDataThunk: AppThunk = (url = '') => {
 };
 
 // отправляет API массив с инфой о заказе, затем меняет стейт редакса в зависимости от ответа
-export const  postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) => {
+export const postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) => {
     //@ts-ignore
     return function (dispatch: AppDispatch) {
+        dispatch({
+            type: SET_CONSTRUCTOR_LOADER,
+            value: true,
+        });
         fetch(url + `?token=${getAccessTokenLiteral()}`, {
             method: 'POST',
             //@ts-ignore getCookie может вернуть undefined, это не страшно
@@ -162,6 +173,10 @@ export const  postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) =
                 dispatch({
                     type: SET_ORDER_STATE,
                     value: res,
+                });
+                dispatch({
+                    type: SET_CONSTRUCTOR_LOADER,
+                    value: false,
                 });
             })
             .then(() => {

@@ -1,5 +1,5 @@
 import update from "immutability-helper"; // этот пакет для ресортировки массива, хранящегося в стейте
-import { TBurgerVendorAcrtionsUnion } from '../actions/burgerVendor';
+import { TBurgerVendorActionsUnion } from '../actions/burgerVendor';
 
 import { TOrderData, TDraggableIngr, TIngredientObjData, TModalType } from '../../utils/types';
 
@@ -19,6 +19,7 @@ import {
     UPDATE_DRAGGABLE_INGRIDIENTS,
     REMOVE_ALL_INGRIDIENTS,
     RESORT_DRAGGABLE_INGRIDIENTS,
+    SET_CONSTRUCTOR_LOADER,
 } from '../actions/burgerVendor';
 
 export type TBurgerVendorReducer = {
@@ -34,6 +35,7 @@ export type TBurgerVendorReducer = {
     currentModalType: TModalType,
     ingrInModalData: TIngredientObjData | {},
     orderData: TOrderData,
+    constructorLoaderIsVisible: boolean,
 
 }
 
@@ -59,13 +61,14 @@ const initialState: TBurgerVendorReducer = {
         order: {
             number: '',
         },
-    }
+    },
+    constructorLoaderIsVisible: false,
 };
 
 // создание редьюсера
 // выполняю рекомендацию к проекту: на данном этапе собираю все редьюсеры в одном файле
 
-export const burgerVendorReducer = (state = initialState, action: TBurgerVendorAcrtionsUnion): TBurgerVendorReducer => {
+export const burgerVendorReducer = (state = initialState, action: TBurgerVendorActionsUnion): TBurgerVendorReducer => {
     switch (action.type) {
         case TOGGLE_MODAL_VISIBILITY: {
             return {
@@ -179,6 +182,12 @@ export const burgerVendorReducer = (state = initialState, action: TBurgerVendorA
                 ...state,
                 bun: {},
                 draggableIngridients: []
+            }
+        }
+        case SET_CONSTRUCTOR_LOADER: {
+            return {
+                ...state,
+                constructorLoaderIsVisible: action.value,
             }
         }
         default: {
