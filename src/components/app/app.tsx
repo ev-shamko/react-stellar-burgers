@@ -20,6 +20,8 @@ import { appUseSelector } from '../../services/hooks';
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
 import { FeedDetailedCard } from '../feed-detailed-card/feed-detailed-card';
+import OrderDetails from '../order-details/order-details';
+
 import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage, ProfileOrdersPage, OrderPage } from '../../pages';
 
 type TLocationState = {
@@ -27,6 +29,7 @@ type TLocationState = {
   ingredientModal?: Location; // а эти три строчки добавляем
   feedModal?: Location;
   profileOrderModal?: Location;
+  modalLastOrderOpen?: Location;
 };
 
 function App() {
@@ -46,6 +49,7 @@ function App() {
 
   // три переменные ниже - это, по сути, background для каждого из модальных окон
   const modalIngredientOpen = action && location.state && location.state.ingredientModal;
+  const modalLastOrderOpen = action && location.state && location.state.modalLastOrderOpen;
   const modalFeedOrderOpen = action && location.state && location.state.feedModal;
   const modalProfileOrderOpen = action && location.state && location.state.profileOrderModal;
 

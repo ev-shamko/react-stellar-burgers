@@ -5,6 +5,8 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
+import { useHistory, useLocation } from 'react-router-dom';
+
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -21,6 +23,10 @@ import { urlApiGetIngridients } from '../../utils/api-url';
 function BurgerVendor() {
 
   const dispatch = appUseDispatch();
+  const history = useHistory();
+  const location = useLocation();
+
+
 
   /******************************************************** */
   /******      Импорт стейтов из редакса        ********* */

@@ -38,10 +38,16 @@ const Modal: FC = ({ children }) => {
             type: SET_MODAL_TYPE,
             value: 'none',
         });
-        // console.log('history.location 2', history.location)
-        // console.log('location 2', location)
-        history.goBack(); // теперь это работает, потому что содержимое объекта location корректно меняется при открытии модалок
 
+        // фикс: после закрытия модального окна о свежем заказе не будет редиректа history.goBack();
+        if (currentModalType === 'OrderDetails') {
+            return history.push({
+                // pathname: `/`,
+                state: { background: location },
+            })
+        }
+
+        history.goBack(); // теперь это работает, потому что содержимое объекта location корректно меняется при открытии модалок, которые открываются в результате работы handleClick(), в котором корректно делается history.push, чтобы прописать в истории нужную "предыдущую страницу"
     }
 
     // Логика закрытия по esc. Она не работает, если написать ее в компоненте modaloverlay на .tsx  Не понимаю, почему ломается.
