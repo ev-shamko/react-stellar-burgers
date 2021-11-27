@@ -308,13 +308,13 @@ export const confirmAuthThunk: AppThunk = () => {
     const hasRefreshToken = (localStorage.getItem('refreshToken') != null);
 
     if (hasAccessCookie) {
-      let safetyCounter = 0;
+      const safetyCounter = 0;
       dispatch(getUserThunk(safetyCounter));
       return 'has logged in';
     }
 
     if (!hasAccessCookie && hasRefreshToken) {
-      let safetyCounter = 1;
+      const safetyCounter = 1;
       dispatch(refreshAccessTokenThunk(safetyCounter));
       return 'has refreshed tokens, than logged in';
     }

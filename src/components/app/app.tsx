@@ -23,12 +23,11 @@ import { FeedDetailedCard } from '../feed-detailed-card/feed-detailed-card';
 
 import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage, ProfileOrdersPage, OrderPage } from '../../pages';
 
+// нужно для функционала отображения модальных окон поверх основного контента страницы, и чтобы при этом url менялся
 type TLocationState = {
-  //background?: Location; // фикс: это убираем
-  ingredientModal?: Location; // а эти три строчки добавляем
+  ingredientModal?: Location;
   feedModal?: Location;
   profileOrderModal?: Location;
-  modalLastOrderOpen?: Location;
 };
 
 function App() {

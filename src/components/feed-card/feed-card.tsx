@@ -88,15 +88,15 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
       return [];
     }
 
-    let normalizerArr = arr.map(i => i);
+    let normalizedArr = arr.map(i => i);
 
-    if (normalizerArr.length > 5) {
-      normalizerArr.length = 5;
+    if (normalizedArr.length > 5) {
+      normalizedArr.length = 5;
     }
 
-    normalizerArr.reverse();
+    normalizedArr.reverse();
 
-    return normalizerArr;
+    return normalizedArr;
   }
 
   normalizedPics = formateArr(arrImages);

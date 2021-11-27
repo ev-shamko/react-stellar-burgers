@@ -11,7 +11,7 @@ import {
 import { urlApiGetIngridients } from '../utils/api-url';
 
 export function IngridientPage() {
-  let { id } = useParams<{ id?: string }>();
+  const { id } = useParams<{ id?: string }>();
   const dispatch = useAppDispatch();
 
   const { arrOfIngridients } = useAppSelector((store) => store.burgerVendor.ingridientsData); // TODO: в следующем спринте типировать конкретнее
