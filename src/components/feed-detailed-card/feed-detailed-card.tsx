@@ -1,5 +1,5 @@
 import s from './feed-detailed-card.module.css';
-import { appUseSelector } from '../../services/hooks';
+import { useAppSelector } from '../../services/hooks';
 import { wsActions } from '../../services/actions/wsActions';
 import { getOrderStatus, getPrice, getCompletedIngrList } from '../../utils/utils';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -9,8 +9,8 @@ import { TOrder, TIngredientObjData, } from '../../utils/types';
 
 
 export const FeedDetailedCard = () => {
-  const orderData = appUseSelector(store => store.ws.detailedOrder);
-  const allIngrCatalog = appUseSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
+  const orderData = useAppSelector(store => store.ws.detailedOrder);
+  const allIngrCatalog = useAppSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
 
   // собираем массив с данными об используемых ингридиентах
   let arrOfUsedIngr: null | Array<TIngredientObjData> = null;

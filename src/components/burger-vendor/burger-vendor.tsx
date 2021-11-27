@@ -11,7 +11,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { appUseSelector, appUseDispatch } from '../../services/hooks';
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
 
 import {
   getIngridientsDataThunk,
@@ -22,7 +22,7 @@ import { urlApiGetIngridients } from '../../utils/api-url';
 
 function BurgerVendor() {
 
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
   const location = useLocation();
 
@@ -32,7 +32,7 @@ function BurgerVendor() {
   /******      Импорт стейтов из редакса        ********* */
   /****************************************************** */
 
-  const { modalIsVisible, currentModalType, arrOfIngridients, dataIsLoading, dataHasError } = appUseSelector((store: any) => ({
+  const { modalIsVisible, currentModalType, arrOfIngridients, dataIsLoading, dataHasError } = useAppSelector((store: any) => ({
     modalIsVisible: store.burgerVendor.modalIsVisible,
     currentModalType: store.burgerVendor.currentModalType,
     ingrInModalData: store.burgerVendor.ingrInModalData,

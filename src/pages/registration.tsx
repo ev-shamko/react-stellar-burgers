@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { appUseDispatch, appUseSelector } from '../services/hooks';
+import { useAppDispatch, useAppSelector } from '../services/hooks';
 import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
 import { confirmAuthThunk, registerNewUserThunk } from '../services/actions/userActions';
@@ -12,9 +12,9 @@ import {
 
 export function RegistrationPage() {
   const [form, setFormValues] = useState({ email: '', name: '', password: '' });
-  const { isLoggedIn } = appUseSelector((store) => store.user);
+  const { isLoggedIn } = useAppSelector((store) => store.user);
 
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     console.log('Auth in /registration');

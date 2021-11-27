@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import indexStyles from './app.module.css';
 import { Route, Switch, useLocation, useHistory, } from 'react-router-dom';
 
-import { appUseDispatch } from '../../services/hooks';
+import { useAppDispatch } from '../../services/hooks';
 import { confirmAuthThunk } from '../../services/actions/userActions';
 import {
   getIngridientsDataThunk,
@@ -15,7 +15,7 @@ import { Location } from 'history';
 
 import Modal from '../modal/modal';
 import IngredientDetais from '../ingridient-details/ingridient-details';
-import { appUseSelector } from '../../services/hooks';
+import { useAppSelector } from '../../services/hooks';
 
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
@@ -52,7 +52,7 @@ function App() {
   const modalProfileOrderOpen = action && location.state && location.state.profileOrderModal;
 
 
-  const { ingrInModalData } = appUseSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
+  const { ingrInModalData } = useAppSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
 
   // фикс, чтобы при перезагрузке с url ингридиента открывалась отдельная страница, а не попап
   // React.useEffect(() => {
@@ -61,7 +61,7 @@ function App() {
   //   });
   //   // eslint-disable-next-line
   // }, []);
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
 
   
   useEffect(() => {

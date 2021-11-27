@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
-import { appUseSelector, appUseDispatch } from '../services/hooks';
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { getCookie } from '../utils/cookie';
 import { setNewPasswordThunk } from '../services/actions/userActions';
 
@@ -13,9 +13,9 @@ import {
 
 export function ResetPassword() {
   const [form, setFormValues] = useState({ password: '', resetCode: '' });
-  const { isLoggedIn, canResetPassword, hasResetPassword } = appUseSelector((store) => store.user);
+  const { isLoggedIn, canResetPassword, hasResetPassword } = useAppSelector((store) => store.user);
 
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

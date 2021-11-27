@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
-import { appUseSelector, appUseDispatch } from '../services/hooks';
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { confirmAuthThunk, requestResetCodeThunk, } from '../services/actions/userActions';
 import {
   Input,
@@ -11,10 +11,10 @@ import {
 
 export function ForgotPage() {
   const [form, setFormValues] = useState({ email: '' });
-  const { isLoggedIn, canResetPassword } = appUseSelector((store) => store.user);
+  const { isLoggedIn, canResetPassword } = useAppSelector((store) => store.user);
 
   // const history = useHistory();
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
 
   // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
   useEffect(() => {

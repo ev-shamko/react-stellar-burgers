@@ -3,7 +3,7 @@ import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, DragPreviewImage } from "react-dnd";
 import { useHistory, useLocation } from 'react-router-dom';
-import { appUseSelector, appUseDispatch } from '../../services/hooks';
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
 
 import {
     OPEN_MODAL,
@@ -17,7 +17,7 @@ type TIngridientCardProps = {
 };
 
 const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
-    const dispatch = appUseDispatch();
+    const dispatch = useAppDispatch();
     const history = useHistory();
     const location = useLocation();
 
@@ -71,7 +71,7 @@ const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
 
     // получаем стейт из редакса, из которого можно понять, сколько штук текущего ингридиента положено в конструктор бургера. Какой конкретно стейт нам нужен зависит от ингридиента в пропсах инстанса текущего компонента
     //@ts-ignore
-    const { ingrInConstructor } = appUseSelector((state) => {
+    const { ingrInConstructor } = useAppSelector((state) => {
         // если у нас тут карточка булки, то в переменную запишется 1 объект: либо пустой, либо с 1 булкой
         if (objIngridient.type === 'bun') {
             return ({ ingrInConstructor: state.burgerVendor.bun });

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { appUseSelector, appUseDispatch } from '../services/hooks';
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { ScrollableList } from '../components/scrollable-list/scrollable-list';
 import { wsActions } from '../services/actions/wsActions';
 import { TOrder } from '../utils/types';
@@ -8,11 +8,11 @@ import s from './feed.module.css';
 
 export function FeedPage() {
 
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
 
-  const currentOrders: ReadonlyArray<TOrder> = appUseSelector((store) => store.ws.ordersData.orders);
-  const ordersTotalToday = appUseSelector((store) => store.ws.ordersData.totalToday);
-  const ordersTotalEver = appUseSelector((store) => store.ws.ordersData.total);
+  const currentOrders: ReadonlyArray<TOrder> = useAppSelector((store) => store.ws.ordersData.orders);
+  const ordersTotalToday = useAppSelector((store) => store.ws.ordersData.totalToday);
+  const ordersTotalEver = useAppSelector((store) => store.ws.ordersData.total);
 
   // массивы для хранения выполненных и готовящихся заказов
   const оrdersDone: number[] = [];

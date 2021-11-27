@@ -1,5 +1,5 @@
 import React from "react";
-import { appUseSelector } from '../../services/hooks';
+import { useAppSelector } from '../../services/hooks';
 import { FeedDetailedCard } from '../feed-detailed-card/feed-detailed-card';
 import { FeedCard } from '../feed-card/feed-card';
 import s from './scrollable-list.module.css';
@@ -13,8 +13,8 @@ type TScrollableListProps = {
 
 export function ScrollableList({ isPersonal }: TScrollableListProps) {
 
-  const currentOrders: ReadonlyArray<TOrder> = appUseSelector((store) => store.ws.ordersData.orders);
-  const { modalIsVisible, currentModalType } = appUseSelector((store) => ({
+  const currentOrders: ReadonlyArray<TOrder> = useAppSelector((store) => store.ws.ordersData.orders);
+  const { modalIsVisible, currentModalType } = useAppSelector((store) => ({
     modalIsVisible: store.burgerVendor.modalIsVisible,
     currentModalType: store.burgerVendor.currentModalType,
   }));

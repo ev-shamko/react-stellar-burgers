@@ -5,7 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import modalStyles from './modal.module.css';
 import ModalOverlay from './modal-overlay/modal-overlay';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { appUseDispatch, appUseSelector } from '../../services/hooks';
+import { useAppDispatch, useAppSelector } from '../../services/hooks';
 
 import {
     CLOSE_MODAL,
@@ -17,10 +17,10 @@ type TLocationState = {
 };
 
 const Modal: FC = ({ children }) => {
-    const dispatch = appUseDispatch();
+    const dispatch = useAppDispatch();
     const history = useHistory();
     const location = useLocation<TLocationState | undefined>();
-    const currentModalType = appUseSelector(state => state.burgerVendor.currentModalType);
+    const currentModalType = useAppSelector(state => state.burgerVendor.currentModalType);
 
     const modalRoot = document.getElementById("react-modals") as HTMLElement;
 

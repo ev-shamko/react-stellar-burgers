@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
 import stylesOD from './order-details.module.css';
-import { appUseSelector } from '../../services/hooks';
+import { useAppSelector } from '../../services/hooks';
 
 
 const OrderDetais: FC = () => {
-    const orderState = appUseSelector((store) => store.burgerVendor.orderData);
+    const orderState = useAppSelector((store) => store.burgerVendor.orderData);
 
     return (
         <>

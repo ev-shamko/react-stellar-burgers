@@ -3,7 +3,7 @@ import styles from './auth-form.module.css';
 import { Link, Redirect, useLocation } from 'react-router-dom';
 import { logInAppThunk, confirmAuthThunk } from '../services/actions/userActions';
 
-import { appUseDispatch, appUseSelector } from '../services/hooks';
+import { useAppDispatch, useAppSelector } from '../services/hooks';
 
 import {
   Input,
@@ -13,8 +13,8 @@ import {
 
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
-  const { isLoggedIn } = appUseSelector((store) => store.user); // TODO: типизируем в следующем спринте
-  const dispatch = appUseDispatch();
+  const { isLoggedIn } = useAppSelector((store) => store.user); // TODO: типизируем в следующем спринте
+  const dispatch = useAppDispatch();
 
   // https://reactrouter.com/web/api/Hooks/uselocation
   // https://reactrouter.com/web/api/location 

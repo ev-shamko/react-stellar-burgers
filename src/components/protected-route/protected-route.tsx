@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { appUseSelector } from '../../services/hooks';
+import { useAppSelector } from '../../services/hooks';
 import { RouteProps } from 'react-router';
 
 export function ProtectedRoute({ children, ...rest }: RouteProps) {
 
-  const { isLoggedIn, userChecked } = appUseSelector((store) => store.user);
+  const { isLoggedIn, userChecked } = useAppSelector((store) => store.user);
 
   if (localStorage.getItem('refreshToken') && !userChecked) return null;
   

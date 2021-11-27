@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import s from "./burger-constructor.module.css";
 import DraggableItem from "../draggable-item/draggable-item";
 import { useDrop } from "react-dnd";
-import { appUseSelector, appUseDispatch } from '../../services/hooks';
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { Loader } from "../loader/loader";
 
 import { useHistory } from 'react-router-dom';
@@ -27,11 +27,11 @@ import {
 import { urlApiPostOrder } from '../../utils/api-url';
 
 function BurgerConstructor() {
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   // стейты с данными об ингридиентах бургера
-  const { chosenBun, chosenDraggableIngr, isLoggedIn, loaderIsVisible  } = appUseSelector((store: any) => ({ // TODO: типизируем в следующем спринте
+  const { chosenBun, chosenDraggableIngr, isLoggedIn, loaderIsVisible  } = useAppSelector((store: any) => ({ // TODO: типизируем в следующем спринте
     chosenBun: store.burgerVendor.bun,
     chosenDraggableIngr: store.burgerVendor.draggableIngridients,
     isLoggedIn: store.user.isLoggedIn,

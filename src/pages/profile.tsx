@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { appUseSelector, appUseDispatch } from '../services/hooks';
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { confirmAuthThunk, patchUserDataThunk } from '../services/actions/userActions';
 import styles from './profile.module.css';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
@@ -11,9 +11,9 @@ import {
 
 export function ProfilePage() {
   const [form, setFormValues] = useState({ name: '', email: '', password: '' });
-  const { userName, userEmail } = appUseSelector((state) => state.user);
+  const { userName, userEmail } = useAppSelector((state) => state.user);
 
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(confirmAuthThunk());

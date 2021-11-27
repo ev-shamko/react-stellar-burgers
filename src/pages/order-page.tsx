@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams } from "react-router-dom";
-import { appUseSelector, appUseDispatch } from '../services/hooks';
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 // import { confirmAuthThunk } from '../services/actions/userActions';
 import { getAccessTokenLiteral } from '../utils/cookie';
 
@@ -19,10 +19,10 @@ type TOrderPageProps = {
 }
 
 export const OrderPage = ({ orderSource }: TOrderPageProps) => {
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
   let { id } = useParams<{ id?: string }>();
 
-  const currentOrders: ReadonlyArray<TOrder> = appUseSelector((store) => store.ws.ordersData.orders);
+  const currentOrders: ReadonlyArray<TOrder> = useAppSelector((store) => store.ws.ordersData.orders);
 
   // объект, который нужно поместить в стейт для попапа
   let selectedOrder: undefined | TOrder;

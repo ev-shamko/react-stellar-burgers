@@ -1,6 +1,6 @@
 import React from "react";
 import diStyles from "./draggable-item.module.css";
-import { appUseSelector, appUseDispatch } from '../../services/hooks';
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
 import {
     UPDATE_DRAGGABLE_INGRIDIENTS,
@@ -24,9 +24,9 @@ type TDraggableItemProps = {
 
 
 const DraggableItem: React.FC<TDraggableItemProps> = ({ ingrInstanceID, ingrData, ingrIndexInStoreArr, resortIngrList, findIngridient }) => {
-    const dispatch = appUseDispatch();
+    const dispatch = useAppDispatch();
 
-    const stateDraggableIngridients = appUseSelector((store: any) => store.burgerVendor.draggableIngridients); // массив объектов  
+    const stateDraggableIngridients = useAppSelector((store: any) => store.burgerVendor.draggableIngridients); // массив объектов  
 
     const deleteThisIngridient = () => {
         // копируем данные из стейта родительского компонента в эту переменную

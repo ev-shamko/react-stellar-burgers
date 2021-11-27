@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { appUseDispatch } from '../services/hooks';
+import { useAppDispatch } from '../services/hooks';
 import { confirmAuthThunk } from '../services/actions/userActions';
 import { wsActions } from '../services/actions/wsActions';
 import styles from './profile.module.css';
@@ -9,7 +9,7 @@ import { wsOrders } from '../utils/api-url';
 import { ScrollableList } from '../components/scrollable-list/scrollable-list';
 
 export function ProfileOrdersPage() {
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     console.log('Auth in profile/orders');

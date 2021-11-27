@@ -1,5 +1,5 @@
 import React from 'react';
-import { appUseSelector, appUseDispatch } from '../../services/hooks';
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import s from './feed-card.module.css';
@@ -26,12 +26,12 @@ type TFeedCard = {
 
 export function FeedCard({ orderData, isPersonal }: TFeedCard) {
 
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
   const location = useLocation();
 
 
-  const allIngrCatalog = appUseSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
+  const allIngrCatalog = useAppSelector((state) => state.burgerVendor.ingridientsData.arrOfIngridients);
 
   // ***** собираем полный массив ингридиентов для подсчёта стоимости заказа
 

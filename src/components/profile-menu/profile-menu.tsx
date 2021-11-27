@@ -5,14 +5,14 @@ import { useHistory } from 'react-router-dom';
 import { logOutThunk } from '../../services/actions/userActions';
 import { TProfileMenuTabsValue } from '../../utils/types';
 
-import { appUseDispatch } from '../../services/hooks';
+import { useAppDispatch } from '../../services/hooks';
 
 type TProfileMenuProps = { activeTab: TProfileMenuTabsValue };
 
 export const ProfileMenu: FC<TProfileMenuProps> = ({ activeTab }) => {
   const [currentTab] = useState(activeTab);
   const history = useHistory();
-  const dispatch = appUseDispatch();
+  const dispatch = useAppDispatch();
 
   const handleTabClick = (value: TProfileMenuTabsValue) => {
     if (value === 'profile') {
