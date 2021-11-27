@@ -23,7 +23,7 @@ export const getCompletedIngrList = (orderData: TOrder, allIngrCatalog: Array<TI
   const completedIngrList: Array<TIngredientObjData> = [];
 
 
-  for (let ingrId of orderData.ingredients) {
+  for (const ingrId of orderData.ingredients) {
     allIngrCatalog.forEach((ingrObj) => {
       if (ingrObj._id === ingrId) {
         completedIngrList.push(ingrObj)

@@ -28,15 +28,31 @@ export type TBurgerVendorReducer = {
         ingrDataIsLoading: boolean,
         ingrDataHasError: boolean,
     }
-    bun: TIngredientObjData | {},
+    bun: TIngredientObjData,
     draggableIngridients: Array<TDraggableIngr>,
 
     modalIsVisible: boolean,
     currentModalType: TModalType,
-    ingrInModalData: TIngredientObjData | {},
+    ingrInModalData: TIngredientObjData,
     orderData: TOrderData,
     constructorLoaderIsVisible: boolean,
 
+}
+
+// 'пустой' объект ингридиента, решает проблему типирования пропса для модального она
+export const blankIngr: TIngredientObjData  = {
+    _id: '',
+    name: '',
+    type: 'main',
+    proteins: 0,
+    fat: 0,
+    carbohydrates: 0,
+    calories: 0,
+    price: 0,
+    image: '',
+    image_mobile: '',
+    image_large: '',
+    __v: 0,
 }
 
 const initialState: TBurgerVendorReducer = {
@@ -47,13 +63,13 @@ const initialState: TBurgerVendorReducer = {
     },
 
     // два свойства с содержимым ингридиентов в BurgerConcstructor
-    bun: {},
+    bun: blankIngr,
     draggableIngridients: [],
 
     // модальное окно
     modalIsVisible: false,
     currentModalType: 'none',
-    ingrInModalData: {}, // TODO: переименовать в ingrDataInModal
+    ingrInModalData: blankIngr, // TODO: переименовать в ingrDataInModal
 
     orderData: {
         success: false,
@@ -143,7 +159,6 @@ export const burgerVendorReducer = (state = initialState, action: TBurgerVendorA
             const objIngridientWithId: TDraggableIngr = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный ID (instanceID), он нужен для DND-ресортировки в конструкторе бургера. Почему называется obj.instanceID, а не просто obj.id? Потому что внутри таких объектов уже есть свойство obj._id, и оно не уникально для массива draggableInghidients, т.к. в массив можно добавить несколько одинаковых ингридиентов с одним и тем же obj._id. И ещё лично мне легко перепутать obj._id и ob.id - слишком похожее написание.
             return {
                 ...state,
-                //@ts-ignore
                 draggableIngridients: state.draggableIngridients.concat(objIngridientWithId)  // добавляем в исходный массив объектов новый объект
             }
         }
@@ -152,7 +167,6 @@ export const burgerVendorReducer = (state = initialState, action: TBurgerVendorA
             const objInstance = { ...action.value, instanceID }; // добавляем в объект ингридиента уникальный instanceID, он нужен для DND-ресортировки в конструкторе бургера
             return {
                 ...state,
-                //@ts-ignore
                 draggableIngridients: state.draggableIngridients.concat(objInstance)  // добавляем в исходный массив объектов новый объект
             };
         }
@@ -165,7 +179,7 @@ export const burgerVendorReducer = (state = initialState, action: TBurgerVendorA
         case RESORT_DRAGGABLE_INGRIDIENTS: {
             const resortedArrOfIngridients = update(state.draggableIngridients, {
                 // Что здесь происходит: мы ресортируем массив объектов ингридиентов в конструкторе бургера
-                // пакет immutability-helper для этого нужндается в indexOfDraggedIngr и indexOfDroppedIngr - исходных индексах в массиве draggableIngridients
+                // пакет immutability-helper для этого нуждается в indexOfDraggedIngr и indexOfDroppedIngr - исходных индексах в массиве draggableIngridients
                 // Выбранный ингридиент (indexOfDraggedIngr) ставится на индекс другого ингридиента (indexOfDroppedIngr).
                 $splice: [
                     [action.indexOfDraggedIngr, 1],
@@ -180,7 +194,7 @@ export const burgerVendorReducer = (state = initialState, action: TBurgerVendorA
         case REMOVE_ALL_INGRIDIENTS: {
             return {
                 ...state,
-                bun: {},
+                bun: blankIngr,
                 draggableIngridients: []
             }
         }

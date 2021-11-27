@@ -1,7 +1,7 @@
 import React from "react";
 import diStyles from "./draggable-item.module.css";
 import { useAppSelector, useAppDispatch } from '../../services/hooks';
-import { DropTargetMonitor, useDrag, useDrop } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 import {
     UPDATE_DRAGGABLE_INGRIDIENTS,
 } from '../../services/actions/burgerVendor';
@@ -10,8 +10,7 @@ import {
     DragIcon
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
-import { AllByAttribute } from "@testing-library/dom";
+import { TIngredientObjData, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
 
 
 type TDraggableItemProps = {
@@ -26,7 +25,7 @@ type TDraggableItemProps = {
 const DraggableItem: React.FC<TDraggableItemProps> = ({ ingrInstanceID, ingrData, ingrIndexInStoreArr, resortIngrList, findIngridient }) => {
     const dispatch = useAppDispatch();
 
-    const stateDraggableIngridients = useAppSelector((store: any) => store.burgerVendor.draggableIngridients); // массив объектов  
+    const stateDraggableIngridients = useAppSelector((store) => store.burgerVendor.draggableIngridients); // массив объектов  
 
     const deleteThisIngridient = () => {
         // копируем данные из стейта родительского компонента в эту переменную

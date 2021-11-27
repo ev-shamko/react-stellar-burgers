@@ -146,7 +146,6 @@ export const getIngridientsDataThunk: AppThunk = (url = '') => {
 
 // отправляет API массив с инфой о заказе, затем меняет стейт редакса в зависимости от ответа
 export const postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) => {
-    //@ts-ignore
     return function (dispatch: AppDispatch) {
         dispatch({
             type: SET_CONSTRUCTOR_LOADER,

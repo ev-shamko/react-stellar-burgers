@@ -207,7 +207,7 @@ export const setNewPasswordThunk: AppThunk = (newPassword: string, resetCode: st
   }
 }
 
-export const patchUserDataThunk: AppThunk = (form: TUserForm, setFormValues: any) => {
+export const patchUserDataThunk: AppThunk = (form: TUserForm, setFormValues) => {
 
   return function (dispatch: AppDispatch) {
     // console.log('new Name', form.name);

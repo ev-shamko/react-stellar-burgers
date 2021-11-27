@@ -22,7 +22,7 @@ export function IngridientPage() {
   //@ts-ignore
   // React.useEffect(() => dispatch(getIngridientsDataThunk(urlApiGetIngridients)), [dispatch]);
 
-  let ingridientProp = arrOfIngridients.find((ingr: TIngredientObjData) => ingr._id === id);
+  const ingridientProp = arrOfIngridients.find((ingr: TIngredientObjData) => ingr._id === id);
 
   // на момент первого рендера ingridientProp это [], а в <IngridientDetais> нельзя пробрасывать такой пропс, так что вернём null
   if (!ingridientProp) {

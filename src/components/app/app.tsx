@@ -52,7 +52,7 @@ function App() {
   const modalProfileOrderOpen = action && location.state && location.state.profileOrderModal;
 
 
-  const { ingrInModalData } = useAppSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
+  const { ingrInModalData } = useAppSelector((store) => store.burgerVendor); // хранилище типизируем в следующем спринте
 
   // фикс, чтобы при перезагрузке с url ингридиента открывалась отдельная страница, а не попап
   // React.useEffect(() => {

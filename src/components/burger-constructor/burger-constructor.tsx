@@ -31,7 +31,7 @@ function BurgerConstructor() {
   const history = useHistory();
 
   // стейты с данными об ингридиентах бургера
-  const { chosenBun, chosenDraggableIngr, isLoggedIn, loaderIsVisible  } = useAppSelector((store: any) => ({ // TODO: типизируем в следующем спринте
+  const { chosenBun, chosenDraggableIngr, isLoggedIn, loaderIsVisible  } = useAppSelector((store) => ({
     chosenBun: store.burgerVendor.bun,
     chosenDraggableIngr: store.burgerVendor.draggableIngridients,
     isLoggedIn: store.user.isLoggedIn,

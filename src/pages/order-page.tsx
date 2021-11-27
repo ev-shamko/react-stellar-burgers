@@ -20,7 +20,7 @@ type TOrderPageProps = {
 
 export const OrderPage = ({ orderSource }: TOrderPageProps) => {
   const dispatch = useAppDispatch();
-  let { id } = useParams<{ id?: string }>();
+  const { id } = useParams<{ id?: string }>();
 
   const currentOrders: ReadonlyArray<TOrder> = useAppSelector((store) => store.ws.ordersData.orders);
 

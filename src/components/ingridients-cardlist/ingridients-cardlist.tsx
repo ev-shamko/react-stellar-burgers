@@ -14,7 +14,7 @@ type TCardListProps = { type: TIngredientType };
 const CardList: React.FC<TCardListProps> = ({ type }) => {
 
     //const { ingridientsState } = React.useContext(IngridientsListContext);
-    const arrOfIngridients = useAppSelector((store) => store.burgerVendor.ingridientsData.arrOfIngridients); // TODO: в этом спринте типируем : any
+    const arrOfIngridients = useAppSelector((store) => store.burgerVendor.ingridientsData.arrOfIngridients);
     
     // из массива всех ингридиентов выбираем ингридиенты определённого типа (например, только булки: obj.type === 'bun')
     const arrTargetedIngridients = arrOfIngridients.filter(function (obj: TIngredientObjData) {

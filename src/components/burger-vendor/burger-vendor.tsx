@@ -1,38 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import s from './burger-vendor.module.css';
-
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { useHistory, useLocation } from 'react-router-dom';
-
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-
-import { useAppSelector, useAppDispatch } from '../../services/hooks';
-
-import {
-  getIngridientsDataThunk,
-} from '../../services/actions/burgerVendor';
-
-// временно захардкодено
-import { urlApiGetIngridients } from '../../utils/api-url';
+import { useAppSelector } from '../../services/hooks';
 
 function BurgerVendor() {
-
-  const dispatch = useAppDispatch();
-  const history = useHistory();
-  const location = useLocation();
-
-
 
   /******************************************************** */
   /******      Импорт стейтов из редакса        ********* */
   /****************************************************** */
 
-  const { modalIsVisible, currentModalType, arrOfIngridients, dataIsLoading, dataHasError } = useAppSelector((store: any) => ({
+  const { modalIsVisible, currentModalType, arrOfIngridients, dataIsLoading, dataHasError } = useAppSelector((store) => ({
     modalIsVisible: store.burgerVendor.modalIsVisible,
     currentModalType: store.burgerVendor.currentModalType,
     ingrInModalData: store.burgerVendor.ingrInModalData,
@@ -45,7 +27,7 @@ function BurgerVendor() {
   /******    Получение массива данных данных от API     ********* */
   /****************************************************** */
 
-  // это можно раскомментировать, если мы хотим обновления данных об ингридиентах при каждом переходе на BurgerVendor. Однако на данный момент в этом нет необходимости: стоимость ингредиентов и их наличие не меняется, сервер всегда отдаёт одно и то же.
+  // это можно раскомментировать, если мы хотим обновления данных об ингридиентах при каждом переходе на BurgerVendor. Однако в 2021 в этом нет необходимости: стоимость ингредиентов и их наличие не меняется, сервер всегда отдаёт одно и то же.
 
   // useEffect(() => dispatch(getIngridientsDataThunk(urlApiGetIngridients)), [dispatch]);
 
@@ -78,13 +60,6 @@ function BurgerVendor() {
               <BurgerIngredients />{/* попап  - ingrInModalData */}
               <BurgerConstructor />{/* попап  - orderData */}
             </DndProvider>
-
-            {/* рендер попапа с инфой об ингридиенте бургера - ingrInModalData*/}
-            {/* {modalIsVisible && (currentModalType === 'IngridientDetails') &&
-              <Modal>
-                <IngridientDetais ingrInModalData={ingrInModalData} />
-              </Modal>
-            } */}
 
             {/* рендер попапа с деталями заказа - orderData */}
             {modalIsVisible && (currentModalType === 'OrderDetails') &&
