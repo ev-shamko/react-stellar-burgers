@@ -10,7 +10,7 @@ import {
 } from '../../utils/api-fetch';
 import { setCookie, deleteCookie, getCookie } from '../../utils/cookie';
 import { TUserForm, TLoginForm } from '../../utils/types';
-import { AppDispatch, AppThunk } from '../../index';
+import { AppDispatch, AppThunk } from '../store';
 
 export const LOGIN_SUCCESSFUL: 'LOGIN_SUCCESSFUL' = 'LOGIN_SUCCESSFUL';
 export const SET_USER_DATA: 'SET_USER_DATA' = 'SET_USER_DATA';

@@ -1,7 +1,7 @@
-import { RootState, AppDispatch, AppThunk } from '../../index';
+import { RootState } from '../store';
 import { Middleware } from 'redux';
 import { getAccessTokenLiteral } from '../../utils/cookie';
-import { TwsActionsUnion, TwsActions } from "../actions/wsActions";
+import { TwsActions } from "../actions/wsActions";
 
 /* 
 Всю логику взаимодействия с WebSocket разместим внутри мидлвара, что позволит разделить зоны ответственности частей приложения и сделать код более читабельным и поддерживаемым.

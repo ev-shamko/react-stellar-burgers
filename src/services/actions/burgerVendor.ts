@@ -1,7 +1,7 @@
 import { getCookie } from '../../utils/cookie';
 import { getAccessTokenLiteral } from '../../utils/cookie';
 import { TIngredientObjData, TOrderData, TDraggableIngr, TModalType } from '../../utils/types';
-import { AppDispatch, AppThunk } from '../../index';
+import { AppDispatch, AppThunk } from '../store';
 
 
 export const TOGGLE_MODAL_VISIBILITY: 'TOGGLE_MODAL_VISIBILITY' = 'TOGGLE_MODAL_VISIBILITY';
