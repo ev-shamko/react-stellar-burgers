@@ -1,6 +1,6 @@
 import s from './feed-detailed-card.module.css';
 import { useAppSelector } from '../../services/hooks';
-import { getOrderStatus, getPrice, getCompletedIngrList } from '../../utils/utils';
+import { getOrderStatus, getPrice, getCompletedIngrList, getFormattedDate } from '../../utils/utils';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { TIngredientObjData, } from '../../utils/types';
 
@@ -72,7 +72,7 @@ export const FeedDetailedCard = () => {
       </ul>
 
       <div className={s.plane}>
-        <span className={' text text_type_main-default text_color_inactive'}>сегодня, 13:50 i-GMT+3{/*getTime(orderData.createdAt)*/}</span>
+        <span className={' text text_type_main-default text_color_inactive'}>{getFormattedDate(orderData.createdAt)}</span>
 
         <div className={s.price}><span className={' text text_type_digits-default mr-2'}>
           { arrOfUsedIngr ? ( getPrice(getCompletedIngrList(orderData, allIngrCatalog)) ) : null}

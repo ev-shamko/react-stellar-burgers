@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -6,7 +5,7 @@ import s from './feed-card.module.css';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { TOrder, TIngredientObjData } from '../../utils/types';
 
-import { getOrderStatus, getPrice, getCompletedIngrList } from '../../utils/utils';
+import { getOrderStatus, getPrice, getCompletedIngrList, getFormattedDate } from '../../utils/utils';
 
 
 import {
@@ -56,15 +55,6 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
     arrOfUsedIngr.forEach((ingr: TIngredientObjData) => { arrImages.push(ingr.image_mobile) })
   }
 
-
-  const getTime = (createdAt: string) => {
-    const parseDate = new Date(Date.parse(createdAt));
-
-    const options: any = { hour: 'numeric', minute: 'numeric', timeZoneName: 'short' };
-    const formatedTime = new Intl.DateTimeFormat('ru-RU', options).format(parseDate);
-
-    return formatedTime;
-  }
 
   // const getPrice = (arr: Array<TIngredientObjData>) => {
   //   return arr.reduce((previousValue: number, currentValue: TIngredientObjData) => {
@@ -151,7 +141,7 @@ export function FeedCard({ orderData, isPersonal }: TFeedCard) {
     <article className={s.main} onClick={handleClick}>
       <div className={s.plane + ' mb-6'}>
         <span className={s.number + ' text text_type_digits-default'}>#{orderData.number}</span>
-        <span className={' text text_type_main-default text_color_inactive'}>сегодня, {getTime(orderData.createdAt)}</span>
+        <span className={' text text_type_main-default text_color_inactive'}>{getFormattedDate(orderData.createdAt)}</span>
       </div>
       <h4 className={s.header + ' text text_type_main-medium mb-2'}>{orderData.name}</h4>
       {isPersonal ? (<span className={' text text_type_main-default text_color_inactive mb-2'}>{getOrderStatus(orderData.status)}</span>) : null}
