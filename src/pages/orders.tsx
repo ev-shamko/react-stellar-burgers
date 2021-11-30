@@ -12,7 +12,7 @@ export function ProfileOrdersPage() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log('Auth in profile/orders');
+    // console.log('Auth in profile/orders');
     dispatch(confirmAuthThunk());
   }, [dispatch]);
 
@@ -22,7 +22,7 @@ export function ProfileOrdersPage() {
       url: wsOrders + `?token=${getAccessTokenLiteral()}`,     
     });
     return () => {
-      console.log('Размонтируем /feed');
+      // console.log('Размонтируем /feed');
       dispatch({ type: wsActions.closeConnection });
     };
   }, [dispatch]);

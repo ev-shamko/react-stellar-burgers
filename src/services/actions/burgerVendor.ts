@@ -122,8 +122,8 @@ export const getIngridientsDataThunk: AppThunk = (url = '') => {
             .then((res) => {
 
                 if (!(Array.isArray(res.data))) {
-                    console.log('Promise.reject(This response is not valid)');
-                    console.log(`Didn't find array in res.data  :-(   Probably got wrong response from ${url}`);
+                    // console.log('Promise.reject(This response is not valid)');
+                    // console.log(`Didn't find array in res.data  :-(   Probably got wrong response from ${url}`);
                     return Promise.reject(res);
                 }
 
@@ -133,9 +133,9 @@ export const getIngridientsDataThunk: AppThunk = (url = '') => {
                 })
             })
             .catch((err) => {
-                console.log(`Error: can't fetch ingridiets data from ${url}`);
-                console.log(`response from server is: `, err);
-                console.log(`err.message is: `, err.message);
+                // console.log(`Error: can't fetch ingridiets data from ${url}`);
+                // console.log(`response from server is: `, err);
+                // console.log(`err.message is: `, err.message);
 
                 dispatch({
                     type: INGRIDIENT_FETCH_ERROR,
@@ -167,7 +167,7 @@ export const postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) =>
                 return Promise.reject(res.status);
             })
             .then((res) => {
-                console.log('after fetch: Получен номер заказа', res.order.number);
+                // console.log('after fetch: Получен номер заказа', res.order.number);
                 // сохраняем объект ответа от сервера с инфой о заказе в редакс-хранилище
                 dispatch({
                     type: SET_ORDER_STATE,
@@ -191,8 +191,8 @@ export const postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) =>
                 });
             })
             .catch((err) => {
-                console.log(`Error: some error ocured during posting order`);
-                console.log(`response from server is: `, err);
+                // console.log(`Error: some error ocured during posting order`);
+                // console.log(`response from server is: `, err);
             });
     }
 };

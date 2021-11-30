@@ -31,13 +31,13 @@ export function ProfilePage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('сабмитим изменения в профиле');
+    // console.log('сабмитим изменения в профиле');
     dispatch(patchUserDataThunk(form, setFormValues));
   }
   
   const handleCansel = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    console.log('canselling changes');
+    // console.log('canselling changes');
     setFormValues({ name: userName, email: userEmail, password: '' });
   }
 

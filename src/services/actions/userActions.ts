@@ -74,9 +74,9 @@ export type TUserActionsUnion = ILoginSuccessful | ISetUserData | ILoginFailed |
 
 // Миддлвары для thunk:
 
-export const  registerNewUserThunk: AppThunk = (data: TUserForm) => {
-  console.log('Начинаем регистрацию нового пользователя');
-  console.log('data: ', data);
+export const registerNewUserThunk: AppThunk = (data: TUserForm) => {
+  // console.log('Начинаем регистрацию нового пользователя');
+  // console.log('data: ', data);
 
   return function (dispatch: AppDispatch) {
     fetchUserRegistration(data)
@@ -92,8 +92,8 @@ export const  registerNewUserThunk: AppThunk = (data: TUserForm) => {
         localStorage.setItem('refreshToken', refreshToken);
       })
       .catch(err => {
-        console.log('Ошибка при попытке зарегистрироваться');
-        return console.log(err);
+        // console.log('Ошибка при попытке зарегистрироваться');
+        return;
       });
   }
 }
@@ -120,8 +120,8 @@ export const logInAppThunk: AppThunk = (data: TLoginForm) => {
 
         });
 
-        console.log('Ошибка при авторизации по логину и паролю');
-        console.log(err);
+        // console.log('Ошибка при авторизации по логину и паролю');
+        // console.log(err);
       });
   };
 }
@@ -129,31 +129,34 @@ export const logInAppThunk: AppThunk = (data: TLoginForm) => {
 export const logOutThunk: AppThunk = () => {
 
   return function (dispatch: AppDispatch) {
-    console.log('Logging you out, Shepard'); // ;-)
+    // console.log('Logging you out, Shepard'); // ;-)
 
     fetchLogOut()
       .then((res) => {
-        console.log('res in logOut: ', res)
-        console.log('res.success', res.success)
+        // console.log('res in logOut: ', res)
+        // console.log('res.success', res.success)
         if (res.success === true) {
-          console.log('Now deleting tokens');
+          // console.log('Now deleting tokens');
           deleteCookie('accessToken');
           localStorage.removeItem('refreshToken');
 
           dispatch({
             type: LOGOUT_SUCCESSFUL,
           });
-          console.log('Logged out successfully');
+          // console.log('Logged out successfully');
         }
       })
       .catch(err => {
-        console.log('Ошибка при разлогинивании');
-        console.log(err);
+        // console.log('Ошибка при разлогинивании');
+        // console.log(err);
 
         // в случае ошибки при разлогинивании необходимо удалить токены. Это сразу запретит заходить на роуты, требующие авторизации.
-        console.log('Удаляем токены');
+        // console.log('Удаляем токены');
         deleteCookie('accessToken');
         localStorage.removeItem('refreshToken');
+        dispatch({
+          type: LOGOUT_SUCCESSFUL,
+        });
       });
   };
 }
@@ -161,11 +164,11 @@ export const logOutThunk: AppThunk = () => {
 export const requestResetCodeThunk: AppThunk = (email: string) => {
 
   return function (dispatch: AppDispatch) {
-    console.log(`Запрашиваем код для смены пароля для email: ${email}`);
+    // console.log(`Запрашиваем код для смены пароля для email: ${email}`);
 
     fetchRequestResetCode(email)
       .then(res => {
-        console.log('res in fn requestResetCodeThunk: ', res);
+        // console.log('res in fn requestResetCodeThunk: ', res);
 
         if (res.success === true) {
           // отмечаем в хранилище, что можно пустить пользователя на страницу ввода нового пароля
@@ -178,8 +181,8 @@ export const requestResetCodeThunk: AppThunk = (email: string) => {
         }
       })
       .catch(err => {
-        console.log('Smth went wrong while requesting for reset code');
-        console.log(err);
+        // console.log('Smth went wrong while requesting for reset code');
+        // console.log(err);
       })
   }
 }
@@ -187,8 +190,8 @@ export const requestResetCodeThunk: AppThunk = (email: string) => {
 export const setNewPasswordThunk: AppThunk = (newPassword: string, resetCode: string) => {
 
   return function (dispatch: AppDispatch) {
-    console.log('newPassword', newPassword);
-    console.log('resetCode', resetCode);
+    // console.log('newPassword', newPassword);
+    // console.log('resetCode', resetCode);
 
     fetchResetPassword(newPassword, resetCode)
       .then(res => {
@@ -201,8 +204,8 @@ export const setNewPasswordThunk: AppThunk = (newPassword: string, resetCode: st
         }
       })
       .catch(err => {
-        console.log('Smth went wrong while requesting for password change');
-        console.log(err);
+        // console.log('Smth went wrong while requesting for password change');
+        // console.log(err);
       })
   }
 }
@@ -216,7 +219,7 @@ export const patchUserDataThunk: AppThunk = (form: TUserForm, setFormValues) => 
 
     fetchChangeUserData(form)
       .then(res => {
-        console.log(res);
+        // console.log(res);
 
         dispatch({
           type: SET_USER_DATA,
@@ -237,12 +240,12 @@ export const patchUserDataThunk: AppThunk = (form: TUserForm, setFormValues) => 
 
 
 export const refreshAccessTokenThunk: AppThunk = (safetyCounter: number) => {
-  console.log('Refreshing tokens now');
+  // console.log('Refreshing tokens now');
 
   return function (dispatch: AppDispatch | AppThunk) {
     fetchRefreshTokens()
       .then(({ accessToken, refreshToken }) => {
-        console.log('Setting refreshed tokens');
+        // console.log('Setting refreshed tokens');
         setCookie("accessToken", accessToken, { expires: 20 * 60 });
         localStorage.setItem('refreshToken', refreshToken);
 
@@ -250,25 +253,25 @@ export const refreshAccessTokenThunk: AppThunk = (safetyCounter: number) => {
         dispatch(getUserThunk(safetyCounter));
       })
       .catch((err) => {
-        console.log('.catch case in fn refreshAccessToken: ');
-        return console.log(err);
+        // console.log('.catch case in fn refreshAccessToken: ');
+        return;
       })
   }
 }
 
 export const getUserThunk: AppThunk = (safetyCounter: number) => {
-  console.log('Starting fn getUser with accessToken');
+  // console.log('Starting fn getUser with accessToken');
 
   /**** safetyCounter - предохранитель, чтобы не было бесконечной рекурсии ****/
   safetyCounter++;
-  console.log('safetyCounter in getUser: ', safetyCounter);
+  // console.log('safetyCounter in getUser: ', safetyCounter);
 
   // Если по какой-то причине сервер будет обновлять токены через refreshToken, но не будет залогинивать пользователя через accessToken, мы попадём в рекурсию. Будет вызываться getUser >> refreshAccessToken >> getUser >> refreshAccessToken и так до бесконечности. 
   // А нужно, чтобы цепочка максимум была такая: getUser >> refreshAccessToken >> getUser
   // Ситуация с бесконечной рекурсией маловероятна и свидетельствует о проблемах на сервере. Однако на всякий случай этот предохранитель со счётчиком  пусть будет. Он остановит бесконечные запросы к серверу.
   if (safetyCounter > 2) {
     return function () {
-      console.log('Вошли в рекурсию в fn getUser. Заканчиваем это безобразие.');
+      // console.log('Вошли в рекурсию в fn getUser. Заканчиваем это безобразие.');
 
     }
   };
@@ -278,7 +281,7 @@ export const getUserThunk: AppThunk = (safetyCounter: number) => {
     fetchGetUserData()
       .then(({ user, success }) => {
         if (success === true) {
-          console.log('Access granted. Welcome aboard, Commander!');
+          // console.log('Access granted. Welcome aboard, Commander!');
 
           dispatch({
             type: SET_USER_DATA,
@@ -290,10 +293,10 @@ export const getUserThunk: AppThunk = (safetyCounter: number) => {
       .catch((err) => {
         // если accessToken есть в браузере, но для сервера он просрочен, получим сообщение 'jwt expired' и пойдём делать рефреш токенов и автологиниться
         if (err.message === 'jwt expired') {
-          console.log('Не получилось добыть юзердату через accessToken. Попробуем обновить токены');
+          // console.log('Не получилось добыть юзердату через accessToken. Попробуем обновить токены');
           dispatch(refreshAccessTokenThunk(safetyCounter)); // сюда пробрасываем safetyCounter
         } else {
-          console.log(err);
+          // console.log(err);
         }
 
       });
@@ -319,7 +322,7 @@ export const confirmAuthThunk: AppThunk = () => {
       return 'has refreshed tokens, than logged in';
     }
 
-    return console.log('fn confirmAuth found no tokens. You may want to enter your login and password on a /login page');
+    // return console.log('fn confirmAuth found no tokens. You may want to enter your login and password on a /login page');
   }
 }
 

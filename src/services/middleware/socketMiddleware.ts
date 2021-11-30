@@ -29,13 +29,13 @@ export const socketMiddleware = (wsActions: TwsActions): Middleware<{}, RootStat
 
       // для подключения к общедоступной ленте заказов
       if (type === openConnection) {
-        console.log('Initiating Websocket connection');
-        console.log('action.url is ', action.url);
+        // console.log('Initiating Websocket connection');
+        // console.log('action.url is ', action.url);
         socket = new WebSocket(action.url);
       }
 
       if (socket && type === closeConnection) {
-        console.log('Отправляем команду на закрытие сокета');
+        // console.log('Отправляем команду на закрытие сокета');
         socket.close();
         socket = null;
       }
@@ -43,18 +43,18 @@ export const socketMiddleware = (wsActions: TwsActions): Middleware<{}, RootStat
       if (socket) {
 
         socket.onopen = () => {
-          console.log('Successfully opened WebSocket connection');
+          // console.log('Successfully opened WebSocket connection');
           dispatch({ type: onOpen });
         }
 
         socket.onerror = (event) => {
-          console.log('WebSocket got error. Event is:');
-          console.log(event);
+          // console.log('WebSocket got error. Event is:');
+          // console.log(event);
           dispatch({ type: onError });
         }
 
         socket.onmessage = (event) => {
-          console.log('Got message through WebSocket connection');
+          // console.log('Got message through WebSocket connection');
           const { data } = event;
           const parseData = JSON.parse(data);
 
@@ -65,7 +65,7 @@ export const socketMiddleware = (wsActions: TwsActions): Middleware<{}, RootStat
         }
 
         socket.onclose = () => {
-          console.log('Closed WebSocket connection');
+          // console.log('Closed WebSocket connection');
           dispatch({ type: onClose });
         }
       }

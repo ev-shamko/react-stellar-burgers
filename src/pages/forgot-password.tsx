@@ -24,7 +24,7 @@ export function ForgotPage() {
   }, []);
 
   useEffect(() => {
-    console.log('Auth in /forgot-password');
+    // console.log('Auth in /forgot-password');
     dispatch(confirmAuthThunk());
   }, [dispatch]);
 
@@ -35,7 +35,7 @@ export function ForgotPage() {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log('Requesting redirection to password reset page', form['email']);
+      // console.log('Requesting redirection to password reset page', form['email']);
 
       // включаем возможность зайти на страницу ввода нового пароля
       // dispatch({

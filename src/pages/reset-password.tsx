@@ -25,7 +25,7 @@ export function ResetPassword() {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log('Sending request for password reset');
+      // console.log('Sending request for password reset');
 
       const newPassword = form.password;
       const resetCode = form['resetCode'];

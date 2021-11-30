@@ -40,7 +40,7 @@ export function FeedPage() {
       url: wsAllOrders, 
     });
     return () => {
-      console.log('Размонтируем /feed');
+      // console.log('Размонтируем /feed');
       dispatch({ type: wsActions.closeConnection });
     };
   }, [dispatch]);

@@ -22,7 +22,7 @@ export function LoginPage() {
 
   // автологин
   useEffect(() => {
-    console.log('Auth in /login');
+    // console.log('Auth in /login');
     dispatch(confirmAuthThunk());
   }, [dispatch]);
 
@@ -44,8 +44,8 @@ export function LoginPage() {
   const handleSubmit = useCallback(
     e => { 
       e.preventDefault();
-      console.log('Sending login request');
-      console.log(form);
+      // console.log('Sending login request');
+      // console.log(form);
 
       dispatch(logInAppThunk(form));
     },
@@ -54,7 +54,7 @@ export function LoginPage() {
 
   // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
   if (isLoggedIn) {
-    console.log('IS LOGGED IN, location:  ', location)
+    // console.log('IS LOGGED IN, location:  ', location)
     return (<Redirect to={ location.state?.from || '/'} />); // пропс to={} примет либо объект location от предыдущей страницы (он м.б. передан в пропсах), и вытащит оттуда роут предыдущей страницы, на которую нужно вернуть пользователя. Либо примет путь '/'
   }
 

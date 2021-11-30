@@ -17,7 +17,7 @@ export function RegistrationPage() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log('Auth in /registration');
+    // console.log('Auth in /registration');
     dispatch(confirmAuthThunk());
   }, [dispatch]);
 
@@ -36,7 +36,7 @@ export function RegistrationPage() {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log('Sending registration request');
+      // console.log('Sending registration request');
       dispatch(registerNewUserThunk(form));
 
       // if (true) {
