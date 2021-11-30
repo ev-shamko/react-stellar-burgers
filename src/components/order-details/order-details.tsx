@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import stylesOD from './order-details.module.css';
 import { useAppSelector } from '../../services/hooks';
 

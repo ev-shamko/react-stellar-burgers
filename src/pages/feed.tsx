@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { ScrollableList } from '../components/scrollable-list/scrollable-list';
 import { wsActions } from '../services/actions/wsActions';

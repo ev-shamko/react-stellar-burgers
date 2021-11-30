@@ -4,7 +4,6 @@ import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-c
 import { useDrag, DragPreviewImage } from "react-dnd";
 import { useHistory, useLocation } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../../services/hooks';
-import { blankIngr } from '../../services/reducers/burgerVendor'
 
 import {
     OPEN_MODAL,

@@ -1,4 +1,5 @@
-import React, { LegacyRef, useRef } from "react";
+import React, { useRef } from "react";
+// import { LegacyRef } from 'react';
 import ingrStyles from "./burger-ingredients.module.css";
 import CardList from "../ingridients-cardlist/ingridients-cardlist";
 
@@ -8,11 +9,11 @@ import {
 
 import { TIngredientType } from '../../utils/types';
 
-type TBunRef = {
-    'bun': LegacyRef<HTMLDivElement>, // без подсказок в жизни бы не подобрала подходящий тип, ппц
-    'sauce': LegacyRef<HTMLDivElement>,
-    'main': LegacyRef<HTMLDivElement>,
-}
+// type TBunRef = {
+//     'bun': LegacyRef<HTMLDivElement>,
+//     'sauce': LegacyRef<HTMLDivElement>,
+//     'main': LegacyRef<HTMLDivElement>,
+// }
 
 
 // <BurgerIngredients openModal={openModal} /> 

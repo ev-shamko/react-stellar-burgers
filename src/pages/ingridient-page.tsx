@@ -1,24 +1,15 @@
-import React from 'react';
 import { useParams } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from '../services/hooks';
+import { useAppSelector } from '../services/hooks';
 import IngredientDetais from '../components/ingridient-details/ingridient-details';
 import { TIngredientObjData } from '../utils/types';
 
 
-import {
-  getIngridientsDataThunk,
-} from '../services/actions/burgerVendor';
-import { urlApiGetIngridients } from '../utils/api-url';
-
 export function IngridientPage() {
   const { id } = useParams<{ id?: string }>();
-  const dispatch = useAppDispatch();
 
   const { arrOfIngridients } = useAppSelector((store) => store.burgerVendor.ingridientsData); // TODO: в следующем спринте типировать конкретнее
 
-  // запрашиваем у сервера массив ингридиентов. 
-  // Поскольку переход на данную страницу возможен только по прямой ссылке /ingredients/:id, store будет дефолтным, и нам всегда нужно получить массив ингридиентов для отображения конкретного ингридиента
-  // Пока массив ингредиентов запрашивается в шапке приложения, можно здесь не дублировать
+  // Пока массив ингредиентов запрашивается в шапке приложения, можно здесь этот запрос не дублировать
   //@ts-ignore
   // React.useEffect(() => dispatch(getIngridientsDataThunk(urlApiGetIngridients)), [dispatch]);
 
@@ -30,7 +21,7 @@ export function IngridientPage() {
   }
 
   return (
-    <div style={{paddingTop: 80,}}>
+    <div style={{ paddingTop: 80, }}>
       <IngredientDetais ingredientData={ingridientProp} />
     </div>
   );

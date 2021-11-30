@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from '../services/hooks';
 // import { confirmAuthThunk } from '../services/actions/userActions';
@@ -55,7 +55,7 @@ export const OrderPage = ({ orderSource }: TOrderPageProps) => {
     return () => {
       dispatch({ type: wsActions.closeConnection });
     };
-  }, [dispatch]);
+  }, [dispatch, orderSource]);
 
   return (
     <>

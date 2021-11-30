@@ -1,9 +1,8 @@
 import s from './feed-detailed-card.module.css';
 import { useAppSelector } from '../../services/hooks';
-import { wsActions } from '../../services/actions/wsActions';
 import { getOrderStatus, getPrice, getCompletedIngrList } from '../../utils/utils';
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
-import { TOrder, TIngredientObjData, } from '../../utils/types';
+import { TIngredientObjData, } from '../../utils/types';
 
 
 

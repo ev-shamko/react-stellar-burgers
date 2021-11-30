@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useAppDispatch } from '../services/hooks';
 import { confirmAuthThunk } from '../services/actions/userActions';
 import { wsActions } from '../services/actions/wsActions';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import { useAppSelector } from '../../services/hooks';
 import { RouteProps } from 'react-router';
