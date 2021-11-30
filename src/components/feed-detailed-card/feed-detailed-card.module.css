@@ -1,0 +1,101 @@
+.main {
+  margin: auto;
+  width: 540px;
+}
+
+.number {
+  display: block;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.header {
+}
+
+.status {
+  display: block;
+  color: rgb(0, 204, 204);
+}
+
+.ingr {
+}
+
+.plane {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.ingrList {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  padding: 0;
+  max-height: 400px;
+  padding-right: 10px;
+  overflow-y: scroll;
+}
+
+.ingrList::-webkit-scrollbar {
+  width: 8px;
+  left: -30px;
+}
+.ingrList::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+.ingrList::-webkit-scrollbar-thumb {
+  background: #8585ad;
+}
+
+.price {
+  display: flex;
+  flex-direction: row;
+}
+
+.imgContainer {
+  display: -webkit-flex;
+  display: flex;
+
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  margin-right: 16px;
+
+  overflow: hidden;
+  position: relative;
+
+  background-color:#1c1c21;
+  background-position: center;
+  background-size: 190%;
+
+  border-radius: 50%;
+  border: 3px solid #801ab2;
+}
+
+.ingrItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 100%;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ingrIdent {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.priceContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  min-width: 140px;
+}
+
+.ingrPrice {
+
+}

@@ -1,21 +1,29 @@
-import React from 'react';
+import React, { useEffect } from "react";
 //import logo from '../../images/logo.svg';
 import indexStyles from './app.module.css';
 import { Route, Switch, useLocation, useHistory, } from 'react-router-dom';
-
+import { useAppDispatch } from '../../services/hooks';
+import { confirmAuthThunk } from '../../services/actions/userActions';
+import {
+  getIngridientsDataThunk,
+} from '../../services/actions/burgerVendor';
+import { urlApiGetIngridients } from '../../utils/api-url';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { Location } from 'history';
-
 import Modal from '../modal/modal';
 import IngredientDetais from '../ingridient-details/ingridient-details';
-import { useSelector } from 'react-redux';
-
+import { useAppSelector } from '../../services/hooks';
 import AppHeader from '../app-header/app-header';
 import BurgerVendor from '../burger-vendor/burger-vendor';
-import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, IngridientPage } from '../../pages';
+import { FeedDetailedCard } from '../feed-detailed-card/feed-detailed-card';
+import { LoginPage, RegistrationPage, ForgotPage, ResetPassword, ProfilePage, FeedPage, IngridientPage, ProfileOrdersPage, OrderPage } from '../../pages';
 
+
+// нужно для функционала отображения модальных окон поверх основного контента страницы, и чтобы при этом url менялся
 type TLocationState = {
-  background?: Location;
+  ingredientModal?: Location;
+  feedModal?: Location;
+  profileOrderModal?: Location;
 };
 
 function App() {
@@ -27,25 +35,31 @@ function App() {
   // background станет не undefined, когда произойдёт клик по одному из ингридиентов в BurgerIngridients
   // background - это объект location, соответствующий адресу, на котором мы находились, когда произошёл клик по ингридиенту (т.е. '/' ))
   // если таки background !== undefined, он будет использован в качестве location для Switch, и тогда BurgerVendor будет показан в качестве фона под модальным окном с информацией об ингридиенте
-  let background = location.state && location.state.background;
-  console.log('background', background);
 
-  const { modalIsVisible, ingrInModalData } = useSelector((store: any) => store.burgerVendor); // хранилище типизируем в следующем спринте
+  const action = history.action === 'PUSH' || history.action === 'REPLACE'; //  history.action is mutable and automatically updates as the location changes. https://github.com/remix-run/history/blob/main/docs/api-reference.md 
 
-  // фикс, чтобы при перезагрузке с url ингридиента открывалась отдельная страница, а не попап
-  React.useEffect(() => {
-    history.replace({
-      state: { background: undefined },
-    });
-    // eslint-disable-next-line
-  }, []);
+  // три переменные ниже - это, по сути, background для каждого из модальных окон
+  const modalIngredientOpen = action && location.state && location.state.ingredientModal;
+  const modalFeedOrderOpen = action && location.state && location.state.feedModal;
+  const modalProfileOrderOpen = action && location.state && location.state.profileOrderModal;
+
+  const { ingrInModalData } = useAppSelector((store) => store.burgerVendor); // хранилище типизируем в следующем спринте
+
+  const dispatch = useAppDispatch();
+
+  
+  useEffect(() => {
+    dispatch(confirmAuthThunk());
+    dispatch(getIngridientsDataThunk(urlApiGetIngridients));
+  }, [dispatch]);
 
   return (
     <>
       <AppHeader />
 
       <main className={indexStyles.main}>
-        <Switch location={background || location}>
+        <Switch location={modalIngredientOpen || modalFeedOrderOpen || modalProfileOrderOpen || location}>
+
           <Route path="/login">
             <LoginPage />
           </Route>
@@ -67,12 +81,13 @@ function App() {
           </ProtectedRoute>
 
           <ProtectedRoute path="/profile/orders" exact={true}>
-            /profile/orders — страница истории заказов пользователя. Доступен только авторизованным пользователям.
-            <br /><a href="/profile/orders/123">Страница заказа 123</a> {/* Не работает, что-то с правом доступа не то */}
+            <ProfileOrdersPage />
+
           </ProtectedRoute>
 
           <ProtectedRoute path="/profile/orders/:id">
-            /profile/orders/:id — страница заказа в истории заказов. Доступен только авторизованным пользователям.
+            {/* /profile/orders/:id — страница заказа в истории заказов. Доступна только авторизованным пользователям. */}
+            <OrderPage orderSource={'personalOrder'} />
 
           </ProtectedRoute>
 
@@ -85,11 +100,12 @@ function App() {
           </Route>
 
           <Route path="/feed" exact={true}>
-            /feed — страница ленты заказов. Доступен всем пользователям.
+            <FeedPage />
           </Route>
 
           <Route path="/feed/:id">
-            /feed/:id — страница заказа в ленте. Доступен всем пользователям.
+            {/* Страница конкретного заказа из /feed */}
+            <OrderPage orderSource={'feed'} />
           </Route>
 
           <Route path="/" exact={true}>{/* exact={true}>; */}
@@ -97,17 +113,31 @@ function App() {
           </Route>
         </Switch>
 
-        {/* Вот это модалка с ингридиентом поверх конструктора бургеров */}
-        {background && (
+        {/* Вот это модальные окна с разным содержимым. Модальные окна - это именно когда окно поверх основного контента страницы */}
+        {modalIngredientOpen && (
           <Route path="/ingredients/:id">
-            {modalIsVisible && (
               <Modal>
                 <IngredientDetais ingredientData={ingrInModalData} />
               </Modal>
-            )}
-            {/* TODO: Сюда добавить полноразмерное окно заказа через /feed и заказа через /profile/orders/:id */}
           </Route>
         )}
+        
+        {modalFeedOrderOpen && (
+          <Route path="/feed/:id">
+              <Modal>
+                <FeedDetailedCard />
+              </Modal>
+          </Route>
+        )}
+
+        {modalProfileOrderOpen && (
+          <ProtectedRoute path="/profile/orders/:id">
+              <Modal>
+                <FeedDetailedCard />
+              </Modal>
+          </ProtectedRoute>
+        )}
+
       </main>
     </>
   );

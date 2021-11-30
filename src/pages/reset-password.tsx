@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../services/hooks';
 import { getCookie } from '../utils/cookie';
-import { setNewPassword } from '../services/actions/userActions';
+import { setNewPasswordThunk } from '../services/actions/userActions';
 
 import {
   Input,
@@ -13,9 +13,9 @@ import {
 
 export function ResetPassword() {
   const [form, setFormValues] = useState({ password: '', resetCode: '' });
-  const { isLoggedIn, canResetPassword, hasResetPassword } = useSelector((store: any) => store.user);
+  const { isLoggedIn, canResetPassword, hasResetPassword } = useAppSelector((store) => store.user);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +25,7 @@ export function ResetPassword() {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log('Sending request for password reset');
+      // console.log('Sending request for password reset');
 
       const newPassword = form.password;
       const resetCode = form['resetCode'];
@@ -33,7 +33,7 @@ export function ResetPassword() {
       console.log('newPassword', newPassword);
       console.log('resetCode', resetCode);
 
-      dispatch(setNewPassword(newPassword, resetCode));
+      dispatch(setNewPasswordThunk(newPassword, resetCode));
 
       setFormValues({ ...form, password: '' });
     }, [dispatch, form]

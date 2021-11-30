@@ -28,13 +28,13 @@ export function fetchUserRegistration(data: TRegistrationData) {
       if (res.ok) {
         return res.json();
       }
-      console.log('Возникли проблемы при регистрации нового пользователя:')
+      // console.log('Возникли проблемы при регистрации нового пользователя:')
       const response = await res.json();
       return Promise.reject(response);
     })
     .then((res) => {
-      console.log('Результаты успешного запроса о регистрации:')
-      console.log(res);
+      // console.log('Результаты успешного запроса о регистрации:')
+      // console.log(res);
       return res;
     })
 }
@@ -73,8 +73,8 @@ export function fetchLogIn(data: TLogInData) {
       return Promise.reject(await res.json());
     })
     .then((res) => {
-      console.log('Результаты успешного запроса об авторизации:')
-      console.log(res);
+      // console.log('Результаты успешного запроса об авторизации:')
+      // console.log(res);
       return res;
     })
 };
@@ -82,7 +82,7 @@ export function fetchLogIn(data: TLogInData) {
 // запрашивает у сервера код для смены пароля. Код придёт на почту
 
 export function fetchRequestResetCode(userEmail: string) {
-  console.log('body', JSON.stringify({ email: userEmail }))
+  // console.log('body', JSON.stringify({ email: userEmail }))
   return fetch(urlResetPassword, {
     method: 'POST',
     headers: {
@@ -97,8 +97,8 @@ export function fetchRequestResetCode(userEmail: string) {
       return Promise.reject(await res.json());
     })
     .then((res) => {
-      console.log('Результаты запроса о коде восстановления пароля:')
-      console.log(res);
+      // console.log('Результаты запроса о коде восстановления пароля:')
+      // console.log(res);
       return res;
     })
 }
@@ -122,8 +122,8 @@ export function fetchResetPassword(newPassword: string, resetCode: string) {
       return Promise.reject(await res.json());
     })
     .then((res) => {
-      console.log('Результаты запроса об установке нового пароля:')
-      console.log(res);
+      // console.log('Результаты запроса об установке нового пароля:')
+      // console.log(res);
       return res;
     })
 }
@@ -146,17 +146,17 @@ export function fetchGetUserData() {
       if (res.ok) {
         return res.json();
       }
-      console.log('Ошибка при попытке получить данные пользователя через accessToken. Возможно, так и должно быть, если токен просрочен.');
+      // console.log('Ошибка при попытке получить данные пользователя через accessToken. Возможно, так и должно быть, если токен просрочен.');
       return Promise.reject(await res.json());
       // если нет адекватного токена (например, пользователь вылогинился), консоль засирается красными ошибками. 
     })
     .then((res) => {
       if (res["success"] === false) {
-        console.error('Getting user data with accessToken failed:', res);
+        // console.error('Getting user data with accessToken failed:', res);
         //return false;
       }
-      console.log('Getting user data with accessToken was successfull')
-      console.log(res);
+      // console.log('Getting user data with accessToken was successfull')
+      // console.log(res);
       return res;
     })
 }
@@ -204,15 +204,15 @@ export function fetchChangeUserData(form: TChangeUserDataArg) {
       if (res.ok) {
         return res.json();
       }
-      console.log('Ошибка при попытке обновить данные пользователя');
+      // console.log('Ошибка при попытке обновить данные пользователя');
       return Promise.reject(await res.json());
     })
     .then((res) => {
       if (res["success"] === false) {
-        console.error('Updating user data failed:', res);
+        // console.error('Updating user data failed:', res);
         //return false;
       }
-      console.log('Updating user data was successfull');
+      // console.log('Updating user data was successfull');
       // console.log(res);
       return res;
     })
@@ -224,7 +224,7 @@ export function fetchChangeUserData(form: TChangeUserDataArg) {
 
 // Обновления токенов через refreshToken, если accessToken протух
 export function fetchRefreshTokens() {
-  console.log('начало фетча за рефрешем токенов')
+  // console.log('начало фетча за рефрешем токенов')
   // console.log('текущий refreshToken', localStorage.getItem('refreshToken'));
   return fetch(urlApiToken, {
     method: 'POST',
@@ -237,15 +237,15 @@ export function fetchRefreshTokens() {
       if (res.ok) {
         return res.json();
       }
-      console.log('Ошибка при попытке обновить токены через refreshToken. Возможно, так и должно быть, если токены уже были обновлены в параллельной сессии.');
+      // console.log('Ошибка при попытке обновить токены через refreshToken. Возможно, так и должно быть, если токены уже были обновлены в параллельной сессии.');
       return Promise.reject(await res.json());
     })
     .then((res) => {
       if (res["success"] === false) {
-        console.error('Couldn`t refresh tokens: ', res);
+        // console.error('Couldn`t refresh tokens: ', res);
         return false;
       }
-      console.log('Got fresh tokens: ', res);
+      // console.log('Got fresh tokens: ', res);
       return res;
     });
 }
@@ -272,7 +272,7 @@ export function fetchLogOut() {
     body: JSON.stringify({ token: localStorage.getItem('refreshToken'), }),
   })
     .then(async (res) => {
-      console.log('response from server: ', res)
+      // console.log('response from server: ', res)
       if (res.ok) {
         return res.json();
       }
@@ -280,10 +280,10 @@ export function fetchLogOut() {
     })
     .then((res) => {
       if (res["success"] === false) {
-        console.error('Didn`t logout properly', res);
+        // console.error('Didn`t logout properly', res);
       }
-      console.log('Body of response: ')
-      console.log(res);
+      // console.log('Body of response: ')
+      // console.log(res);
       return res;
     })
 };

@@ -1,9 +1,8 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../services/hooks';
 import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { confirmAuth, registerNewUser } from '../services/actions/userActions';
+import { confirmAuthThunk, registerNewUserThunk } from '../services/actions/userActions';
 
 import {
   Input,
@@ -13,13 +12,13 @@ import {
 
 export function RegistrationPage() {
   const [form, setFormValues] = useState({ email: '', name: '', password: '' });
-  const { isLoggedIn } = useSelector((store: any) => store.user);
+  const { isLoggedIn } = useAppSelector((store) => store.user);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log('Auth in /registration');
-    dispatch(confirmAuth());
+    // console.log('Auth in /registration');
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
    // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
@@ -37,8 +36,8 @@ export function RegistrationPage() {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log('Sending registration request');
-      dispatch(registerNewUser(form));
+      // console.log('Sending registration request');
+      dispatch(registerNewUserThunk(form));
 
       // if (true) {
       //   history.replace({ pathname: '/login' });

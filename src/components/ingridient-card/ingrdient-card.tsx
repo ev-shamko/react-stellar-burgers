@@ -3,20 +3,21 @@ import cardStyles from "./ingridient-card.module.css";
 import { CurrencyIcon, Counter } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, DragPreviewImage } from "react-dnd";
 import { useHistory, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
+
 import {
     OPEN_MODAL,
     SET_MODAL_TYPE,
     SET_INGRIDIENT_IN_MODAL,
 } from '../../services/actions/burgerVendor';
-import { TIngredientObjData, TIngredientInStore } from '../../utils/types';
+import { TIngredientObjData, TIngredientInStore, TDraggableIngr } from '../../utils/types';
 
 type TIngridientCardProps = {
     objIngridient: TIngredientObjData
 };
 
 const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const history = useHistory();
     const location = useLocation();
 
@@ -48,9 +49,9 @@ const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
         openIngridientDetails();
 
         // при открытии модального окна с информацией об ингридиенте в адресной строке пропишется уникальный роут ингридиента
-        history.replace({
+        history.push({
             pathname: `/ingredients/${objIngridient._id}`,
-            state: { background: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
+            state: { ingredientModal: location }, // в background записался текущий объект location, который будет использоваться в App для изменения содержимого адресной строки
         });
     };
 
@@ -63,33 +64,45 @@ const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
     const [ingrCounter, setIngrCounter] = React.useState<number>();
 
     // получаем стейт из редакса, из которого можно понять, сколько штук текущего ингридиента положено в конструктор бургера. Какой конкретно стейт нам нужен зависит от ингридиента в пропсах инстанса текущего компонента
-    const { ingrInConstructor } = useSelector((state: any): any => { // функция возвращает пока что тип any по рекомендации наставника
-        // если у нас тут карточка булки, то в переменную запишется 1 объект: либо пустой, либо с 1 булкой
+
+
+    // эта переменная даёт инстансу карточки доступ к ингридиентам в конструкторе бургера:
+    // либо к булкам, если это карточка булки
+    // либо к списку draggableIngridients, если инстанс карточки относится к начинкам
+    // на основании этой переменной определяется, что писать в счётчике выбранных ингредиентов на карточке ингридиента
+    const bunInConstructor: TIngredientObjData | undefined = useAppSelector((state) => {
+        // если у нас тут карточка булки, то в переменную запишется 1 объект: либо пустой, либо с 1 булк ой
         if (objIngridient.type === 'bun') {
-            return ({ ingrInConstructor: state.burgerVendor.bun });
+            return state.burgerVendor.bun ;
         }
+        return undefined;
+    });
+
+    const draggableIngrInConstructor: TDraggableIngr[] | undefined = useAppSelector((state) => {
         // если создаём карточку соуса или начинки, то в переменную запишется массив с объектами ингридиентов, перетащенных в конструктор бургера
         if (objIngridient.type === 'sauce' || objIngridient.type === 'main') {
-            return ({ ingrInConstructor: state.burgerVendor.draggableIngridients });
+            return state.burgerVendor.draggableIngridients ;
         }
-    })
+        return undefined;
+    });
 
     // в зависимости от типа текущего ингридиента функция проверит, сколько таких ингридиентов лежит в соответствующем стейте в редаксе
     function getNumOfIngridients(): number {
         let counterValue = 0;
 
+
         // если в стейте лежит именно эта булка, счётчик выставляем на 1, иначе на 0
         // ingrInConstructor будет объектом
         if (objIngridient.type === 'bun') {
-            if (ingrInConstructor._id === objIngridient._id) {
+            if (bunInConstructor && (bunInConstructor._id === objIngridient._id) ) {
                 return 2;
             }
         }
 
         // если текущий для данного инстанса ингридиент - это соус или начинка, считаем, сколько таких ингридиентов в конструкторе
-        if (objIngridient.type === 'sauce' || objIngridient.type === 'main') {
+        if (draggableIngrInConstructor && (objIngridient.type === 'sauce' || objIngridient.type === 'main')) {
             // если находим в массиве такой же _id, как в этом экземпляре карточки, то увеличиваем счётчик на 1
-            ingrInConstructor.forEach((item: TIngredientInStore) => {
+            draggableIngrInConstructor.forEach((item: TIngredientInStore) => {
                 if (item._id === objIngridient._id) {
                     counterValue++;
                 }
@@ -103,7 +116,7 @@ const IngridientCard: React.FC<TIngridientCardProps> = ({ objIngridient }) => {
     useEffect(() => {
         setIngrCounter(getNumOfIngridients());
         // eslint-disable-next-line
-    }, [ingrInConstructor, objIngridient]);
+    }, [bunInConstructor, draggableIngrInConstructor, objIngridient]);
 
     /**************************************************** */
 

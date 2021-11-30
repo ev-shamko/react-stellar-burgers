@@ -1,0 +1,77 @@
+.headerSection {
+  padding-top: 40px;
+  padding-bottom: 20px;
+}
+
+.feedData {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.feedContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  width: 600px;
+  min-height: 600px;
+  max-height: 75vh;
+  margin-right: 68px;
+}
+
+.feedChart {
+  display: flex;
+  flex-direction: column;
+  width: 580px;
+}
+
+.currentOrders {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.currentChart {
+  display: flex;
+  flex-direction: column;
+  width: 272px;
+}
+
+.ul {
+  list-style-type: none;
+  max-height: 220px;
+  width: 240px;
+  /* overflow-y: scroll; */
+  padding: 0;
+  padding-left: 10px;
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+/* .ul::-webkit-scrollbar {
+  width: 8px;
+  left: -30px;
+}
+.ul::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+.ul::-webkit-scrollbar-thumb {
+  background: #8585ad;
+} */
+
+.liElem {
+  display: block;
+  margin-right: 15px;
+}
+
+.totalChart {
+}
+
+.totalBlock {
+}
+
+.bigHeader {
+  display: block;
+}

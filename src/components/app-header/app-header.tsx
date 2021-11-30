@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import headerStyles from "./app-header.module.css";
-import { useDispatch } from 'react-redux';
-import { confirmAuth } from '../../services/actions/userActions';
+
 import { Link } from 'react-router-dom';
 import {
   Logo,
@@ -10,18 +9,8 @@ import {
   ProfileIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 
-import {
-  getIngridientsData,
-} from '../../services/actions/burgerVendor';
-import { urlApiGetIngridients } from '../../utils/api-url';
 
 function AppHeader() {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(confirmAuth());
-    dispatch(getIngridientsData(urlApiGetIngridients));
-  }, [dispatch]);
 
   return (
     <header className={headerStyles.header}>

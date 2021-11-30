@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './auth-form.module.css';
 import { Link, Redirect, useLocation } from 'react-router-dom';
-import { logInApp, confirmAuth } from '../services/actions/userActions';
-import { useSelector, useDispatch } from 'react-redux';
+import { logInAppThunk, confirmAuthThunk } from '../services/actions/userActions';
+
+import { useAppDispatch, useAppSelector } from '../services/hooks';
+
 import {
   Input,
   PasswordInput,
@@ -11,8 +13,8 @@ import {
 
 export function LoginPage() {
   const [form, setFormValues] = useState({ email: '', password: '' });
-  const { isLoggedIn } = useSelector((store: any): any => store.user); // TODO: типизируем в следующем спринте
-  const dispatch = useDispatch();
+  const { isLoggedIn } = useAppSelector((store) => store.user); // TODO: типизируем в следующем спринте
+  const dispatch = useAppDispatch();
 
   // https://reactrouter.com/web/api/Hooks/uselocation
   // https://reactrouter.com/web/api/location 
@@ -20,8 +22,8 @@ export function LoginPage() {
 
   // автологин
   useEffect(() => {
-    console.log('Auth in /login');
-    dispatch(confirmAuth());
+    // console.log('Auth in /login');
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
   // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
@@ -42,16 +44,17 @@ export function LoginPage() {
   const handleSubmit = useCallback(
     e => { 
       e.preventDefault();
-      console.log('Sending login request');
-      console.log(form);
+      // console.log('Sending login request');
+      // console.log(form);
 
-      dispatch(logInApp(form));
+      dispatch(logInAppThunk(form));
     },
     [form, dispatch]
   );
 
   // редирект сработает и при авторизации, и при прямом переходе на страницу по ссылке
   if (isLoggedIn) {
+    // console.log('IS LOGGED IN, location:  ', location)
     return (<Redirect to={ location.state?.from || '/'} />); // пропс to={} примет либо объект location от предыдущей страницы (он м.б. передан в пропсах), и вытащит оттуда роут предыдущей страницы, на которую нужно вернуть пользователя. Либо примет путь '/'
   }
 

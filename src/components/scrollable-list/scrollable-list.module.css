@@ -1,0 +1,32 @@
+.main {
+  display: block;
+  display: flex;
+  flex-direction: column;
+  
+
+  overflow-y: scroll;
+}
+
+.main::-webkit-scrollbar {
+  width: 8px;
+  left: -30px;
+}
+.main::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+.main::-webkit-scrollbar-thumb {
+  background: #8585ad;
+}
+
+.mainReversed {
+  composes: main;
+
+  flex-direction: column-reverse;
+}
+
+.temporary {
+  width: 584px;
+  height: 214px;
+  background-color: #1C1C21;
+  margin-bottom: 5px;
+}

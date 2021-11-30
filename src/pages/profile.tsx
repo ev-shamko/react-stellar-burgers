@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { confirmAuth, patchUserData } from '../services/actions/userActions';
+import { useAppSelector, useAppDispatch } from '../services/hooks';
+import { confirmAuthThunk, patchUserDataThunk } from '../services/actions/userActions';
 import styles from './profile.module.css';
 import { ProfileMenu } from '../components/profile-menu/profile-menu';
 
@@ -12,12 +11,12 @@ import {
 
 export function ProfilePage() {
   const [form, setFormValues] = useState({ name: '', email: '', password: '' });
-  const { userName, userEmail } = useSelector((state: any) => state.user);
+  const { userName, userEmail } = useAppSelector((state) => state.user);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(confirmAuth());
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
   // при загрузке компонента в поля поставятся имя и почта из стейта
@@ -32,13 +31,13 @@ export function ProfilePage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('сабмитим изменения в профиле');
-    dispatch(patchUserData(form, setFormValues));
+    // console.log('сабмитим изменения в профиле');
+    dispatch(patchUserDataThunk(form, setFormValues));
   }
   
   const handleCansel = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    console.log('canselling changes');
+    // console.log('canselling changes');
     setFormValues({ name: userName, email: userEmail, password: '' });
   }
 

@@ -1,15 +1,17 @@
 /* eslint-disable */
-import React from "react";
+import React, { useState } from "react";
 import { useCallback } from "react";
-import crStyles from "./burger-constructor.module.css";
+import s from "./burger-constructor.module.css";
 import DraggableItem from "../draggable-item/draggable-item";
 import { useDrop } from "react-dnd";
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../services/hooks';
+import { Loader } from "../loader/loader";
+
 import { useHistory } from 'react-router-dom';
 import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
 
 import {
-  postBurgerOrder,
+  postBurgerOrderThunk,
   ADD_BUN,
   ADD_SAUCE,
   ADD_MAIN,
@@ -25,14 +27,15 @@ import {
 import { urlApiPostOrder } from '../../utils/api-url';
 
 function BurgerConstructor() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const history = useHistory();
 
   // стейты с данными об ингридиентах бургера
-  const { chosenBun, chosenDraggableIngr, isLoggedIn } = useSelector((store: any) => ({ // TODO: типизируем в следующем спринте
+  const { chosenBun, chosenDraggableIngr, isLoggedIn, loaderIsVisible  } = useAppSelector((store) => ({
     chosenBun: store.burgerVendor.bun,
     chosenDraggableIngr: store.burgerVendor.draggableIngridients,
     isLoggedIn: store.user.isLoggedIn,
+    loaderIsVisible: store.burgerVendor.constructorLoaderIsVisible,
   }));
 
   /******************************************************** */
@@ -44,11 +47,11 @@ function BurgerConstructor() {
     addIngridientInConstructor(objIngridient);
   };
 
-  type TGetActionResponse = 'ADD_BUN' | 'ADD_SAUCE' | 'ADD_MAIN' | 'error'; 
+  type TGetActionResponse = 'ADD_BUN' | 'ADD_SAUCE' | 'ADD_MAIN' | 'error';
 
   // функция возвращает нужный экшн в зависимости от типа ингридиента
   // это нужно для добавления ингридиета в стейт
-  const getAction = (typeOfIngridient: TIngredientType): TGetActionResponse  => {
+  const getAction = (typeOfIngridient: TIngredientType): TGetActionResponse => {
     if (typeOfIngridient === 'bun') {
       return ADD_BUN;
     }
@@ -163,19 +166,21 @@ function BurgerConstructor() {
       return (history.push({ pathname: '/login' }));
     }
 
-    return dispatch(postBurgerOrder(urlApiPostOrder, createPostBody));
+    return dispatch(postBurgerOrderThunk(urlApiPostOrder, createPostBody));
   };
 
   return (
-    <section className={crStyles.container} ref={dropTarget} style={{ background }}>
+    <section className={s.container} ref={dropTarget} style={{ background }}>
       {/* {console.log('Рендерю >>BurgerConstructor<<')} */}
+      { loaderIsVisible ? <div className={s.loader}><Loader /></div> : null}
 
-      <ul className={crStyles.chosenIngridients + ' mb-6'}>
+
+      <ul className={s.chosenIngridients + ' mb-6'}>
 
         {/* Верхняя булка: отрисуется, если пользователь уже выбрал булку  */}
         {(chosenBun.name) &&
           (
-            <li className={crStyles.topIngridinet}>
+            <li className={s.topIngridinet}>
               <ConstructorElement type="top" isLocked={true} text={chosenBun.name + " (верх)"} thumbnail={chosenBun.image} price={chosenBun.price} />
             </li>
           )
@@ -184,7 +189,7 @@ function BurgerConstructor() {
         {/* Контейнер с настраиваемыми ингридиентами: отрисуется, если что-то уже выбрано */}
         {(chosenDraggableIngr.length > 0) &&
           (
-            <li className={crStyles.draggableIngridinetContainer} ref={dropResort}>
+            <li className={s.draggableIngridinetContainer} ref={dropResort}>
               {chosenDraggableIngr.map((ingr: TIngredientInStore, index: number) => {
                 return (
                   <DraggableItem
@@ -205,7 +210,7 @@ function BurgerConstructor() {
         {/* Нижняя булка: отрисуется, если пользователь уже выбрал булку  */}
         {(chosenBun.name) &&
           (
-            <li className={crStyles.bottomIngridinet}>
+            <li className={s.bottomIngridinet}>
               <ConstructorElement type="bottom" isLocked={true} text={chosenBun.name + " (низ)"} thumbnail={chosenBun.image} price={chosenBun.price} />
             </li>
           )
@@ -213,7 +218,7 @@ function BurgerConstructor() {
 
       </ul>
 
-      <div className={crStyles.totalBar}>
+      <div className={s.totalBar}>
         {/* Блок со стоимостью и кнопкой заказа: Если пользователь не выбрал бургерную булку, то этот блок не будет отрисовываться */}
         {/* Если не выбран ни один ингридиент, отобразится подсказка про перетаскивание. Если не выбрана булка, появится подсказка про булку */}
         {(chosenBun.name) &&
@@ -242,6 +247,7 @@ function BurgerConstructor() {
             </div>
           )
         }
+
       </div>
 
     </section>

@@ -1,8 +1,8 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import styles from './auth-form.module.css';
 import { Link, Redirect } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { confirmAuth, requestResetCode, } from '../services/actions/userActions';
+import { useAppSelector, useAppDispatch } from '../services/hooks';
+import { confirmAuthThunk, requestResetCodeThunk, } from '../services/actions/userActions';
 import {
   Input,
   Button,
@@ -11,10 +11,10 @@ import {
 
 export function ForgotPage() {
   const [form, setFormValues] = useState({ email: '' });
-  const { isLoggedIn, canResetPassword } = useSelector((store: any) => store.user);
+  const { isLoggedIn, canResetPassword } = useAppSelector((store) => store.user);
 
   // const history = useHistory();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
   useEffect(() => {
@@ -24,8 +24,8 @@ export function ForgotPage() {
   }, []);
 
   useEffect(() => {
-    console.log('Auth in /forgot-password');
-    dispatch(confirmAuth());
+    // console.log('Auth in /forgot-password');
+    dispatch(confirmAuthThunk());
   }, [dispatch]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,14 +35,14 @@ export function ForgotPage() {
   const handleSubmit = useCallback(
     e => {
       e.preventDefault();
-      console.log('Requesting redirection to password reset page', form['email']);
+      // console.log('Requesting redirection to password reset page', form['email']);
 
       // включаем возможность зайти на страницу ввода нового пароля
       // dispatch({
       //   type: ALLOW_RESET_PASSWORD,
       // });
 
-      dispatch(requestResetCode(form.email));
+      dispatch(requestResetCodeThunk(form.email));
 
       // if (true) { // после ушедшего запроса на сервер
       //   history.replace({ pathname: '/reset-password' });

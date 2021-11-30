@@ -32,6 +32,7 @@ export function setCookie(name: string, value: string | null, props: any) {
 }
 
 // Authorization: 'Bearer ' + getCookie('accessToken')
+// getCookie('accessToken') вернёт accessToken перет которым 'Bearer '
 export const getCookie = (name: string): string | undefined => {
   const matches = document.cookie.match(
     new RegExp(
@@ -41,6 +42,17 @@ export const getCookie = (name: string): string | undefined => {
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
 };
+
+// вернёт либо accessToken без 'Bearer ', либо пустую строку
+export const getAccessTokenLiteral = (): string => {
+  let str = getCookie('accessToken');
+  if (str) {
+    str = str.split("Bearer ")[1]
+  } else {
+    str = '';
+  }
+  return str;
+}
 
 export function deleteCookie(name: string) {
   setCookie(name, null, { expires: -1 });

@@ -8,6 +8,9 @@
 .profileInfo {
   display: flex;
   flex-direction: column;
+  max-width: 700px;
+  min-height: 600px;
+    max-height: 75vh;
 }
 
 
