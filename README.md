@@ -1,6 +1,9 @@
 # Stellar Burgers
 Yandex.Praktikum React-dev course study project
 
+
+To run cypress: npm run cypress:open
+
 ### `npm start`
 
 Runs the app in the development mode.\
