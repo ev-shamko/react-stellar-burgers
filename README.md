@@ -2,7 +2,10 @@
 Yandex.Praktikum React-dev course study project
 
 
-To run cypress: npm run cypress:open
+### To run cypress tests: 
+1) Open two terminals
+2) In first terminal: `npm start`
+3) In second terminal: `npm run cypress:open`
 
 ### `npm start`
 

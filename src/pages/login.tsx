@@ -27,14 +27,11 @@ export function LoginPage() {
   }, [dispatch]);
 
   // автоподстановка корректного логина и пароля  ВЫКЛЮЧИТЬ НА ПРОДЕ
-  useEffect(() => {
-    setFormValues(
-      { email: 'shamko.e.v@yandex.ru', password: '123123' }
-    );
-
-    // console.log('location object: ', location);
-    // console.log('location.state?.from ', location.state?.from); // вот здесь может лежать объект location страницы, с которой пользователь сюда попал. Только если попал с <ProtectedRout>. Ну а если был прямой переход на /login, то вернётся undefined благодаря conditional chaining https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining 
-  }, [isLoggedIn, location]);
+  // useEffect(() => {
+  //   setFormValues(
+  //     { email: 'shamko.e.v@yandex.ru', password: '123123' }
+  //   );
+  // }, [isLoggedIn, location]);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

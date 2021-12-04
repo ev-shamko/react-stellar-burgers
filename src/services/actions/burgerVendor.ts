@@ -151,7 +151,7 @@ export const postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) =>
             type: SET_CONSTRUCTOR_LOADER,
             value: true,
         });
-        fetch(url + `?token=${getAccessTokenLiteral()}`, {
+        fetch(url, {
             method: 'POST',
             //@ts-ignore getCookie может вернуть undefined, это не страшно
             headers: {
