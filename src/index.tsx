@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter basename="/">
+    <BrowserRouter basename="/react-stellar-burger">
       <Provider store={store}>
         <App />
       </Provider>
