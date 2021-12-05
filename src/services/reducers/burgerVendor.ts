@@ -55,7 +55,7 @@ export const blankIngr: TIngredientObjData  = {
     __v: 0,
 }
 
-const initialState: TBurgerVendorReducer = {
+export const initialState: TBurgerVendorReducer = {
     ingridientsData: {
         arrOfIngridients: [],
         ingrDataIsLoading: false,
