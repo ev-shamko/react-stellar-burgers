@@ -8,13 +8,6 @@ import {
 } from '../actions/wsActions';
 import { TOrder } from '../../utils/types';
 
-// const initialState = {
-//   wsConnected: false,
-//   wsError: false,
-//   ordersData: []
-// };
-
-
 export type TOrdersStoreData = {
   success: null | boolean,
   orders: ReadonlyArray<TOrder>,
@@ -30,7 +23,7 @@ export type TwsState = {
 }
 
 
-const initialState: TwsState = {
+export const wsInitialState: TwsState = {
   wsConnected: false,
   wsError: false,
   ordersData: {
@@ -50,7 +43,7 @@ const initialState: TwsState = {
   },
 };
 
-export const wsReducer = (state = initialState, action: TwsActionsUnion): TwsState => {
+export const wsReducer = (state = wsInitialState, action: TwsActionsUnion): TwsState => {
   switch (action.type) {
     case WS_CONNECTED_SUCCESSFULLY:
       return {
