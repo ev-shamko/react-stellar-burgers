@@ -1,9 +1,9 @@
 # Stellar Burgers 
-### customise and order a delicious burger on our space station ;)
+### customise and order a delicious burger on our space station
 
 This application was created as a Yandex.Praktikum React-dev course study project
 
-Demo: 
+Demo: https://ev-shamko.github.io/react-stellar-burgers/index.html
 
 ## Functionality
 
