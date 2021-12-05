@@ -3,7 +3,7 @@
 
 This application was created as a Yandex.Praktikum React-dev course study project
 
-Demo: https://ev-shamko.github.io/react-stellar-burgers/index.html
+Demo: https://ev-shamko.github.io/react-stellar-burgers
 
 ## Functionality
 
