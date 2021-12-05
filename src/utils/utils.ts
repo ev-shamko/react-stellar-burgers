@@ -3,6 +3,8 @@ import { format, differenceInDays, formatDistance } from "date-fns";
 import { ru } from "date-fns/locale";
 import { TIngredientObjData, TOrder } from './types';
 
+export const getInstanceID = () => {return (new Date()).getTime()};
+
 export const getFormattedDate = (data: string) => {
   const currentDate = new Date();
   const pastDate = new Date(data);
