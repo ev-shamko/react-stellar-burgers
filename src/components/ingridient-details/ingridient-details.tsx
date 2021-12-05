@@ -16,19 +16,19 @@ function IngredientDetais({ ingredientData }: TIngredientDetaisProps) {
             <ul className={stylesID.ingrInfo}>
                 <li className={stylesID.nutrient}>
                     <h5 className={stylesID.nutrientHeader + ' text  text_type_main-default text_color_inactive'}>Калории,ккал</h5>
-                    <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'}>{ingredientData['calories']}</p>
+                    <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'} test-id='ingrDetails_calories'>{ingredientData['calories']}</p>
                 </li>
                 <li className={stylesID.nutrient + ' text  text_type_main-default text_color_inactive'}>
                     <h5 className={stylesID.nutrientHeader + ' text  text_type_main-default text_color_inactive'}>Белки, г</h5>
-                    <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'}>{ingredientData['proteins']}</p>
+                    <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'} test-id='ingrDetails_proteins'>{ingredientData['proteins']}</p>
                 </li>
                 <li className={stylesID.nutrient + ' text  text_type_main-default text_color_inactive'}>
                     <h5 className={stylesID.nutrientHeader + ' text  text_type_main-default text_color_inactive'}>Жиры, г</h5>
-                    <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'}>{ingredientData['fat']}</p>
+                    <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'} test-id='ingrDetails_fats'>{ingredientData['fat']}</p>
                 </li>
                 <li className={stylesID.nutrient + ' text  text_type_main-default text_color_inactive'}>
                     <h5 className={stylesID.nutrientHeader + ' text  text_type_main-default text_color_inactive'}>Углеводы, г</h5>
-                    <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'}>{ingredientData['carbohydrates']}</p>
+                    <p className={stylesID.nutrientValue + ' text text_type_digits-default  text_color_inactive'} test-id='ingrDetails_carbo'>{ingredientData['carbohydrates']}</p>
                 </li>
             </ul>
         </div>

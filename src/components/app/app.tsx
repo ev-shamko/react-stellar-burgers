@@ -108,7 +108,7 @@ function App() {
             <OrderPage orderSource={'feed'} />
           </Route>
 
-          <Route path="/" exact={true}>{/* exact={true}>; */}
+          <Route path="/" exact={true}>
             <BurgerVendor />
           </Route>
         </Switch>

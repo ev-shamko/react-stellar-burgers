@@ -6,9 +6,10 @@ import DraggableItem from "../draggable-item/draggable-item";
 import { useDrop } from "react-dnd";
 import { useAppSelector, useAppDispatch } from '../../services/hooks';
 import { Loader } from "../loader/loader";
+import { getInstanceID } from '../../utils/utils';
 
 import { useHistory } from 'react-router-dom';
-import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList } from '../../utils/types';
+import { TIngredientType, TIngredientObjData, TIngredientInStore, TFindIngredientInStore, TResortIngrList, TDraggableIngr } from '../../utils/types';
 
 import {
   postBurgerOrderThunk,
@@ -42,7 +43,7 @@ function BurgerConstructor() {
   /******        DragAndDrop логика              ********* */
   /****************************************************** */
 
-  // при метком броске карточки ингридиента добавляет ингридиент в конструктор
+  // при метком броске карточка ингридиента добавляет ингридиент в конструктор
   function onDropHandler(objIngridient: TIngredientObjData) {
     addIngridientInConstructor(objIngridient);
   };
@@ -68,9 +69,12 @@ function BurgerConstructor() {
   };
 
   const addIngridientInConstructor = (objIngridient: TIngredientObjData) => {
+
+    const objIngridientWithId: TDraggableIngr = { ...objIngridient, instanceID: getInstanceID() };
+
     dispatch({
       type: getAction(objIngridient.type), // в зависимости от типа добавляемого ингридиента сюда подставится нужный экшн
-      value: objIngridient,
+      value: objIngridientWithId,
     })
   };
 

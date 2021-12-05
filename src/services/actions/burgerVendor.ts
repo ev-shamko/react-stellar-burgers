@@ -1,5 +1,4 @@
 import { getCookie } from '../../utils/cookie';
-import { getAccessTokenLiteral } from '../../utils/cookie';
 import { TIngredientObjData, TOrderData, TDraggableIngr, TModalType } from '../../utils/types';
 import { AppDispatch, AppThunk } from '../store';
 
@@ -70,17 +69,17 @@ export interface ISetModalType {
 
 export interface IAddBun {
     readonly type: typeof ADD_BUN,
-    readonly value: TIngredientObjData,
+    readonly value: TDraggableIngr,
 }
 
 export interface IAddSauce {
     readonly type: typeof ADD_SAUCE,
-    readonly value: TIngredientObjData,
+    readonly value: TDraggableIngr,
 }
 
 export interface IAddMain {
     readonly type: typeof ADD_MAIN,
-    readonly value: TIngredientObjData,
+    readonly value: TDraggableIngr,
 }
 
 export interface IUpdateDraggableIngr {
@@ -151,7 +150,7 @@ export const postBurgerOrderThunk: AppThunk = (url = '', createPostBody: any) =>
             type: SET_CONSTRUCTOR_LOADER,
             value: true,
         });
-        fetch(url + `?token=${getAccessTokenLiteral()}`, {
+        fetch(url, {
             method: 'POST',
             //@ts-ignore getCookie может вернуть undefined, это не страшно
             headers: {

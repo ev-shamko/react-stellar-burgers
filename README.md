@@ -1,41 +1,45 @@
-# Stellar Burgers
-Yandex.Praktikum React-dev course study project
+# Stellar Burgers 
+### customise and order a delicious burger on our space station
+
+This application was created as a Yandex.Praktikum React-dev course study project
+
+Demo: https://ev-shamko.github.io/react-stellar-burgers
+
+## Functionality
+
+* use drag and drop to create your own delicios burger 
+* you can get the list of ingridients from API and post an order
+* get the updating list of last 50 orders and their current status through WebSocket connection
+* you can create an account, authorise or restore password
+* quick and comfortable single page routing
+
+## Technologies
+React CRA, Redux, TypeScript, WebSocket, Cypress, Jest, Webpack, React DND, React Router DOM <br>
+This application is connected to public API. If API seems not working (no ingridients data, authorisation fails) please inform me.
+
+## Installation
+`git clone`<br>
+`npm i`<br>
+For guaranteed result use NPM v6.14.* and Node v14.17.* <br>
+However more resent versions of npm and node probably should do fine.
+
+## How to run the app
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Runs the app in the development mode.
 
 ### `npm run build`
+Builds the app for production to the `build` folder.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Testing
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Redux testing: 
+Redux store can be tested with Jest
+`npm run test`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### To run Cypress UI-tests: 
+Functionality of creating order and authorisation proсess can be tested with Cypress. It is really usefull, important for drag and drop automatic testing, also it looks very cool.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+1) Open two terminals
+2) In first terminal: `npm start`  (then wait a bit)
+3) In second terminal: `npm run cypress:open`
