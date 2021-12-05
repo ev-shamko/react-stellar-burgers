@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/static/css/main.faed3357.chunk.css",
-    "main.js": "/static/js/main.e66c028f.chunk.js",
-    "main.js.map": "/static/js/main.e66c028f.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.83128fad.js",
-    "runtime-main.js.map": "/static/js/runtime-main.83128fad.js.map",
-    "static/css/2.0310d8ea.chunk.css": "/static/css/2.0310d8ea.chunk.css",
-    "static/js/2.8925ef94.chunk.js": "/static/js/2.8925ef94.chunk.js",
-    "static/js/2.8925ef94.chunk.js.map": "/static/js/2.8925ef94.chunk.js.map",
-    "index.html": "/index.html",
-    "static/css/2.0310d8ea.chunk.css.map": "/static/css/2.0310d8ea.chunk.css.map",
-    "static/css/main.faed3357.chunk.css.map": "/static/css/main.faed3357.chunk.css.map",
-    "static/js/2.8925ef94.chunk.js.LICENSE.txt": "/static/js/2.8925ef94.chunk.js.LICENSE.txt",
-    "static/media/fonts.css": "/static/media/iceland.77ad7fc2.woff",
-    "static/media/burger-constructor.module.css": "/static/media/buttonDruggableDots.be53ed15.svg",
-    "static/media/order-details.module.css": "/static/media/doneicon.4e95a0d3.jpg"
+    "main.css": "./static/css/main.8e7e3dfc.chunk.css",
+    "main.js": "./static/js/main.e66c028f.chunk.js",
+    "main.js.map": "./static/js/main.e66c028f.chunk.js.map",
+    "runtime-main.js": "./static/js/runtime-main.1bdf9876.js",
+    "runtime-main.js.map": "./static/js/runtime-main.1bdf9876.js.map",
+    "static/css/2.832bd4cf.chunk.css": "./static/css/2.832bd4cf.chunk.css",
+    "static/js/2.8925ef94.chunk.js": "./static/js/2.8925ef94.chunk.js",
+    "static/js/2.8925ef94.chunk.js.map": "./static/js/2.8925ef94.chunk.js.map",
+    "index.html": "./index.html",
+    "static/css/2.832bd4cf.chunk.css.map": "./static/css/2.832bd4cf.chunk.css.map",
+    "static/css/main.8e7e3dfc.chunk.css.map": "./static/css/main.8e7e3dfc.chunk.css.map",
+    "static/js/2.8925ef94.chunk.js.LICENSE.txt": "./static/js/2.8925ef94.chunk.js.LICENSE.txt",
+    "static/media/fonts.css": "./static/media/iceland.77ad7fc2.woff",
+    "static/media/burger-constructor.module.css": "./static/media/buttonDruggableDots.be53ed15.svg",
+    "static/media/order-details.module.css": "./static/media/doneicon.4e95a0d3.jpg"
   },
   "entrypoints": [
-    "static/js/runtime-main.83128fad.js",
-    "static/css/2.0310d8ea.chunk.css",
+    "static/js/runtime-main.1bdf9876.js",
+    "static/css/2.832bd4cf.chunk.css",
     "static/js/2.8925ef94.chunk.js",
-    "static/css/main.faed3357.chunk.css",
+    "static/css/main.8e7e3dfc.chunk.css",
     "static/js/main.e66c028f.chunk.js"
   ]
 }
