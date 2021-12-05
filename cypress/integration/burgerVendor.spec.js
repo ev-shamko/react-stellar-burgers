@@ -23,7 +23,8 @@ describe('delivery page display correctly', function () {
     cy.get('[test-id=ingrDetails_fats]').contains('24').should('exist');
     cy.get('[test-id=ingrDetails_carbo]').contains('53').should('exist');
 
-    cy.get('[class^=modal_closeButton]').click();
+    // попап закрывается по нажатию Esc
+    cy.get('body').type('{esc}'); // особенность cypress: чтобы имитровать глобальные шорткаты, нужно поцелить либо инпуты etc, либо body
     cy.get('[class^=modal_modal]').should('not.exist');
   });
 });
