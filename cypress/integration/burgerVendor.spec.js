@@ -1,4 +1,4 @@
-describe('delivery page display correctly', function () {
+describe('popup with ingredient details functionality', function () {
   before(function () {
     cy.visit('http://localhost:3000');
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredientsList.json' });
@@ -32,13 +32,15 @@ describe('delivery page display correctly', function () {
 describe('functionality of burger constructor and DnD', function () {
   before(function () {
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredientsList.json' });
-    cy.intercept('POST', 'api/auth/login', { fixture: 'loginResponse.json' }).as('login');
-    cy.intercept('POST', 'api/orders', { fixture: 'orderSuccessResp.json' }).as('order');
     cy.visit('http://localhost:3000');
   });
 
-  it('should drag ingredients in burger constructor and put an order', () => {
+  beforeEach(function () {
+    cy.intercept('POST', 'api/auth/login', { fixture: 'loginResponse.json' }).as('login');
+    cy.intercept('POST', 'api/orders', { fixture: 'orderSuccessResp.json' }).as('order');
+  });
 
+  it('should drag ingredients in burger constructor and put an order', () => {
     // перетаскивание ингредиентов
     cy.get('[class^=ingridient-card_ingrCard]').contains('Краторная булка N-200i').trigger('dragstart');
     cy.get('[class^=burger-constructor_container]').trigger('drop');
@@ -53,10 +55,13 @@ describe('functionality of burger constructor and DnD', function () {
     cy.get('[class^=burger-constructor_topIngridinet]').contains('Краторная булка N-200i').should('exist');
     cy.get('[class^=burger-constructor_bottomIngridinet]').contains('Краторная булка N-200i').should('exist');
     cy.get('[class^=burger-constructor_container]').contains('Соус Spicy-X').should('exist'); cy.get('[class^=burger-constructor_container]').contains('Говяжий метеорит (отбивная)').should('exist');
+    cy.get('[class^=burger-constructor_totalBar]').contains('5600').should('exist'); 
 
     // жмём кнопку оформления заказа: редиректит на форму авторизации
     cy.get('[class^=burger-constructor_container]').contains('Оформить заказ').click();
+  });
 
+  it('should authorize user in app, then should redirect back to burger constructor', () => {
     // вводим логин-пароль и имитируем успешную авторизацию и получение токенов от сервера
     cy.get('form input[type=email]').type('shamko.e.v+1@yandex.ru');
     cy.get('form input[type=password]').type('123123');
@@ -68,15 +73,23 @@ describe('functionality of burger constructor and DnD', function () {
       password: '123123',
     });
 
+    // после авторизации нас редиректнуло обратно на главную. Проверяем, чтобы в конструкторе по-прежнему находились выбранные ингредиенты
+    cy.get('[class^=burger-constructor_topIngridinet]').contains('Краторная булка N-200i').should('exist');
+    cy.get('[class^=burger-constructor_bottomIngridinet]').contains('Краторная булка N-200i').should('exist');
+    cy.get('[class^=burger-constructor_container]').contains('Соус Spicy-X').should('exist'); cy.get('[class^=burger-constructor_container]').contains('Говяжий метеорит (отбивная)').should('exist');
+    cy.get('[class^=burger-constructor_totalBar]').contains('5600').should('exist'); 
+  });
+
+  it('should put an order, then should show popup with order data and close it', () => {
     // после успешной авторизации нас редиректнуло на BurgerVendor и снова жмем кнопку заказа
     cy.get('[class^=burger-constructor_container]').contains('Оформить заказ').click();
 
     // Проверка тела запроса
     cy.wait('@order').its('request.body').should('deep.equal', {
       ingredients: [
-        "60666c42cc7b410027a1a9b1",
-        "60666c42cc7b410027a1a9b7",
-        "60666c42cc7b410027a1a9b5",
+        "01",
+        "05",
+        "03",
       ]
     });
 
@@ -87,7 +100,5 @@ describe('functionality of burger constructor and DnD', function () {
     // попап закрывается по клику на крестик
     cy.get('[class^=modal_closeButton]').click();
     cy.get('[class^=modal_modal]').should('not.exist');
-
   });
-
 });
