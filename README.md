@@ -44,4 +44,4 @@ Functionality of creating order and authorisation proсess can be tested with Cy
 2) In first terminal: `npm start`  (then wait a bit)
 3) In second terminal: `npm run cypress:open`
 
-![stellar burger illustration by ya.prakticum](https://pictures.s3.yandex.net/resources/Frame_48_1625048227.png)
+![stellar burger illustration by ya.prakticum](https://github.com/ev-shamko/react-stellar-burgers/blob/main/src/images/Frame_48_1625048227.png)
