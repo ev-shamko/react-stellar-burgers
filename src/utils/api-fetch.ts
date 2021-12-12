@@ -152,8 +152,8 @@ export function fetchGetUserData() {
     })
     .then((res) => {
       if (res["success"] === false) {
-        // console.error('Getting user data with accessToken failed:', res);
-        //return false;
+        console.error('Getting user data with accessToken failed:', res);
+        return false;
       }
       // console.log('Getting user data with accessToken was successfull')
       // console.log(res);
